@@ -10,6 +10,9 @@ You will need a census API key to call the APIs.  You can request one here:
 
 In the example notebook, I read it using configparser from a config file, `~/.census`.
 
+The official Census API documention is at
+  https://www.census.gov/developers/
+
 ## TODOs
 * improve API and variable discoverability
 * improve API documentation generation
