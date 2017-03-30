@@ -4,6 +4,12 @@ find relevant APIs and variables to query, and returns data into a Pandas datafr
 
 See the example notebook for basic usage.
 
+## API Key
+You will need a census API key to call the APIs.  You can request one here:  
+  http://api.census.gov/data/key_signup.html
+
+In the example notebook, I read it using configparser from a config file, `~/.census`.
+
 ## TODOs
 * improve API and variable discoverability
 * improve API documentation generation
