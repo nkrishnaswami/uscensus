@@ -3,6 +3,7 @@ from whoosh.fields import Schema, ID, KEYWORD, TEXT
 from whoosh.index import FileIndex
 from whoosh.qparser import QueryParser
 
+
 class Index(object):
     def __init__(self):
         self.schema = Schema(
@@ -18,6 +19,7 @@ class Index(object):
         # Initialize index
         self.index = RamStorage().create_index(self.schema)
         self.qparser = QueryParser("title", schema=self.schema)
+
     def add(self, iterator):
         with self.index.writer() as writer:
             for (api_id, title, description, variables,
@@ -32,6 +34,7 @@ class Index(object):
                     keywords=keywords,
                     tags=tags,
                 )
+
     def query(self, querystring):
         query = self.qparser.parse(querystring)
         with self.index.searcher() as searcher:

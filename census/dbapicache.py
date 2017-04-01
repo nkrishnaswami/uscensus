@@ -7,20 +7,22 @@ try:
 except ImportError:
     import json
 
-__paramstyle_positional={
+__paramstyle_positional = {
     "qmark": True,
     "numeric": True,
     "named": False,
     "format": True,
     "format": False,
 }
-__paramstyle_format_args={
+__paramstyle_format_args = {
     "qmark": lambda names: ["?"]*len(names),
-    "numeric": lambda names: [":{}".format(idx+1) for idx in range(len(names))],
+    "numeric": lambda names: [":{}".format(idx+1)
+                              for idx in range(len(names))],
     "named": lambda names: [":{}".format(name) for name in names],
     "format": lambda names: ["%s"]*len(names),
     "pyformat": lambda names: ["%({})".format(name) for name in names],
 }
+
 
 def _query(dbapi, conn, template, **kwargs):
     """Query a DBAPI db, agnostic of paramstyle
@@ -31,18 +33,17 @@ def _query(dbapi, conn, template, **kwargs):
         raise DBError("Invalid paramstyle: " + dbapi.paramstyle)
 
     names = sorted([name for name in kwargs],
-               key=lambda x: template.find('{'+x+'}'))
+                   key=lambda x: template.find('{'+x+'}'))
     querystr = template.format(**dict(zip(names, fmt_args(names))))
 
     if positional:
-        vals = [val for key,val in sorted(
+        vals = [val for key, val in sorted(
             kwargs.items(),
             key=lambda kv: template.find('{'+kv[0]+'}'))]
-
-        
         return conn.execute(querystr, vals)
     else:
         return conn.execute(querystr, kwargs)
+
 
 class DBAPICache(object):
     def __init__(self,
@@ -56,29 +57,31 @@ class DBAPICache(object):
         _query(
             self.dbapi, self.conn,
             'CREATE TABLE IF NOT EXISTS ' + self.table +
-            ' (url TEXT, data BLOB, date TIMESTAMP, '+
+            ' (url TEXT, data BLOB, date TIMESTAMP, ' +
             'PRIMARY KEY(url ASC))')
+
     def get(self, url):
         """Check if the URL is in the cache.
         If it is not, return None.
         If it is but has expired, delete the entry and return None.
         If it is and has not expired, parse the JSON and return it.
         """
-        cur=_query(
+        cur = _query(
             self.dbapi, self.conn,
             'SELECT data,date FROM ' + self.table +
             ' WHERE url={url}',
             url=url)
-        row=cur.fetchone()
+        row = cur.fetchone()
         if row:
             if dt.datetime.now()-row[1] < self.timeout:
                 return json.loads(row[0])
             else:
-                cur=_query(
+                cur = _query(
                     self.dbapi, self.conn,
                     'DELETE FROM ' + self.table +
                     ' WHERE url={url}',
                     url=url)
+
     def put(self, url, doc):
         """Insert the document for the URL into the cache.
         Parse the document as JSON and return it.
