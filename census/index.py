@@ -5,7 +5,10 @@ from whoosh.qparser import QueryParser
 
 
 class Index(object):
+    """Census API metadata indexer."""
+
     def __init__(self):
+        """Initialize Whoosh index for Census API metadata fields"""
         self.schema = Schema(
             api_id=ID(stored=True),
             title=TEXT(stored=True),
@@ -21,6 +24,14 @@ class Index(object):
         self.qparser = QueryParser("title", schema=self.schema)
 
     def add(self, iterator):
+        """Add entries to the index
+
+        Arguments:
+          * iterator: iterator over tuples of field metadata, viz.
+            api_id, title, description, variables, geographies, concepts,
+            keywords, and tags.
+        """
+
         with self.index.writer() as writer:
             for (api_id, title, description, variables,
                  geographies, concepts, keywords, tags) in iterator:
@@ -36,6 +47,8 @@ class Index(object):
                 )
 
     def query(self, querystring):
+        """Find API IDs matching querystring"""
+
         query = self.qparser.parse(querystring)
         with self.index.searcher() as searcher:
             results = searcher.search(query, limit=None)

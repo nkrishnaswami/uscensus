@@ -12,6 +12,16 @@ class CensusLoader(object):
     Discover and bind census APIs
     """
     def __init__(self, key, cache):
+        """Load and wrap census APIs.
+
+        Prefers cached metadata if present and not stale, otherwise
+        queries server.
+
+        Arguments:
+          * key: Census API key
+          * cache: cache in which to fetch/store metadata
+        """
+
         self.index = Index()
         self.apis = {}
         resp = fetchjson('http://api.census.gov/data.json', cache)
@@ -60,22 +70,23 @@ class CensusLoader(object):
 
         Elaborate queries can be constructed using parenthesized
         subqueries, ANDs, and ORs.
-
         """
+
         return [self[nid] for nid in self.index.query(query)]
 
     def __getitem__(self, api_id):
         """Return an identifier by API ID.
 
-        An API ID is the part of its endpoint name without the shared
-        census API URL prefix.
-
+        Arguments:
+          * api_id: the part of its endpoint name without the shared
+            census API URL prefix.
         """
+
         return self.apis.get(api_id)
 
     def __repr__(self):
         """The readable string for an Loader is that of its `apis`
         dictionary.
-
         """
+
         return repr(self.apis)

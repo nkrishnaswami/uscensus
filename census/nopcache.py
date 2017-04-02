@@ -5,6 +5,7 @@ except ImportError:
 
 
 class NopCache(object):
+    """Dummy cache implementation for fetchjson that does not store data"""
     def get(self, url):
         return None
 

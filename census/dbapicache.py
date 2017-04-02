@@ -1,48 +1,12 @@
 from __future__ import print_function
-from census.errors import DBError
+
+from census.util import DBAPIQueryHelper
 
 import datetime as dt
 try:
     import ujson as json
 except ImportError:
     import json
-
-__paramstyle_positional = {
-    "qmark": True,
-    "numeric": True,
-    "named": False,
-    "format": True,
-    "format": False,
-}
-__paramstyle_format_args = {
-    "qmark": lambda names: ["?"]*len(names),
-    "numeric": lambda names: [":{}".format(idx+1)
-                              for idx in range(len(names))],
-    "named": lambda names: [":{}".format(name) for name in names],
-    "format": lambda names: ["%s"]*len(names),
-    "pyformat": lambda names: ["%({})".format(name) for name in names],
-}
-
-
-def _query(dbapi, conn, template, **kwargs):
-    """Query a DBAPI db, agnostic of paramstyle
-    """
-    positional = __paramstyle_positional.get(dbapi.paramstyle)
-    fmt_args = __paramstyle_format_args.get(dbapi.paramstyle)
-    if positional is None or fmt_args is None:
-        raise DBError("Invalid paramstyle: " + dbapi.paramstyle)
-
-    names = sorted([name for name in kwargs],
-                   key=lambda x: template.find('{'+x+'}'))
-    querystr = template.format(**dict(zip(names, fmt_args(names))))
-
-    if positional:
-        vals = [val for key, val in sorted(
-            kwargs.items(),
-            key=lambda kv: template.find('{'+kv[0]+'}'))]
-        return conn.execute(querystr, vals)
-    else:
-        return conn.execute(querystr, kwargs)
 
 
 class DBAPICache(object):
@@ -53,9 +17,9 @@ class DBAPICache(object):
         self.dbapi = dbapi
         self.timeout = timeout
         self.conn = self.dbapi.connect(*dbargs, **dbkwargs)
+        self.query = DBAPIQueryHelper(self.dbapi, self.conn)
         self.table = table
-        _query(
-            self.dbapi, self.conn,
+        self.query(
             'CREATE TABLE IF NOT EXISTS ' + self.table +
             ' (url TEXT, data BLOB, date TIMESTAMP, ' +
             'PRIMARY KEY(url ASC))')
@@ -66,8 +30,7 @@ class DBAPICache(object):
         If it is but has expired, delete the entry and return None.
         If it is and has not expired, parse the JSON and return it.
         """
-        cur = _query(
-            self.dbapi, self.conn,
+        cur = self.query(
             'SELECT data,date FROM ' + self.table +
             ' WHERE url={url}',
             url=url)
@@ -76,8 +39,7 @@ class DBAPICache(object):
             if dt.datetime.now()-row[1] < self.timeout:
                 return json.loads(row[0])
             else:
-                cur = _query(
-                    self.dbapi, self.conn,
+                cur = self.query(
                     'DELETE FROM ' + self.table +
                     ' WHERE url={url}',
                     url=url)
@@ -86,8 +48,7 @@ class DBAPICache(object):
         """Insert the document for the URL into the cache.
         Parse the document as JSON and return it.
         """
-        _query(
-            self.dbapi, self.conn,
+        self.query(
             'INSERT INTO ' + self.table +
             ' VALUES ({url},{data},{date})',
             url=url,

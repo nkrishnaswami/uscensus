@@ -8,13 +8,17 @@ import pandas as pd
 class CensusDataAPI(object):
     """A single census endpoint, with metadata about queryable variables
     and geography
-
     """
+
     def __init__(self, key, ds, cache):
+        """Initialize a Census API endpoint wrapper.
+
+        Arguments:
+          * key: user's API key
+          * ds: census dataset descriptor metadata
+          * cache: cache in which to look up/store metadata
         """
-        key: user's API key
-        ds: census dataset descriptor metadata
-        """
+
         self.key = key                         # API key
         self.title = ds['title']               # title
         self.description = ds['description']   # long description
@@ -46,14 +50,20 @@ class CensusDataAPI(object):
 
     @staticmethod
     def _geo2str(geo):
+        """Format geography dict as string for query"""
+
         return ' '.join('{}:{}'.format(k, v) for k, v in geo.items())
 
     def __call__(self, fields, geo_for, geo_in=None, cache=NopCache()):
+        """Special method to make API object invocable.
+
+        Arguments:
+          * fields: list of variables to return.
+          * geo_* fields must be given as dictionaries, eg:
+            `{'county': '*'}`
+          * cache: cache in which to store results. Not cached by default.
         """
-        Special method to make API object invocable.
-        geo_* fields must be given as dictionaries, eg:
-        `{'county': '*'}`
-        """
+
         params = {
             'get': ','.join(fields),
             'key': self.key,
@@ -70,4 +80,6 @@ class CensusDataAPI(object):
         return ret
 
     def __repr__(self):
+        """Represent APi endpoint by its title"""
+
         return self.title
