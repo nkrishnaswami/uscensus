@@ -8,6 +8,12 @@ http://api.census.gov/data.json, and provides callable wrappers for
 each API it finds.  It indexes each of their metadata fields to make
 the APIs and variables related to them easier to find.
 
+The fields in the dataset discovery interface are described at
+https://project-open-data.cio.gov/v1.1/schema/ .
+
+Using this module requires a Census API key, which you can request at
+https://www.census.gov/developers/ .
+
 Exceptions:
  * CensusError(Exception): base class for module exceptions
  * DBError(CensusError): errors accessing databases

@@ -3,7 +3,7 @@ from census.errors import DBError
 import requests
 
 
-def fetchjson(url, cache, **kwargs):
+def fetchjson(url, cache, session, **kwargs):
     """Very thin wrapper around requests.py, to get a URL, check for
     errors, and return the parsed JSON reponse.
 
@@ -12,6 +12,7 @@ def fetchjson(url, cache, **kwargs):
     Arguments:
       * url: URL from which to fetch JSON resonse
       * cache: Cache in which to store response
+      * session: optional requests.Session for making API call
       * kwargs: additional arguments to `requests.get`
 
     Exceptions:
@@ -20,7 +21,10 @@ def fetchjson(url, cache, **kwargs):
     """
     doc = cache.get(url)
     if not doc:
-        r = requests.get(url, **kwargs)
+        if session:
+            r = session.get(url, **kwargs)
+        else:
+            r = requests.get(url, **kwargs)
         r.raise_for_status()
         return cache.put(url, r.text)
     return doc

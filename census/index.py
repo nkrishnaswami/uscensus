@@ -18,6 +18,7 @@ class Index(object):
             concepts=KEYWORD,
             keywords=KEYWORD,
             tags=KEYWORD,
+            vintage=KEYWORD,
             )
         # Initialize index
         self.index = RamStorage().create_index(self.schema)
@@ -29,12 +30,13 @@ class Index(object):
         Arguments:
           * iterator: iterator over tuples of field metadata, viz.
             api_id, title, description, variables, geographies, concepts,
-            keywords, and tags.
+            keywords, tags, and vintage.
         """
 
         with self.index.writer() as writer:
             for (api_id, title, description, variables,
-                 geographies, concepts, keywords, tags) in iterator:
+                 geographies, concepts, keywords, tags, vintage
+            ) in iterator:
                 writer.update_document(
                     api_id=api_id,
                     title=title,
@@ -44,6 +46,7 @@ class Index(object):
                     concepts=concepts,
                     keywords=keywords,
                     tags=tags,
+                    vintage=vintage,
                 )
 
     def query(self, querystring):

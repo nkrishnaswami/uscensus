@@ -11,7 +11,7 @@ class CensusLoader(object):
     """
     Discover and bind census APIs
     """
-    def __init__(self, key, cache):
+    def __init__(self, key, cache, session=None):
         """Load and wrap census APIs.
 
         Prefers cached metadata if present and not stale, otherwise
@@ -24,23 +24,23 @@ class CensusLoader(object):
 
         self.index = Index()
         self.apis = {}
-        resp = fetchjson('http://api.census.gov/data.json', cache)
+        resp = fetchjson('http://api.census.gov/data.json', cache, session)
         datasets = resp.get('dataset')
         if not datasets:
             raise CensusError("Unable to identify datasets from API " +
                               " discovery endpoint")
         for ds in datasets:
-            try:
-                api = CensusDataAPI(key, ds, cache)
-                api_id = api.endpoint.replace(
-                    'http://api.census.gov/data/',
-                    '')
-                # todo: add mode indexing; hier by dataset, by vintage, etc
-                self.apis[api_id] = api
-            except Exception as e:
-                print("Error processing metadata; skipping API:", ds)
-                print(e)
-                print()
+#            try:
+            api = CensusDataAPI(key, ds, cache, session)
+            api_id = api.endpoint.replace(
+                'http://api.census.gov/data/',
+                '')
+            # todo: add more indexing; hier by dataset, by vintage, etc
+            self.apis[api_id] = api
+#            except Exception as e:
+#                print("Error processing metadata; skipping API:", ds)
+#                print(type(e), e)
+#                print()
         self.index.add(
             (api_id,
              api.title,
@@ -50,6 +50,7 @@ class CensusLoader(object):
              ' '.join(api.concepts),
              ' '.join(api.keyword),
              ' '.join(api.tags),
+             api.vintage,
              ) for api_id, api in self.apis.items())
 
     def search(self, query):

@@ -10,16 +10,18 @@ class CensusDataAPI(object):
     and geography
     """
 
-    def __init__(self, key, ds, cache):
+    def __init__(self, key, ds, cache, session):
         """Initialize a Census API endpoint wrapper.
 
         Arguments:
           * key: user's API key
           * ds: census dataset descriptor metadata
           * cache: cache in which to look up/store metadata
+          * session: requests.Session to use for retrieving data
         """
 
         self.key = key                         # API key
+        self.session = session                 # requests.Session
         self.title = ds['title']               # title
         self.description = ds['description']   # long description
         self.__doc__ = self.description
@@ -30,10 +32,12 @@ class CensusDataAPI(object):
         # API endpoint URL
         self.endpoint = ds['distribution'][0]['accessURL']
         # list of valid geographies
-        self.geographies = fetchjson(ds['c_geographyLink'], cache)
+        self.geographies = fetchjson(ds['c_geographyLink'], cache,
+                                     self.session)
         # list of valid variables
         self.variables = (
-            fetchjson(ds['c_variablesLink'], cache)['variables'])
+            fetchjson(ds['c_variablesLink'], cache,
+                      self.session)['variables'])
         # concepts linking variables
         self.concepts = defaultdict(dict)
         for var, desc in self.variables.items():
@@ -44,7 +48,8 @@ class CensusDataAPI(object):
         self.keyword = ds.get('keyword', [])
         if 'c_tagsLink' in ds:
             # list of tags
-            self.tags = fetchjson(ds['c_tagsLink'], cache)['tags']
+            self.tags = fetchjson(ds['c_tagsLink'], cache,
+                                  self.session)['tags']
         else:
             self.tags = []
 
@@ -72,7 +77,7 @@ class CensusDataAPI(object):
         if geo_in:
             params['in'] = self._geo2str(geo_in)
 
-        j = fetchjson(self.endpoint, cache, params=params)
+        j = fetchjson(self.endpoint, cache, self.session, params=params)
         ret = pd.DataFrame(data=j[1:], columns=j[0])
         for field in fields:
             if self.variables[field].get('predicateType') == 'int':
