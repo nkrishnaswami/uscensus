@@ -5,6 +5,7 @@ from census.errors import CensusError
 from census.index import Index
 from census.model import CensusDataAPI
 from census.util import fetchjson
+from census.nopcache import NopCache
 
 
 class CensusLoader(object):
@@ -30,17 +31,17 @@ class CensusLoader(object):
             raise CensusError("Unable to identify datasets from API " +
                               " discovery endpoint")
         for ds in datasets:
-#            try:
-            api = CensusDataAPI(key, ds, cache, session)
-            api_id = api.endpoint.replace(
-                'http://api.census.gov/data/',
-                '')
-            # todo: add more indexing; hier by dataset, by vintage, etc
-            self.apis[api_id] = api
-#            except Exception as e:
-#                print("Error processing metadata; skipping API:", ds)
-#                print(type(e), e)
-#                print()
+            try:
+                api = CensusDataAPI(key, ds, cache, session)
+                api_id = api.endpoint.replace(
+                    'http://api.census.gov/data/',
+                    '')
+                # todo: add more indexing; hier by dataset, by vintage, etc
+                self.apis[api_id] = api
+            except Exception as e:
+                print("Error processing metadata; skipping API:", ds)
+                print(type(e), e)
+                print()
         self.index.add(
             (api_id,
              api.title,
@@ -50,7 +51,7 @@ class CensusLoader(object):
              ' '.join(api.concepts),
              ' '.join(api.keyword),
              ' '.join(api.tags),
-             api.vintage,
+             str(api.vintage),
              ) for api_id, api in self.apis.items())
 
     def search(self, query):

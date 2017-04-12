@@ -1,6 +1,24 @@
 from census.errors import DBError
 
+import datetime
+import email.utils
 import requests
+
+
+class UTC(datetime.tzinfo):
+    """UTC"""
+    ZERO = datetime.timedelta(0)
+
+    def utcoffset(self, dt):
+        return UTC.ZERO
+
+    def tzname(self, dt):
+        return "UTC"
+
+    def dst(self, dt):
+        return UTC.ZERO
+
+utc = UTC()
 
 
 def fetchjson(url, cache, session, **kwargs):
@@ -19,14 +37,29 @@ def fetchjson(url, cache, session, **kwargs):
       * requests.exceptions.HTTPError on HTTP failure
       * ValueError on JSON parse failure
     """
-    doc = cache.get(url)
-    if not doc:
+    doc, date = cache.get(url)
+    stale = False
+    if date:
+        stale = (datetime.datetime.now(tz=utc) - date) > cache.timeout
+    if stale or not doc:
+        headers = {}
+        if date:
+            headers['If-Modified-Since'] = email.utils.format_datetime(date)
         if session:
-            r = session.get(url, **kwargs)
+            r = session.get(url, headers=headers, **kwargs)
         else:
-            r = requests.get(url, **kwargs)
+            r = requests.get(url, headers=headers, **kwargs)
         r.raise_for_status()
-        return cache.put(url, r.text)
+        if r.status_code == 304:
+            cache.touch(url, r.headers['Date'])
+        elif r.text:
+            if stale:
+                # already in db; remove it
+                cache.delete(url)
+            return cache.put(
+                url,
+                r.text,
+                email.utils.parsedate_to_datetime(r.headers['Date']))
     return doc
 
 
