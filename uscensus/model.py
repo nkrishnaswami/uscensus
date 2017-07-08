@@ -1,5 +1,5 @@
-from census.nopcache import NopCache
-from census.util import fetchjson
+from uscensus.nopcache import NopCache
+from uscensus.util import fetchjson
 
 from collections import defaultdict
 import pandas as pd

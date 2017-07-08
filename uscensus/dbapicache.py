@@ -1,6 +1,6 @@
 from __future__ import print_function
 
-from census.util import DBAPIQueryHelper
+from uscensus.util import DBAPIQueryHelper
 
 import datetime as dt
 import dateutil.parser
@@ -17,13 +17,27 @@ class DBAPICache(object):
                  *dbargs, **dbkwargs):
         self.dbapi = dbapi
         self.timeout = timeout
+        self.table = table
+        self.conn = None
+        self.query = None
+        self.open(*dbargs, *dbkwargs)
+
+    def open(self, *dbargs, **dbkwargs):
+        """Open the DB connection for caching."""
+        if self.conn:
+            raise RuntimeError('Re-opening open DB connection')
         self.conn = self.dbapi.connect(*dbargs, **dbkwargs)
         self.query = DBAPIQueryHelper(self.dbapi, self.conn)
-        self.table = table
         self.query(
             'CREATE TABLE IF NOT EXISTS ' + self.table +
             ' (url TEXT, data BLOB, date VARCHAR(28), ' +
             'PRIMARY KEY(url ASC))')
+
+    def close(self):
+        """Close the DB connection."""
+        self.conn.close()
+        self.conn = None
+        self.query = None
 
     def get(self, url):
         """Check if the URL is in the cache.
@@ -41,17 +55,21 @@ class DBAPICache(object):
         return None, None
 
     def delete(self, url):
+        """Remove a URL from the cache."""
         cur = self.query(
             'DELETE FROM ' + self.table +
             ' WHERE url={url}',
             url=url)
+        cur
 
     def touch(self, url, date):
+        """Update the last update timestamp for a URL in the cache."""
         cur = self.query(
             'UPDATE ' + self.table +
             ' SET date={date}'
             ' WHERE url={url}',
             url=url, date=date)
+        cur
 
     def put(self, url, doc, date):
         """Insert the document for the URL into the cache.

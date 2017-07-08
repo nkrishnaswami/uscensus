@@ -1,18 +1,16 @@
 from __future__ import print_function
-import sqlite3
 
-from census.errors import CensusError
-from census.index import Index
-from census.model import CensusDataAPI
-from census.util import fetchjson
-from census.nopcache import NopCache
+from uscensus.errors import CensusError
+from uscensus.index import Index
+from uscensus.model import CensusDataAPI
+from uscensus.util import fetchjson
 
 
 class CensusLoader(object):
     """
     Discover and bind census APIs
     """
-    def __init__(self, key, cache, session=None):
+    def __init__(self, key, cache, session=None, index=True):
         """Load and wrap census APIs.
 
         Prefers cached metadata if present and not stale, otherwise
@@ -21,9 +19,10 @@ class CensusLoader(object):
         Arguments:
           * key: Census API key
           * cache: cache in which to fetch/store metadata
+          * session: requests session to use for calling API
+          * index: if true, index metadata with whoosh
         """
 
-        self.index = Index()
         self.apis = {}
         resp = fetchjson('http://api.census.gov/data.json', cache, session)
         datasets = resp.get('dataset')
@@ -42,17 +41,21 @@ class CensusLoader(object):
                 print("Error processing metadata; skipping API:", ds)
                 print(type(e), e)
                 print()
-        self.index.add(
-            (api_id,
-             api.title,
-             api.description,
-             ' '.join(api.variables or []),
-             ' '.join(api.geographies or []),
-             ' '.join(api.concepts),
-             ' '.join(api.keyword),
-             ' '.join(api.tags),
-             str(api.vintage),
-             ) for api_id, api in self.apis.items())
+        if index:
+            self.index = Index()
+            self.index.add(
+                (api_id,
+                 api.title,
+                 api.description,
+                 ' '.join(api.variables or []),
+                 ' '.join(api.geographies or []),
+                 ' '.join(api.concepts),
+                 ' '.join(api.keyword),
+                 ' '.join(api.tags),
+                 str(api.vintage),
+                 ) for api_id, api in self.apis.items())
+        else:
+            self.index = None
 
     def search(self, query):
         """Find a list of API objects matching the index query.
@@ -73,8 +76,10 @@ class CensusLoader(object):
         Elaborate queries can be constructed using parenthesized
         subqueries, ANDs, and ORs.
         """
-
-        return [self[nid] for nid in self.index.query(query)]
+        if not self.index:
+            raise RuntimeError('Loader was created without an index;'
+                               ' search is disabled')
+        return [self[hit['api_id']] for hit in self.index.query(query)]
 
     def __getitem__(self, api_id):
         """Return an identifier by API ID.

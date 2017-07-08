@@ -1,4 +1,4 @@
-from census.errors import DBError
+from uscensus.errors import DBError
 
 import datetime
 import email.utils
@@ -17,6 +17,7 @@ class UTC(datetime.tzinfo):
 
     def dst(self, dt):
         return UTC.ZERO
+
 
 utc = UTC()
 
@@ -71,7 +72,7 @@ class DBAPIQueryHelper(object):
         'numeric': True,
         'named': False,
         'format': True,
-        'format': False,
+        'pyformat': False,
     }
 
     __paramstyle_format_args = {

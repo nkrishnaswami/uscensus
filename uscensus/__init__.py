@@ -1,7 +1,7 @@
-from census.errors import *
-from census.dbapicache import DBAPICache
-from census.nopcache import NopCache
-from census.loader import *
+from uscensus.errors import *
+from uscensus.dbapicache import DBAPICache
+from uscensus.nopcache import NopCache
+from uscensus.loader import *
 
 """This module reads the Census's API discovery interface at
 http://api.census.gov/data.json, and provides callable wrappers for
