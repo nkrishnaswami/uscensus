@@ -10,7 +10,11 @@ class CensusLoader(object):
     """
     Discover and bind census APIs
     """
-    def __init__(self, key, cache, session=None, index=True):
+    def __init__(self,
+                 key,
+                 cache,
+                 session=None,
+                 index=True):
         """Load and wrap census APIs.
 
         Prefers cached metadata if present and not stale, otherwise
@@ -20,7 +24,7 @@ class CensusLoader(object):
           * key: Census API key
           * cache: cache in which to fetch/store metadata
           * session: requests session to use for calling API
-          * index: if true, index metadata with whoosh
+          * index: if true, index metadata for the `search` method
         """
 
         self.apis = {}

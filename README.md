@@ -5,13 +5,38 @@ find relevant APIs and variables to query, and returns data into a Pandas datafr
 See the example notebook for basic usage.
 
 ## API Key
-You will need a census API key to call the APIs.  You can request one here:  
+You will need an API key to invoke the census APIs.  You can request one here:  
   http://api.census.gov/data/key_signup.html
 
-In the example notebook, I read it using configparser from a config file, `~/.census`.
+In the example notebook, I read it using a `RawConfigParser` from a config file, viz. `~/.census`.
 
+# Census APIs
 The official Census API documention is at
   https://www.census.gov/developers/
+
+## Census Data APIs
+The Census Data APIs are the first set of interfaces to which this package provides access. These cover the decennial census, American Community Survey, and other data sets for a variety of vintages.
+
+This package uses the (Census Data API Discovery Interface)[https://api.census.gov/data.json] to identify the currently available
+data sets, and caches the data in a database (eg `sqlite3` db).  The
+discovery interface is an instance of the (US Open Project Data Common
+Core Metadata Schema)[https://project-open-data.cio.gov/schema/].
+
+For detailed documentation, see the (Census Data API User Guide [pdf])[https://www.census.gov/content/dam/Census/data/developers/api-user-guide/api-guide.pdf]
+
+## Geocoder REST services
+The Census Bureau offers REST Services for geocoding addresses to
+canonical form, lon/lat, and Census geographies, based on the Master
+Address File and TIGER data. These support single address queries as
+well as a bulk interface for up to 1000 addresses at a time.
+
+This package provides pandas and raw interfaces to both query styles. [Note: not pushed yet, writing test cases.]
+
+## TigerWeb REST services
+)[https://www.census.gov/data/developers/data-sets/TIGERweb-map-service.html]
+
+    (TIGERweb API directory)[http://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb]
+  
 
 ## TODOs
 * improve API and variable discoverability

@@ -46,10 +46,7 @@ def fetchjson(url, cache, session, **kwargs):
         headers = {}
         if date:
             headers['If-Modified-Since'] = email.utils.format_datetime(date)
-        if session:
-            r = session.get(url, headers=headers, **kwargs)
-        else:
-            r = requests.get(url, headers=headers, **kwargs)
+        r = (session or requests).get(url, headers=headers, **kwargs)
         r.raise_for_status()
         if r.status_code == 304:
             cache.touch(url, r.headers['Date'])
