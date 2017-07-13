@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/nkrishnaswami/uscensus.svg?branch=master)](https://travis-ci.org/nkrishnaswami/uscensus)
+
 # Census API helpers
 This module fetches metadata for the Census API to make it easier to
 find relevant APIs and variables to query, and returns data into a Pandas dataframe.
