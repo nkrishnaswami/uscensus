@@ -1,6 +1,7 @@
 configparser
 datetime
 geopandas
+nose
 pandas
 requests
 ujson
