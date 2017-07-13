@@ -4,10 +4,17 @@ from uscensus.errors import CensusError
 from uscensus.nopcache import NopCache
 from uscensus.loader import CensusLoader
 
+from datetime import datetime as dt
+from email.utils import format_datetime
+
 
 class FakeResponse(object):
     def __init__(self):
         self.text = ''
+        self.status_code = 200
+        self.headers = {
+            'Date': format_datetime(dt.now())
+        }
 
     def raise_for_status(self):
         pass
