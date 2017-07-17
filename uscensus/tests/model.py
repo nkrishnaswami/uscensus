@@ -1,2 +1,5 @@
+from __future__ import print_function, unicode_literals
+
+
 def CensusDataAPI_test():
-    assert True
+    pass  # removing `assert True`

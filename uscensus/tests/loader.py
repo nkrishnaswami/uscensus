@@ -1,11 +1,21 @@
-import json
+from __future__ import print_function, unicode_literals
 
 from uscensus.errors import CensusError
 from uscensus.nopcache import NopCache
 from uscensus.loader import CensusLoader
 
+import json
 from datetime import datetime as dt
-from email.utils import format_datetime
+try:
+    from email.utils import format_datetime
+except ImportError:
+    # The fn was introduced in 3.3; hack:
+    from email.utils import formatdate
+    import time
+
+    def format_datetime(dt):
+        now = time.mktime(dt.timetuple())
+        return formatdate(now)
 
 
 class FakeResponse(object):
@@ -32,9 +42,12 @@ class FakeSession(object):
         elif url.endswith('tags.json'):
             ret.text = self.getTags()
         else:
-            print("Unexpected url:", url)
+            print('Unexpected url:', url)
         return ret
 
+    # Yeah, it's gauche to mix quote types, but these are basically
+    # the repr's for some returned objects, and many of the strings
+    # contain single quotes; seems cleaner than escaping them all.
     def getData(self):
         return json.dumps({
             "dataset": [

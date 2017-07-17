@@ -1,11 +1,12 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 from setuptools import setup, find_packages
 
 setup(
     name="uscensus",
-    version="0.1",
+    version="0.1.1",
     packages=find_packages(),
     description="US Census API discovery wrappers",
+    long_description="""This module fetches metadata for the Census Data API to make it easier to find relevant data sets and variables to query, and returns data as a Pandas dataframe.""",
     license="Apache Software License 2.0",
     keywords="census demographics economics data api discovery",
     url="https://github.com/nkrishnaswami/uscensus",

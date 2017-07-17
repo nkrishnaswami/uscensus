@@ -1,7 +1,21 @@
-from uscensus.errors import DBError
+from __future__ import print_function, unicode_literals
 
+from uscensus.errors import DBError
 import datetime
-import email.utils
+try:
+    from email.utils import format_datetime, parsedate_to_datetime
+except ImportError:
+    # these were introduced in 3.3; quick hack:
+    from email.utils import formatdate, parsedate
+    import time
+
+    def format_datetime(dt):
+        return formatdate(time.mktime(dt.timetuple()))
+
+    def parsedate_to_datetime(date):
+        return datetime.datetime(*parsedate(date)[:6])
+
+    
 import requests
 
 
@@ -45,7 +59,7 @@ def fetchjson(url, cache, session, **kwargs):
     if stale or not doc:
         headers = {}
         if date:
-            headers['If-Modified-Since'] = email.utils.format_datetime(date)
+            headers['If-Modified-Since'] = format_datetime(date)
         r = (session or requests).get(url, headers=headers, **kwargs)
         r.raise_for_status()
         if r.status_code == 304:
@@ -57,7 +71,7 @@ def fetchjson(url, cache, session, **kwargs):
             return cache.put(
                 url,
                 r.text,
-                email.utils.parsedate_to_datetime(r.headers['Date']))
+                parsedate_to_datetime(r.headers['Date']))
     return doc
 
 

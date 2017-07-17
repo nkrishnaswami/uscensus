@@ -1,3 +1,5 @@
+from __future__ import print_function, unicode_literals
+
 from uscensus.tests.dbapicache import DBAPICache_test
 from uscensus.tests.errors import CensusError_test, DBError_test
 from uscensus.tests.index import Index_test

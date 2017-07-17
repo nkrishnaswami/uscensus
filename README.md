@@ -1,16 +1,21 @@
+# Census API helpers
 [![Build Status](https://travis-ci.org/nkrishnaswami/uscensus.svg?branch=master)](https://travis-ci.org/nkrishnaswami/uscensus)
 
-# Census API helpers
-This module fetches metadata for the Census API to make it easier to
-find relevant APIs and variables to query, and returns data into a Pandas dataframe.
+This module fetches metadata for the Census Data API to make it easier to find relevant data sets and variables to query, and returns data as a Pandas dataframe.
 
 See the example notebook for basic usage.
+
+# Installation
+The package is available on PyPi, so you can install the latest version using `pip`:
+```bash
+pip install uscensus
+```
 
 ## API Key
 You will need an API key to invoke the census APIs.  You can request one here:  
   http://api.census.gov/data/key_signup.html
 
-In the example notebook, I read it using a `RawConfigParser` from a config file, viz. `~/.census`.
+In the example notebook, I read an API key from a config file, viz. `~/.census` using `RawConfigParser`.
 
 # Census APIs
 The official Census API documention is at

@@ -1,9 +1,9 @@
+from __future__ import print_function, unicode_literals
+
 from collections import OrderedDict
 from whoosh.filedb.filestore import FileStorage, RamStorage
 from whoosh.fields import Schema, ID, KEYWORD, TEXT
-from whoosh.index import FileIndex
 from whoosh.qparser import QueryParser
-
 
 class Index(object):
     """Census API metadata indexer."""
@@ -45,6 +45,7 @@ class Index(object):
             for vals in iterator:
                 writer.update_document(
                     **dict(zip(self._SchemaFields, vals)))
+
 
     def query(self, querystring):
         """Find API IDs matching querystring"""

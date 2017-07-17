@@ -1,6 +1,9 @@
+from __future__ import print_function, unicode_literals
+
+
 def fetchjson_test():
-    assert True
+    pass  # removing `assert True`
 
 
 def DBAPIQueryHelper_test():
-    assert True
+    pass  # removing `assert True`

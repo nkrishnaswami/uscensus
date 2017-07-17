@@ -1,4 +1,5 @@
-from __future__ import print_function
+from __future__ import print_function, unicode_literals
+from builtins import str
 
 from uscensus.errors import CensusError
 from uscensus.index import Index
@@ -10,6 +11,16 @@ class CensusLoader(object):
     """
     Discover and bind census APIs
     """
+    @staticmethod
+    def _ensuretext(val):
+        """Make sure strings/lists of strings are unicode."""
+        if isinstance(val, list):
+            return [CensusLoader._ensuretext(elt) for elt in val]
+        elif isinstance(val, str):
+            return val
+        else:
+            return str(val)
+
     def __init__(self,
                  key,
                  cache,
@@ -48,15 +59,15 @@ class CensusLoader(object):
         if index:
             self.index = Index()
             self.index.add(
-                (api_id,
-                 api.title,
-                 api.description,
-                 ' '.join(api.variables or []),
-                 ' '.join(api.geographies or []),
-                 ' '.join(api.concepts),
-                 ' '.join(api.keyword),
-                 ' '.join(api.tags),
-                 str(api.vintage),
+                (self._ensuretext(api_id),
+                 self._ensuretext(api.title),
+                 self._ensuretext(api.description),
+                 ' '.join(self._ensuretext(api.variables or [])),
+                 ' '.join(self._ensuretext(api.geographies or [])),
+                 ' '.join(self._ensuretext(api.concepts)),
+                 ' '.join(self._ensuretext(api.keyword)),
+                 ' '.join(self._ensuretext(api.tags)),
+                 self._ensuretext(api.vintage),
                  ) for api_id, api in self.apis.items())
         else:
             self.index = None

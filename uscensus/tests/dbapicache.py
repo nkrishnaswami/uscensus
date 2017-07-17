@@ -1,3 +1,5 @@
+from __future__ import print_function, unicode_literals
+
 from uscensus.dbapicache import DBAPICache
 
 import datetime as dt

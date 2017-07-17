@@ -1,4 +1,4 @@
-from __future__ import print_function
+from __future__ import print_function, unicode_literals
 
 from uscensus.util import DBAPIQueryHelper
 
@@ -20,7 +20,7 @@ class DBAPICache(object):
         self.table = table
         self.conn = None
         self.query = None
-        self.open(*dbargs, *dbkwargs)
+        self.open(*dbargs, **dbkwargs)
 
     def open(self, *dbargs, **dbkwargs):
         """Open the DB connection for caching."""
