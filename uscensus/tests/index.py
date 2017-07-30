@@ -1,6 +1,7 @@
-from __future__ import print_function, unicode_literals
+from __future__ import print_function
+from __future__ import unicode_literals
 
-from uscensus.index import Index
+from uscensus.data.index import Index
 
 
 def Index_test():
@@ -27,7 +28,6 @@ def Index_test():
     assert api_ids(index.query('description:one')) == ['title one']
     assert api_ids(index.query('description:two')) == ['title two']
 
-    print(index.query(u'keywords:*'))
     assert api_ids(index.query('keywords:key1')) == ['title one']
     assert api_ids(index.query('keywords:key2')) == ['title two']
     assert sorted(api_ids(index.query('keywords:key'))) == \

@@ -1,8 +1,8 @@
 from __future__ import print_function, unicode_literals
 
-from uscensus.errors import CensusError
-from uscensus.nopcache import NopCache
-from uscensus.loader import CensusLoader
+from uscensus.util.errors import CensusError
+from uscensus.util.nopcache import NopCache
+from uscensus.data.discovery import DiscoveryInterface
 
 import json
 from datetime import datetime as dt
@@ -133,8 +133,8 @@ class FakeSession(object):
         })
 
 
-def CensusLoader_test():
-    cl = CensusLoader('', NopCache(), FakeSession())
+def DiscoveryInterface_test():
+    cl = DiscoveryInterface('', NopCache(), FakeSession())
     print(cl.apis)
     assert len(cl.apis) == 1
     k, v = next(iter(cl.apis.items()))

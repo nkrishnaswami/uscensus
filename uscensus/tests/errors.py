@@ -1,6 +1,6 @@
 from __future__ import print_function, unicode_literals
 
-from uscensus.errors import *
+from uscensus.util.errors import CensusError, DBError
 
 
 def CensusError_test():

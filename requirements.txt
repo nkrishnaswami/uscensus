@@ -3,6 +3,7 @@ datetime
 geopandas
 nose
 pandas
+pytz
 requests
 ujson
 whoosh

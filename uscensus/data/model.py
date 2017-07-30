@@ -1,13 +1,13 @@
 from __future__ import print_function, unicode_literals
 
-from uscensus.nopcache import NopCache
-from uscensus.util import fetchjson
+from uscensus.util.nopcache import NopCache
+from uscensus.util.webcache import fetchjson
 
 from collections import defaultdict
 import pandas as pd
 
 
-class CensusDataAPI(object):
+class CensusDataEndpoint(object):
     """A single census endpoint, with metadata about queryable variables
     and geography
     """

@@ -1,7 +1,7 @@
-from uscensus.errors import *
-from uscensus.dbapicache import DBAPICache
-from uscensus.nopcache import NopCache
-from uscensus.loader import *
+from uscensus.data.discovery import DiscoveryInterface
+from uscensus.util.dbapicache import DBAPICache
+from uscensus.util.nopcache import NopCache
+from uscensus.util.errors import CensusError, DBError
 
 """This module reads the Census's API discovery interface at
 http://api.census.gov/data.json, and provides callable wrappers for
@@ -20,14 +20,23 @@ Exceptions:
 
 Classes:
  * DBAPICache: caches API metadata in any DBAPI compatible DBMS
- * CensusLoader: retrieves and caches census API metadata. This
+ * DiscoveryInterface: retrieves and caches census API metadata. This
    indexes metadata and has a dict of wrapper objects for each API.
- * model.CensusAPI: wraps a Census API endpoint given its metadata.
-   These are constructed by the CensusLoader
+ * model.CensusDataEndpoint: wraps a Census API endpoint given its
+   metadata.  These are constructed by the DiscoveryInterface.
  * NopCache: dummy implementation of the cache interface
 
-Usage: Instantiate a CensusLoader using a DBAPICache and your Census
-API key.  Call census APIs and receive the results as a pandas
+Usage: Instantiate a DiscoveryInterface using a DBAPICache and your
+Census API key.  Call census APIs and receive the results as a pandas
 DataFrame.
 
 """
+
+
+__all__ = [
+    "DiscoveryInterface",
+    "DBAPICache",
+    "NopCache",
+    "CensusError",
+    "DBError",
+]

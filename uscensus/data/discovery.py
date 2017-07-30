@@ -1,30 +1,23 @@
 from __future__ import print_function, unicode_literals
-from builtins import str
+from uscensus.data.index import Index
+from uscensus.data.model import CensusDataEndpoint
+from uscensus.util.errors import CensusError
+from uscensus.util.webcache import fetchjson
+from uscensus.util.ensuretext import ensuretext
 
-from uscensus.errors import CensusError
-from uscensus.index import Index
-from uscensus.model import CensusDataAPI
-from uscensus.util import fetchjson
 
+class DiscoveryInterface(object):
+    """Discover and bind census APIs.
 
-class CensusLoader(object):
+    TODO: Move the functionality into DiscoveryInterface, and make the
+    constructor into static method(s).
+
     """
-    Discover and bind census APIs
-    """
-    @staticmethod
-    def _ensuretext(val):
-        """Make sure strings/lists of strings are unicode."""
-        if isinstance(val, list):
-            return [CensusLoader._ensuretext(elt) for elt in val]
-        elif isinstance(val, str):
-            return val
-        else:
-            return str(val)
-
     def __init__(self,
                  key,
                  cache,
                  session=None,
+                 vintage=None,
                  index=True):
         """Load and wrap census APIs.
 
@@ -33,20 +26,25 @@ class CensusLoader(object):
 
         Arguments:
           * key: Census API key
-          * cache: cache in which to fetch/store metadata
-          * session: requests session to use for calling API
-          * index: if true, index metadata for the `search` method
+          * cache: cache in which to fetch/store metadata.
+          * session: requests session to use for calling API.
+          * vintage: discovery only data sets for this vintage, if present.
+          * index: if true, index metadata for the `search` method.
         """
 
         self.apis = {}
-        resp = fetchjson('http://api.census.gov/data.json', cache, session)
+        if vintage:
+            url = 'http://api.census.gov/data/{}.json'.format(vintage)
+        else:
+            url = 'http://api.census.gov/data.json'
+        resp = fetchjson(url, cache, session)
         datasets = resp.get('dataset')
         if not datasets:
             raise CensusError("Unable to identify datasets from API " +
                               " discovery endpoint")
         for ds in datasets:
             try:
-                api = CensusDataAPI(key, ds, cache, session)
+                api = CensusDataEndpoint(key, ds, cache, session)
                 api_id = api.endpoint.replace(
                     'http://api.census.gov/data/',
                     '')
@@ -59,15 +57,15 @@ class CensusLoader(object):
         if index:
             self.index = Index()
             self.index.add(
-                (self._ensuretext(api_id),
-                 self._ensuretext(api.title),
-                 self._ensuretext(api.description),
-                 ' '.join(self._ensuretext(api.variables or [])),
-                 ' '.join(self._ensuretext(api.geographies or [])),
-                 ' '.join(self._ensuretext(api.concepts)),
-                 ' '.join(self._ensuretext(api.keyword)),
-                 ' '.join(self._ensuretext(api.tags)),
-                 self._ensuretext(api.vintage),
+                (ensuretext(api_id),
+                 ensuretext(api.title),
+                 ensuretext(api.description),
+                 ' '.join(ensuretext(api.variables or [])),
+                 ' '.join(ensuretext(api.geographies or [])),
+                 ' '.join(ensuretext(api.concepts)),
+                 ' '.join(ensuretext(api.keyword)),
+                 ' '.join(ensuretext(api.tags)),
+                 ensuretext(api.vintage),
                  ) for api_id, api in self.apis.items())
         else:
             self.index = None

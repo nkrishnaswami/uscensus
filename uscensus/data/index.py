@@ -1,25 +1,27 @@
 from __future__ import print_function, unicode_literals
 
 from collections import OrderedDict
+from whoosh.analysis import (KeywordAnalyzer, StandardAnalyzer)
 from whoosh.filedb.filestore import FileStorage, RamStorage
-from whoosh.fields import Schema, ID, KEYWORD, TEXT
+from whoosh.fields import Schema, KEYWORD, ID, TEXT
 from whoosh.qparser import QueryParser
+
 
 class Index(object):
     """Census API metadata indexer."""
-
+    _KWAnalyzer = KeywordAnalyzer(lowercase=True)
+    _Analyzer = StandardAnalyzer()
     _SchemaFields = OrderedDict((
         ('api_id', ID(stored=True)),
-        ('title', TEXT(stored=True)),
-        ('description', TEXT),
-        ('variables', KEYWORD),
-        ('geographies', KEYWORD),
-        ('concepts', KEYWORD),
-        ('keywords', KEYWORD),
-        ('tags', KEYWORD),
-        ('vintage', KEYWORD),
+        ('title', KEYWORD(stored=True, analyzer=_KWAnalyzer)),
+        ('description', TEXT(analyzer=_Analyzer)),
+        ('variables', KEYWORD(analyzer=_KWAnalyzer)),
+        ('geographies', KEYWORD(analyzer=_KWAnalyzer)),
+        ('concepts', KEYWORD(stored=True, analyzer=_KWAnalyzer)),
+        ('keywords', KEYWORD(stored=True, analyzer=_KWAnalyzer)),
+        ('tags', KEYWORD(stored=True, analyzer=_KWAnalyzer)),
+        ('vintage', ID),
     ))
-
     _CensusMetadataSchema = Schema(**_SchemaFields)
 
     def __init__(self, path=None):
@@ -32,7 +34,7 @@ class Index(object):
             self.index = fs.create_index(self._CensusMetadataSchema)
         self.qparser = QueryParser("title", schema=self._CensusMetadataSchema)
 
-    def add(self, iterator):
+    def add(self, iterator, **kwargs):
         """Add entries to the index
 
         Arguments:
@@ -40,12 +42,10 @@ class Index(object):
             api_id, title, description, variables, geographies, concepts,
             keywords, tags, and vintage.
         """
-
         with self.index.writer() as writer:
             for vals in iterator:
                 writer.update_document(
                     **dict(zip(self._SchemaFields, vals)))
-
 
     def query(self, querystring):
         """Find API IDs matching querystring"""

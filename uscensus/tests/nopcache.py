@@ -1,5 +1,9 @@
 from __future__ import print_function, unicode_literals
+from uscensus.util.nopcache import NopCache
 
 
 def NopCache_test():
-    pass  # removing `assert True`
+    nc = NopCache()
+    doc, date = nc.get('test')
+    assert doc is None
+    assert date is None

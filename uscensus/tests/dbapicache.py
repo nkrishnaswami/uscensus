@@ -1,6 +1,6 @@
 from __future__ import print_function, unicode_literals
 
-from uscensus.dbapicache import DBAPICache
+from uscensus.util.dbapicache import DBAPICache
 
 import datetime as dt
 import sqlite3
@@ -20,3 +20,8 @@ def DBAPICache_test():
     time = dt.datetime.now()
     assert cache.put('empty', '{}', time) == {}
     assert cache.get('empty') == ({}, time)
+    t_plus_1 = time + dt.timedelta(1)
+    cache.touch('empty', t_plus_1)
+    assert cache.get('empty') == ({}, t_plus_1)
+    cache.delete('empty')
+    assert cache.get('empty') == (None, None)
