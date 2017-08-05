@@ -1,8 +1,8 @@
 from __future__ import print_function, unicode_literals
 
-from uscensus.util.errors import CensusError
-from uscensus.util.nopcache import NopCache
-from uscensus.data.discovery import DiscoveryInterface
+from ..util.errors import CensusError
+from ..util.nopcache import NopCache
+from ..data.discovery import DiscoveryInterface
 
 import json
 from datetime import datetime as dt

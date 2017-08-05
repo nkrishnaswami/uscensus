@@ -1,7 +1,7 @@
 from __future__ import print_function
 from __future__ import unicode_literals
 
-from uscensus.data.index import Index
+from ..data.index import Index
 
 
 def Index_test():

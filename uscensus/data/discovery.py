@@ -1,9 +1,9 @@
 from __future__ import print_function, unicode_literals
-from uscensus.data.index import Index
-from uscensus.data.model import CensusDataEndpoint
-from uscensus.util.errors import CensusError
-from uscensus.util.webcache import fetchjson
-from uscensus.util.ensuretext import ensuretext
+from ..data.index import Index
+from ..data.model import CensusDataEndpoint
+from ..util.errors import CensusError
+from ..util.webcache import fetchjson
+from ..util.ensuretext import ensuretext
 
 
 class DiscoveryInterface(object):

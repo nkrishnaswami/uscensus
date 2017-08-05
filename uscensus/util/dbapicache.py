@@ -1,6 +1,6 @@
 from __future__ import print_function, unicode_literals
 
-from uscensus.util.dbapiqueryhelper import DBAPIQueryHelper
+from ..util.dbapiqueryhelper import DBAPIQueryHelper
 
 import datetime as dt
 import dateutil.parser

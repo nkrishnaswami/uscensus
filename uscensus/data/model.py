@@ -1,7 +1,7 @@
 from __future__ import print_function, unicode_literals
 
-from uscensus.util.nopcache import NopCache
-from uscensus.util.webcache import fetchjson
+from ..util.nopcache import NopCache
+from ..util.webcache import fetchjson
 
 from collections import defaultdict
 import pandas as pd

@@ -1,6 +1,6 @@
 from __future__ import print_function, unicode_literals
 
-from uscensus.util.dbapicache import DBAPICache
+from ..util.dbapicache import DBAPICache
 
 import datetime as dt
 import sqlite3

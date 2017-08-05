@@ -1,6 +1,6 @@
 from __future__ import print_function, unicode_literals
-from uscensus.util.webcache import fetchjson
-from uscensus.util.webcache import condget
+from ..util.webcache import fetchjson
+from ..util.webcache import condget
 
 
 def fetchjson_test():

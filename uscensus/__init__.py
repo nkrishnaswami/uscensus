@@ -1,7 +1,9 @@
 from uscensus.data.discovery import DiscoveryInterface
+from uscensus.geocode.bulk import CensusBulkGeocoder
 from uscensus.util.dbapicache import DBAPICache
+from uscensus.util.errors import CensusError
+from uscensus.util.errors import DBError
 from uscensus.util.nopcache import NopCache
-from uscensus.util.errors import CensusError, DBError
 
 """This module reads the Census's API discovery interface at
 http://api.census.gov/data.json, and provides callable wrappers for
@@ -34,6 +36,7 @@ DataFrame.
 
 
 __all__ = [
+    "CensusBulkGeocoder",
     "DiscoveryInterface",
     "DBAPICache",
     "NopCache",
