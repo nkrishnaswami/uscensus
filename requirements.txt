@@ -7,3 +7,4 @@ pytz
 requests
 ujson
 whoosh
+gevent
