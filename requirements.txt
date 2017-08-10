@@ -6,6 +6,7 @@ pandas
 pytz
 requests
 grequests
+sqlalchemy
 ujson
 whoosh
 gevent
