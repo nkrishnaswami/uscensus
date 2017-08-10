@@ -5,6 +5,7 @@ nose
 pandas
 pytz
 requests
+grequests
 ujson
 whoosh
 gevent
