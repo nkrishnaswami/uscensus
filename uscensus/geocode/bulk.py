@@ -118,7 +118,7 @@ class SqlAlchemyPersister(object):
             'SELECT * FROM "' + self.table + '"',
             self.connstr,
         )
-        ret.dtypes.update['Key'] = int
+        ret.dtypes['Key'] = int
         return ret
 
 class CensusBulkGeocoder(object):
