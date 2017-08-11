@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from builtins import str
+
 def ensuretext(val):
     """Make sure strings/lists of strings are unicode."""
     if isinstance(val, list):
