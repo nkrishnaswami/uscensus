@@ -246,6 +246,7 @@ class CensusBulkGeocoder(object):
                     grequests.AsyncRequest.send,
                     reqs)):
             handleResp(idx, req)
+        pool.join()
         print('Processed {} responses'.format(idx+1))
         df = self.persister.persistFinal()
         return df
