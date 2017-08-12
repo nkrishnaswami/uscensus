@@ -36,6 +36,15 @@ CENSUS_GEO_COLNAMES = [
     'Geo.Block',
 ]
 
+CENSUS_GEO_DTYPES = {
+    'Key': str,
+    'Geo.TIGER.LineID': str,
+    'Geo.FIPS.State': str,
+    'Geo.FIPS.County': str,
+    'Geo.Tract': str,
+    'Geo.Block': str,
+}
+
 
 def chunker(n, iterable):
     iterable = iter(iterable)
@@ -43,16 +52,30 @@ def chunker(n, iterable):
 
 
 class FilePersister(object):
+    """Saves progress to files."""
     def __init__(self, tempOut, finalOut):
+        """Arguments:
+          * tempOut: filename template with one positional parameter
+            for temporary files.
+          * finalOut: filename for final CSV output.
+        """
         self.temp = tempOut
         self.cols = None
         self.final = finalOut
+        self.dtypes = None
         self.idx = 0
-        os.makedirs(os.dirname(self.temp))
-        os.makedirs(os.dirname(self.final))
+        try:
+            os.makedirs(os.path.dirname(self.temp))
+        except FileExistsError:
+            pass
+        try:
+            os.makedirs(os.path.dirname(self.final))
+        except FileExistsError:
+            pass
 
-    def prepare(self, cols):
+    def prepare(self, cols, dtypes):
         self.cols = cols
+        self.dtypes = dtypes
 
     def persistTemp(self, rows):
         with open(self.temp.format('000{}'.format(self.idx)[-4:]), 'w') as f:
@@ -72,29 +95,26 @@ class FilePersister(object):
                         f.write('\n')
         return pd.read_csv(
             self.final,
-            dtypes={
-                'Key': int,
-                'Geo.TIGER.LineID': str,
-                'Geo.FIPS.State': str,
-                'Geo.FIPS.County': str,
-                'Geo.Tract': str,
-                'Geo.Block': str,
-            })
+            dtype=self.dtypes
+        )
 
 
 class SqlAlchemyPersister(object):
     def __init__(self, connstr, table):
         self.connstr = connstr
         self.engine = sqlalchemy.create_engine(self.connstr)
-        self.table = table
+        self.tablename = table
+        self.table = None
         self.cols = None
+        self.dtypes = None
 
-    def prepare(self, cols):
+    def prepare(self, cols, dtypes):
         self.cols = cols
+        self.dtypes = dtypes
         with self.engine.begin() as conn:
-            md = sqlalchemy.MetaData()
-            sqlalchemy.Table(
-                self.table,
+            md = sqlalchemy.MetaData(bind=conn, reflect=True)
+            self.table = sqlalchemy.Table(
+                self.tablename,
                 md,
                 *(
                     sqlalchemy.Column(
@@ -107,18 +127,15 @@ class SqlAlchemyPersister(object):
 
     def persistTemp(self, rows):
         with self.engine.begin() as conn:
-            md = sqlalchemy.MetaData(bind=conn)
-            tbl = sqlalchemy.Table(self.table, md, autoload=True)
-            s = tbl.insert()
-            params = list(rows)
-            conn.execute(s, *params)
+            conn.execute(self.table.insert(), *list(rows))
 
     def persistFinal(self):
         ret = pd.read_sql(
-            'SELECT * FROM "' + self.table + '"',
-            self.connstr,
+            self.table.select(),
+            self.engine,
         )
-        ret.dtypes['Key'] = int
+        for col,dtype in self.dtypes.items():
+            ret.dtypes[col] = dtype
         return ret
 
 class CensusBulkGeocoder(object):
@@ -139,7 +156,10 @@ class CensusBulkGeocoder(object):
         self.chunksize = chunksize
         self.concurrency = concurrency
         # set headers
-        self.persister.prepare(CENSUS_GEO_COLNAMES)
+        self.persister.prepare(
+            CENSUS_GEO_COLNAMES,
+            CENSUS_GEO_DTYPES,
+        )
 
     def _generate_requests(
             self,
@@ -271,9 +291,9 @@ class CensusBulkGeocoder(object):
           ValueError: `columns` has the wrong number of elements.
         """
         if len(columns) == 4:
-            it = df[columns].itertuples()
+            it = df.loc[columns].itertuples()
         elif len(columns) == 5:
-            it = df[columns].itertuples(index=False)
+            it = df.loc[columns].itertuples(index=False)
         else:
             raise ValueError("len(columns) is neither 4 or 5")
         return self.geocode_rows(
