@@ -83,7 +83,7 @@ class FilePersister(object):
 
 
 class SqlAlchemyPersister(object):
-    def __init__(self, connstr, table, if_exists):
+    def __init__(self, connstr, table):
         self.connstr = connstr
         self.engine = sqlalchemy.create_engine(self.connstr)
         self.table = table
@@ -167,37 +167,38 @@ class CensusBulkGeocoder(object):
                 stream=False,
                 session=session)
 
-    def geocode_addresses(self, key, street, city, state, zip5, session=None):
-        """The main geocoding routing.
+    def geocode_rows(self, rows, session=None):
+        """Geocode addresses stored as rows.
 
         Arguments:
-          * key: unique identifiers.
-          * street: street addresses.
-          * city: city names.
-          * state: state abbreviations.
-          * zip5: ZIP codes as strings.
+          * row: iterator of iterables containing
+            * key: unique identifier.
+            * street: street address.
+            * city: city name.
+            * state: state abbreviation.
+            * zip5: ZIP code as string.
+          * session: requests session to use for calling census API.
 
         Returns: DataFrame with geocoding output with rows keyed by
           the input key.
         """
         reqiter = self._generate_requests(
-            zip(key, street, city, state, zip5),
-            session=session,
-        )
+            rows,
+            session=session)
         reqs = list(reqiter)
         req_to_idx = {req: idx for idx, req in enumerate(reqs)}
 
         def handleResp(idx, req, retry=True):
             chunkno = req_to_idx.get(req, 'N/A')
             if req.response is not None:
-                print('Finished req {}/{} for chunk#{}'.format(
-                    idx+1, len(reqs), chunkno))
                 r = req.response
+                print(
+                    'Finished req {}/{} for chunk#{}: status {}'.format(
+                        idx+1, len(reqs), chunkno, r.status_code))
                 if r.status_code == 200:
                     rdr = csv.DictReader(
                         StringIO(r.text),
-                        fieldnames=CENSUS_GEO_COLNAMES,
-                    )
+                        fieldnames=CENSUS_GEO_COLNAMES)
                     self.persister.persistTemp(rdr)
                 else:
                     print('Failed req {}/{} for chunk#{}: '
@@ -221,9 +222,61 @@ class CensusBulkGeocoder(object):
         # request object to use as a correlator.
         pool = Pool(self.concurrency)
         for idx, req in enumerate(
-                pool.imap_unordered(grequests.AsyncRequest.send,
-                                    reqs)):
+                pool.imap_unordered(
+                    grequests.AsyncRequest.send,
+                    reqs)):
             handleResp(idx, req)
         print('Processed {} responses'.format(idx+1))
         df = self.persister.persistFinal()
         return df
+
+    def geocode_cols(
+            self,
+            key, street, city, state, zip5,
+            session=None
+    ):
+        """Geocode addresses stored as separate columns.
+        Arguments:
+          * key: unique identifiers.
+          * street: street addresses.
+          * city: city names.
+          * state: state abbreviations.
+          * zip5: ZIP codes as strings.
+          * session: requests session to use for calling census API.
+
+        Returns: DataFrame with geocoding output with rows keyed by
+          the input key.
+        """
+        return self.geocode_rows(
+            zip(key, street, city, state, zip5),
+            session)
+
+    def geocode_df(self, df, columns, session=None):
+        """Geocode from a dataframe.
+
+        Arguments:
+          * df: the pandas DataFrame
+          * columns: a 4- or 5-tuple/list of columns to extract:
+            0. unique key. If omitted, index will be used.
+            1. street address.
+            2. city name.
+            3. state abbreviation.
+            4. ZIP code as string.
+          * session: requests session to use for calling census API.
+
+        Returns: DataFrame with geocoding output with rows keyed by
+          the input key.
+
+        Raises:
+          ValueError: `columns` has the wrong number of elements.
+        """
+        if len(columns) == 4:
+            it = df[columns].itertuples()
+        elif len(columns) == 5:
+            it = df[columns].itertuples(index=False)
+        else:
+            raise ValueError("len(columns) is neither 4 or 5")
+        return self.geocode_rows(
+            it,
+            session
+        )
