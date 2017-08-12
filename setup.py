@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="uscensus",
-    version="0.1.3",
+    version="0.1.4",
     packages=find_packages(),
     description="US Census API discovery wrappers",
     long_description="""This module fetches metadata for the Census Data API to make it easier to find relevant data sets and variables to query, and returns data as a Pandas dataframe.""",

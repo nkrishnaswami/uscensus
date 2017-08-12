@@ -6,6 +6,7 @@ from .errors import DBError_test
 from .index import Index_test
 from .model import CensusDataEndpoint_test
 from .nopcache import NopCache_test
+from .sqlalchemycache import SqlAlchemyCache_test
 from .webcache import fetchjson_test
 from .webcache import condget_test
 
