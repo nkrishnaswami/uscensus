@@ -5,11 +5,12 @@ from .errors import CensusError_test
 from .errors import DBError_test
 from .geocode import FilePersister_test
 from .geocode import SqlAlchemyPersister_test
-from .geocode import CensusBulkGeocoder_test
+from .geocode import CensusBulkGeocoder_cols_test
+from .geocode import CensusBulkGeocoder_df_test
+from .geocode import CensusBulkGeocoder_rows_test
 from .index import Index_test
 from .model import CensusDataEndpoint_test
 from .nopcache import NopCache_test
 from .sqlalchemycache import SqlAlchemyCache_test
 from .webcache import fetchjson_test
 from .webcache import condget_test
-

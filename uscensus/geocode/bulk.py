@@ -3,7 +3,9 @@
 Attributes:
     CENSUS_GEO_COLNAMES: column names in output from geocoding API.
 """
-from __future__ import print_function, unicode_literals
+from __future__ import print_function
+from __future__ import unicode_literals
+from builtins import str
 
 import csv
 import fiona
@@ -17,7 +19,6 @@ import grequests
 import os
 import os.path
 import pandas as pd
-import grequests
 import shapely
 import sqlalchemy
 
@@ -299,5 +300,17 @@ class CensusBulkGeocoder(object):
             raise ValueError("len(columns) is neither 4 or 5")
         return self.geocode_rows(
             it,
-            session
-        )
+            session)
+
+
+def parse_lonlat(series):
+    """Turn a Geo.Lon.Lat series into a shapely Geometry series."""
+    return series.str.split(',').apply(
+        lambda x: x and shapely.geometry.Point(
+            float(x[0]), float(x[1])))
+
+
+def to_geodataframe(df):
+    if 'Geo.Lon.Lat' not in df.columns:
+        raise ValueError("DataFrame has no Geo.Lon.Lat column.")
+    return gpd.GeoDataFrame(df, geometry=parse_lonlat(df['Geo.Lon.Lat']))

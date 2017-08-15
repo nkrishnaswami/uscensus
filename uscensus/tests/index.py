@@ -1,16 +1,35 @@
 from __future__ import print_function
 from __future__ import unicode_literals
 
-from ..data.index import Index
+from ..data.index import Index, ApiSchemaFields
+
+from collections import namedtuple
 
 
 def Index_test():
-    index = Index()
+    index = Index(ApiSchemaFields)
+    Row = namedtuple('Row', ApiSchemaFields)
     data = [
-        ('id1', 'title one', 'description of api one', ['var1_1', 'var1_2'],
-         [], [], ['key', 'key1'], ['tag', 'tag1'], '2015'),
-        ('id2', 'title two', 'description of api two', ['var2_1', 'var2_2'],
-         [], [], ['key', 'key2'], ['tag', 'tag2'], '2015'),
+        Row(api_id='id1',
+            title='title one',
+            description='description of api one',
+            variable_name='var1_1 var1_2',
+            variable_desc='Variable One One Variable One Two',
+            geographies='',
+            concepts='',
+            keywords='key key1',
+            tags='tag tag1',
+            vintage='2015'),
+        Row(api_id='id2',
+            title='title two',
+            description='description of api two',
+            variable_name='var2_1 var2_2',
+            variable_desc='Variable Two One Variable Two Two',
+            geographies='',
+            concepts='',
+            keywords='key key2',
+            tags='tag tag2',
+            vintage='2015'),
     ]
     index.add(data)
 

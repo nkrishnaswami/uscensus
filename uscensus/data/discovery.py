@@ -1,5 +1,8 @@
-from __future__ import print_function, unicode_literals
+from __future__ import print_function
+from __future__ import unicode_literals
+
 from ..data.index import Index
+from ..data.index import ApiSchemaFields
 from ..data.model import CensusDataEndpoint
 from ..util.errors import CensusError
 from ..util.webcache import fetchjson
@@ -55,18 +58,25 @@ class DiscoveryInterface(object):
                 print(type(e), e)
                 print()
         if index:
-            self.index = Index()
+            print("Indexing metadata")
+            self.index = Index(ApiSchemaFields)
             self.index.add(
                 (ensuretext(api_id),
                  ensuretext(api.title),
                  ensuretext(api.description),
-                 ' '.join(ensuretext(api.variables or [])),
-                 ' '.join(ensuretext(api.geographies or [])),
-                 ' '.join(ensuretext(api.concepts)),
-                 ' '.join(ensuretext(api.keyword)),
-                 ' '.join(ensuretext(api.tags)),
+                 ensuretext(api.variables),
+                 ensuretext(
+                     list(v.get('label', '')
+                          for v in api.variables.values())),
+                 ensuretext(api.geographies),
+                 ensuretext(api.concepts),
+                 ensuretext(api.keyword),
+                 ensuretext(api.tags),
                  ensuretext(api.vintage),
-                 ) for api_id, api in self.apis.items())
+                )
+                for api_id, api in self.apis.items()
+            )
+            print("Done indexing metadata")
         else:
             self.index = None
 

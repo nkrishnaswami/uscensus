@@ -1,38 +1,56 @@
-from __future__ import print_function, unicode_literals
+from __future__ import print_function
+from __future__ import unicode_literals
 
 from collections import OrderedDict
+from whoosh.analysis.filters import StopFilter
 from whoosh.analysis import (KeywordAnalyzer, StandardAnalyzer)
 from whoosh.filedb.filestore import FileStorage, RamStorage
 from whoosh.fields import Schema, KEYWORD, ID, TEXT
 from whoosh.qparser import QueryParser
 
+KWAnalyzer = KeywordAnalyzer(lowercase=True) | StopFilter()
+Analyzer = StandardAnalyzer()
+ApiSchemaFields = OrderedDict((
+    ('api_id', ID(stored=True)),
+    ('title', KEYWORD(stored=True, analyzer=KWAnalyzer)),
+    ('description', TEXT(analyzer=Analyzer)),
+    ('variable_name', KEYWORD(analyzer=KWAnalyzer)),
+    ('variable_desc', TEXT(analyzer=Analyzer)),
+    ('geographies', KEYWORD(analyzer=KWAnalyzer)),
+    ('concepts', KEYWORD(stored=True, analyzer=KWAnalyzer)),
+    ('keywords', KEYWORD(stored=True, analyzer=KWAnalyzer)),
+    ('tags', KEYWORD(stored=True, analyzer=KWAnalyzer)),
+    ('vintage', ID),
+))
+
+VariableSchemaFields = OrderedDict((
+    ('variable', ID(stored=True)),
+    ('label', TEXT(analyzer=Analyzer)),
+    ('concept', KEYWORD(stored=True, analyzer=Analyzer)),
+))
+
 
 class Index(object):
     """Census API metadata indexer."""
-    _KWAnalyzer = KeywordAnalyzer(lowercase=True)
-    _Analyzer = StandardAnalyzer()
-    _SchemaFields = OrderedDict((
-        ('api_id', ID(stored=True)),
-        ('title', KEYWORD(stored=True, analyzer=_KWAnalyzer)),
-        ('description', TEXT(analyzer=_Analyzer)),
-        ('variables', KEYWORD(analyzer=_KWAnalyzer)),
-        ('geographies', KEYWORD(analyzer=_KWAnalyzer)),
-        ('concepts', KEYWORD(stored=True, analyzer=_KWAnalyzer)),
-        ('keywords', KEYWORD(stored=True, analyzer=_KWAnalyzer)),
-        ('tags', KEYWORD(stored=True, analyzer=_KWAnalyzer)),
-        ('vintage', ID),
-    ))
-    _CensusMetadataSchema = Schema(**_SchemaFields)
+    def __init__(self, schema_fields, path=None):
+        """Initialize Whoosh index specified fields.
 
-    def __init__(self, path=None):
-        """Initialize Whoosh index for Census API metadata fields"""
+          Arguments:
+            * schema_fields: an OrderedDict of column names to whoosh
+              field types.
+            * path: if specified, the path in which to create a
+              persistent index. If not specified, index to RAM.
+        """
+        self.schema_fields = schema_fields
         # Initialize index
         fs = FileStorage(path).create() if path else RamStorage()
         if fs.index_exists():
             self.index = fs.open_index()
+            schema = self.index.schema()
         else:
-            self.index = fs.create_index(self._CensusMetadataSchema)
-        self.qparser = QueryParser("title", schema=self._CensusMetadataSchema)
+            schema = Schema(**self.schema_fields)
+            self.index = fs.create_index(schema)
+        self.qparser = QueryParser("title", schema=schema)
 
     def add(self, iterator, **kwargs):
         """Add entries to the index
@@ -45,11 +63,10 @@ class Index(object):
         with self.index.writer() as writer:
             for vals in iterator:
                 writer.update_document(
-                    **dict(zip(self._SchemaFields, vals)))
+                    **dict(zip(self.schema_fields, vals)))
 
     def query(self, querystring):
         """Find API IDs matching querystring"""
-
         query = self.qparser.parse(querystring)
         with self.index.searcher() as searcher:
             results = searcher.search(query, limit=None)

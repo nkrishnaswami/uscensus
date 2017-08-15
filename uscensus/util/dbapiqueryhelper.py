@@ -1,3 +1,7 @@
+from __future__ import print_function
+from __future__ import unicode_literals
+
+
 class DBAPIQueryHelper(object):
     """Helper to simplify binding DBAPI parameters"""
 

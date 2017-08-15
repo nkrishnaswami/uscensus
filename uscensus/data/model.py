@@ -1,9 +1,11 @@
-from __future__ import print_function, unicode_literals
+from __future__ import print_function
+from __future__ import unicode_literals
 
+from ..data.index import Index, VariableSchemaFields
 from ..util.nopcache import NopCache
 from ..util.webcache import fetchjson
 
-from collections import defaultdict
+from collections import defaultdict, OrderedDict
 import pandas as pd
 
 
@@ -16,12 +18,11 @@ class CensusDataEndpoint(object):
         """Initialize a Census API endpoint wrapper.
 
         Arguments:
-          * key: user's API key
-          * ds: census dataset descriptor metadata
-          * cache: cache in which to look up/store metadata
-          * session: requests.Session to use for retrieving data
+          * key: user's API key.
+          * ds: census dataset descriptor metadata.
+          * cache: cache in which to look up/store metadata.
+          * session: requests.Session to use for retrieving data.
         """
-
         self.key = key                         # API key
         self.session = session                 # requests.Session
         self.title = ds['title']               # title
@@ -34,20 +35,33 @@ class CensusDataEndpoint(object):
         # API endpoint URL
         self.endpoint = ds['distribution'][0]['accessURL']
         # list of valid geographies
-        self.geographies = fetchjson(ds['c_geographyLink'], cache,
-                                     self.session)
+        self.geographies = (
+            fetchjson(ds['c_geographyLink'], cache,
+                      self.session) or
+            {}
+        )
         # list of valid variables
         self.variables = (
             fetchjson(ds['c_variablesLink'], cache,
-                      self.session)['variables'])
-        # concepts linking variables
-        self.concepts = defaultdict(dict)
+                      self.session)['variables'] or
+            {}
+        )
+
+        # index the variables
+        self.variableindex = Index(VariableSchemaFields)
+        self.variableindex.add(self._generateVariableRows())
+
+        # keep track of concepts for indexing
+        concepts = set()
         for var, desc in self.variables.items():
             concept = desc.get('concept')
             if concept:
-                self.concepts[concept][var] = desc
+                concepts.add(concept)
+        self.concepts = list(concepts)
+
         # list of keywords
         self.keyword = ds.get('keyword', [])
+        # list of tags
         if 'c_tagsLink' in ds:
             # list of tags
             self.tags = fetchjson(ds['c_tagsLink'], cache,
@@ -55,10 +69,16 @@ class CensusDataEndpoint(object):
         else:
             self.tags = []
 
+    def searchVariables(self, query):
+        """Look for variables matching a query string.
+
+        Keywords are `variable`, `label` and `concept`.
+        """
+        return [hit for hit in self.index.query(query)]
+
     @staticmethod
     def _geo2str(geo):
         """Format geography dict as string for query"""
-
         return ' '.join('{}:{}'.format(k, v) for k, v in geo.items())
 
     def __call__(self, fields, geo_for, geo_in=None, cache=NopCache()):
@@ -70,7 +90,6 @@ class CensusDataEndpoint(object):
             `{'county': '*'}`
           * cache: cache in which to store results. Not cached by default.
         """
-
         params = {
             'get': ','.join(fields),
             'key': self.key,
@@ -86,7 +105,10 @@ class CensusDataEndpoint(object):
                 ret[field] = pd.to_numeric(ret[field])
         return ret
 
-    def __repr__(self):
-        """Represent APi endpoint by its title"""
+    def _generateVariableRows(self):
+        for k, v in self.variables.items():
+            yield k, v.get('label', ''), v.get('concept', '')
 
+    def __repr__(self):
+        """Represent API endpoint by its title"""
         return self.title
