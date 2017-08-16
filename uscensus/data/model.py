@@ -5,7 +5,7 @@ from ..data.index import Index, VariableSchemaFields
 from ..util.nopcache import NopCache
 from ..util.webcache import fetchjson
 
-from collections import defaultdict, OrderedDict
+from collections import namedtuple
 import pandas as pd
 
 
@@ -74,7 +74,7 @@ class CensusDataEndpoint(object):
 
         Keywords are `variable`, `label` and `concept`.
         """
-        return [hit for hit in self.index.query(query)]
+        return [hit for hit in self.variableindex.query(query)]
 
     @staticmethod
     def _geo2str(geo):
@@ -105,9 +105,15 @@ class CensusDataEndpoint(object):
                 ret[field] = pd.to_numeric(ret[field])
         return ret
 
+    _Row = namedtuple('_Row', VariableSchemaFields)
+
     def _generateVariableRows(self):
         for k, v in self.variables.items():
-            yield k, v.get('label', ''), v.get('concept', '')
+            yield CensusDataEndpoint._Row(
+                variable=k,
+                label=v.get('label', ''),
+                concept=v.get('concept', ''),
+            )
 
     def __repr__(self):
         """Represent API endpoint by its title"""

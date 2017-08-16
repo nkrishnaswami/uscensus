@@ -293,9 +293,9 @@ class CensusBulkGeocoder(object):
           ValueError: `columns` has the wrong number of elements.
         """
         if len(columns) == 4:
-            it = df.loc[columns].itertuples()
+            it = df.loc[:, columns].itertuples()
         elif len(columns) == 5:
-            it = df.loc[columns].itertuples(index=False)
+            it = df.loc[:, columns].itertuples(index=False)
         else:
             raise ValueError("len(columns) is neither 4 or 5")
         return self.geocode_rows(
