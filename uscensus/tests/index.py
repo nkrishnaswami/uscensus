@@ -7,14 +7,12 @@ from collections import namedtuple
 
 
 def Index_test():
-    index = Index(ApiSchemaFields)
+    index = Index(ApiSchemaFields, 'title')
     Row = namedtuple('Row', ApiSchemaFields)
     data = [
         Row(api_id='id1',
             title='title one',
             description='description of api one',
-            variable_name='var1_1 var1_2',
-            variable_desc='Variable One One Variable One Two',
             geographies='',
             concepts='',
             keywords='key key1',
@@ -23,8 +21,6 @@ def Index_test():
         Row(api_id='id2',
             title='title two',
             description='description of api two',
-            variable_name='var2_1 var2_2',
-            variable_desc='Variable Two One Variable Two Two',
             geographies='',
             concepts='',
             keywords='key key2',
@@ -36,22 +32,22 @@ def Index_test():
     def api_ids(results):
         def gen_api_ids(results):
             for hit in results:
-                yield hit['title']
+                yield hit['api_id']
         return list(gen_api_ids(results))
-    assert api_ids(index.query('one')) == ['title one']
-    assert api_ids(index.query('two')) == ['title two']
-    assert sorted(api_ids(index.query('title'))) == ['title one', 'title two']
-    assert api_ids(index.query('title:one')) == ['title one']
-    assert api_ids(index.query('title:two')) == ['title two']
+    assert api_ids(index.query('one')) == ['id1']
+    assert api_ids(index.query('two')) == ['id2']
+    assert sorted(api_ids(index.query('title'))) == ['id1', 'id2']
+    assert api_ids(index.query('title:one')) == ['id1']
+    assert api_ids(index.query('title:two')) == ['id2']
 
-    assert api_ids(index.query('description:one')) == ['title one']
-    assert api_ids(index.query('description:two')) == ['title two']
+    assert api_ids(index.query('description:one')) == ['id1']
+    assert api_ids(index.query('description:two')) == ['id2']
 
-    assert api_ids(index.query('keywords:key1')) == ['title one']
-    assert api_ids(index.query('keywords:key2')) == ['title two']
+    assert api_ids(index.query('keywords:key1')) == ['id1']
+    assert api_ids(index.query('keywords:key2')) == ['id2']
     assert sorted(api_ids(index.query('keywords:key'))) == \
-        ['title one', 'title two']
-    assert api_ids(index.query('tags:tag1')) == ['title one']
-    assert api_ids(index.query('tags:tag2')) == ['title two']
+        ['id1', 'id2']
+    assert api_ids(index.query('tags:tag1')) == ['id1']
+    assert api_ids(index.query('tags:tag2')) == ['id2']
     assert sorted(api_ids(index.query('tags:tag'))) == \
-        ['title one', 'title two']
+        ['id1', 'id2']
