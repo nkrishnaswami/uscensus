@@ -59,21 +59,17 @@ class DiscoveryInterface(object):
                 print()
         if index:
             print("Indexing metadata")
-            self.index = Index(ApiSchemaFields)
+            self.index = Index(ApiSchemaFields, 'title')
             self.index.add(
                 (ensuretext(api_id),
                  ensuretext(api.title),
                  ensuretext(api.description),
-                 ensuretext(api.variables),
-                 ensuretext(
-                     list(v.get('label', '')
-                          for v in api.variables.values())),
                  ensuretext(api.geographies),
                  ensuretext(api.concepts),
                  ensuretext(api.keyword),
                  ensuretext(api.tags),
                  ensuretext(api.vintage),
-                )
+                 )
                 for api_id, api in self.apis.items()
             )
             print("Done indexing metadata")

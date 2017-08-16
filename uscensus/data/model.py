@@ -48,7 +48,7 @@ class CensusDataEndpoint(object):
         )
 
         # index the variables
-        self.variableindex = Index(VariableSchemaFields)
+        self.variableindex = Index(VariableSchemaFields, 'label')
         self.variableindex.add(self._generateVariableRows())
 
         # keep track of concepts for indexing
@@ -70,11 +70,15 @@ class CensusDataEndpoint(object):
             self.tags = []
 
     def searchVariables(self, query):
-        """Look for variables matching a query string.
+        """Return for variables matching a query string.
 
-        Keywords are `variable`, `label` and `concept`.
+        Keywords are `variable` (ID), `label` (name) and `concept`
+        (grouping of variables).
+
         """
-        return [hit for hit in self.variableindex.query(query)]
+        return [(hit['variable'],
+                 self.variables[hit['variable']])
+                for hit in self.variableindex.query(query)]
 
     @staticmethod
     def _geo2str(geo):

@@ -12,27 +12,25 @@ KWAnalyzer = KeywordAnalyzer(lowercase=True) | StopFilter()
 Analyzer = StandardAnalyzer()
 ApiSchemaFields = OrderedDict((
     ('api_id', ID(stored=True)),
-    ('title', KEYWORD(stored=True, analyzer=KWAnalyzer)),
+    ('title', KEYWORD(analyzer=KWAnalyzer)),
     ('description', TEXT(analyzer=Analyzer)),
-    ('variable_name', KEYWORD(analyzer=KWAnalyzer)),
-    ('variable_desc', TEXT(analyzer=Analyzer)),
     ('geographies', KEYWORD(analyzer=KWAnalyzer)),
-    ('concepts', KEYWORD(stored=True, analyzer=KWAnalyzer)),
-    ('keywords', KEYWORD(stored=True, analyzer=KWAnalyzer)),
-    ('tags', KEYWORD(stored=True, analyzer=KWAnalyzer)),
+    ('concepts', KEYWORD(analyzer=KWAnalyzer)),
+    ('keywords', KEYWORD(analyzer=KWAnalyzer)),
+    ('tags', KEYWORD(analyzer=KWAnalyzer)),
     ('vintage', ID),
 ))
 
 VariableSchemaFields = OrderedDict((
     ('variable', ID(stored=True)),
     ('label', TEXT(analyzer=Analyzer)),
-    ('concept', KEYWORD(stored=True, analyzer=Analyzer)),
+    ('concept', KEYWORD(analyzer=Analyzer)),
 ))
 
 
 class Index(object):
     """Census API metadata indexer."""
-    def __init__(self, schema_fields, path=None):
+    def __init__(self, schema_fields, dflt_query_field, path=None):
         """Initialize Whoosh index specified fields.
 
           Arguments:
@@ -50,7 +48,8 @@ class Index(object):
         else:
             schema = Schema(**self.schema_fields)
             self.index = fs.create_index(schema)
-        self.qparser = QueryParser("title", schema=schema)
+        self.qparser = QueryParser(dflt_query_field,
+                                   schema=schema)
 
     def add(self, iterator, **kwargs):
         """Add entries to the index
