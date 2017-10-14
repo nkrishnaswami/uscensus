@@ -26,8 +26,9 @@ class SqlAlchemyCache(object):
         self.connstr = connstr
         self.timeout = timeout
         self.engine = sqlalchemy.create_engine(self.connstr)
+        self.conn = self.engine.connect()
         self.txn = None
-        with self.engine.begin() as conn:
+        with self.conn.begin():
             md = sqlalchemy.MetaData()
             self.table = sqlalchemy.Table(
                 table,
@@ -42,10 +43,10 @@ class SqlAlchemyCache(object):
                                   sqlalchemy.DateTime,
                                   nullable=False),
             )
-            md.create_all(bind=conn)
+            md.create_all(bind=self.conn)
 
     def __enter__(self):
-        self.txn = self.engine.begin()
+        self.txn = self.conn.begin()
         return self
 
     def __exit__(self, exc_type, exc_value, traceback):
@@ -68,7 +69,7 @@ class SqlAlchemyCache(object):
           * url: document key.
         """
         logging.debug('Getting url={}'.format(url))
-        cur = self.engine.execute(
+        cur = self.conn.execute(
             sqlalchemy.select(
                 [self.table.c.data, self.table.c.date],
                 from_obj=self.table,
@@ -90,7 +91,7 @@ class SqlAlchemyCache(object):
     def delete(self, url):
         """Remove a URL from the cache."""
         logging.debug('Deleting: url={}'.format(url))
-        self.engine.execute(
+        self.conn.execute(
             self.table.delete().where(
                 self.table.c.url == sqlalchemy.bindparam('url')
             ),
@@ -100,7 +101,7 @@ class SqlAlchemyCache(object):
     def touch(self, url, date):
         """Update the last update timestamp for a URL in the cache."""
         logging.debug('Updating timestamp: url={}'.format(url))
-        self.engine.execute(
+        self.conn.execute(
             self.table.update().where(
                 self.table.c.url == sqlalchemy.bindparam('tgturl'),
             ).values(
@@ -115,7 +116,7 @@ class SqlAlchemyCache(object):
         Parse the document as JSON and return it.
         """
         logging.debug('Inserting: doc={} url={}'.format(not not doc, url))
-        self.engine.execute(
+        self.conn.execute(
             self.table.insert(),
             url=url,
             data=doc,
