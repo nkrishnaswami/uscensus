@@ -1,12 +1,12 @@
 from __future__ import print_function
 from __future__ import unicode_literals
 
-from ..data.index import Index
-from ..data.index import ApiSchemaFields
+from ..data.mongoindex import MongoIndex
+#from ..data.index import ApiSchemaFields, VariableSchemaFields
 from ..data.model import CensusDataEndpoint
 from ..util.errors import CensusError
 from ..util.webcache import fetchjson
-from ..util.ensuretext import ensuretext
+#from ..util.ensuretext import ensuretext
 
 
 class DiscoveryInterface(object):
@@ -20,8 +20,7 @@ class DiscoveryInterface(object):
                  key,
                  cache,
                  session=None,
-                 vintage=None,
-                 index=True):
+                 vintage=None):
         """Load and wrap census APIs.
 
         Prefers cached metadata if present and not stale, otherwise
@@ -32,49 +31,47 @@ class DiscoveryInterface(object):
           * cache: cache in which to fetch/store metadata.
           * session: requests session to use for calling API.
           * vintage: discovery only data sets for this vintage, if present.
-          * index: if true, index metadata for the `search` method.
         """
 
         self.apis = {}
         if vintage:
-            url = 'http://api.census.gov/data/{}.json'.format(vintage)
+            url = 'https://api.census.gov/data/{}.json'.format(vintage)
         else:
-            url = 'http://api.census.gov/data.json'
+            url = 'https://api.census.gov/data.json'
         resp = fetchjson(url, cache, session)
         datasets = resp.get('dataset')
         if not datasets:
             raise CensusError("Unable to identify datasets from API " +
                               " discovery endpoint")
-        for ds in datasets:
-            try:
-                api = CensusDataEndpoint(key, ds, cache, session)
-                api_id = api.endpoint.replace(
-                    'http://api.census.gov/data/',
-                    '')
-                # todo: add more indexing; hier by dataset, by vintage, etc
-                self.apis[api_id] = api
-            except Exception as e:
-                print("Error processing metadata; skipping API:", ds)
-                print(type(e), e)
-                print()
-        if index:
-            print("Indexing metadata")
-            self.index = Index(ApiSchemaFields, 'title')
+        self.variableindex = MongoIndex('variables', dflt_query_field='label')
+        with self.variableindex:
+            for ds in datasets:
+                try:
+                    api = CensusDataEndpoint(
+                        key, ds, cache, session,
+                        self.variableindex)
+                    # todo: add more indexing; hier by dataset, by vintage, etc
+                    self.apis[api.id] = api
+                except Exception as e:
+                    print("Error processing metadata; skipping API:", ds)
+                    print(type(e), e)
+                    print()
+        print("Indexing metadata")
+        self.index = MongoIndex('apis', dflt_query_field='title')
+        with self.index:
             self.index.add(
-                (ensuretext(api_id),
-                 ensuretext(api.title),
-                 ensuretext(api.description),
-                 ensuretext(api.geographies),
-                 ensuretext(api.concepts),
-                 ensuretext(api.keyword),
-                 ensuretext(api.tags),
-                 ensuretext(api.vintage),
-                 )
-                for api_id, api in self.apis.items()
+                {'api_id': api.id,
+                 'title': api.title,
+                 'description': api.description,
+                 'geography': api.geographies['name'].values.tolist(),
+                 'concept': api.concepts,
+                 'keyword': api.keyword,
+                 'tag': api.tags,
+                 'vintage': api.vintage,
+                 }
+                for api in self.apis.values()
             )
             print("Done indexing metadata")
-        else:
-            self.index = None
 
     def search(self, query):
         """Find a list of API objects matching the index query.
@@ -95,10 +92,7 @@ class DiscoveryInterface(object):
         Elaborate queries can be constructed using parenthesized
         subqueries, ANDs, and ORs.
         """
-        if not self.index:
-            raise RuntimeError('Loader was created without an index;'
-                               ' search is disabled')
-        return [self[hit['api_id']] for hit in self.index.query(query)]
+        return {self[hit['api_id']]: hit['description'] for hit in self.index.query(query)}
 
     def __getitem__(self, api_id):
         """Return an identifier by API ID.

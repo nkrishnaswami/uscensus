@@ -8,7 +8,7 @@ from .geocode import SqlAlchemyPersister_test
 from .geocode import CensusBulkGeocoder_cols_test
 from .geocode import CensusBulkGeocoder_df_test
 from .geocode import CensusBulkGeocoder_rows_test
-from .index import Index_test
+from .whooshindex import Index_test
 from .model import CensusDataEndpoint_test
 from .nopcache import NopCache_test
 from .sqlalchemycache import SqlAlchemyCache_test

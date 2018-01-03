@@ -1,7 +1,7 @@
 from __future__ import print_function
 from __future__ import unicode_literals
 
-from ..data.index import Index, VariableSchemaFields
+#from ..data.index import Index, VariableSchemaFields
 from ..util.nopcache import NopCache
 from ..util.webcache import fetchjson
 
@@ -14,7 +14,7 @@ class CensusDataEndpoint(object):
     and geography
     """
 
-    def __init__(self, key, ds, cache, session):
+    def __init__(self, key, ds, cache, session, variableindex):
         """Initialize a Census API endpoint wrapper.
 
         Arguments:
@@ -22,6 +22,7 @@ class CensusDataEndpoint(object):
           * ds: census dataset descriptor metadata.
           * cache: cache in which to look up/store metadata.
           * session: requests.Session to use for retrieving data.
+          * variableindex: the Index in which to store variable data
         """
         self.key = key                         # API key
         self.session = session                 # requests.Session
@@ -33,31 +34,51 @@ class CensusDataEndpoint(object):
         # vintage, if dataset is year-specific
         self.vintage = ds.get('c_vintage')
         # API endpoint URL
-        self.endpoint = ds['distribution'][0]['accessURL']
+        for distribution in ds.get('distribution') or []:
+            if distribution.get('format') == 'API':
+                self.endpoint = distribution['accessURL']
+        # short ID
+        self.id = self.endpoint.replace(
+            'https://api.census.gov/data/',
+            '')
         # list of valid geographies
-        self.geographies = (
+        self.geographies_ = (
             fetchjson(ds['c_geographyLink'], cache,
                       self.session) or
             {}
         )
+        self.geographies = None
+        for scheme in self.geographies_:
+            tmp = pd.DataFrame(
+                self.geographies_[scheme],
+                columns=[
+                    'scheme',
+                    'name',
+                    'predicate_type',
+                    'referenceDate',
+                    'requires',
+                    'optionalWithWCFor',
+                    'wildcard'])
+            tmp['scheme'] = scheme
+            if self.geographies is not None:
+                self.geographies.append(tmp)
+            else:
+                self.geographies = tmp
+
         # list of valid variables
-        self.variables = (
+        self.variables_ = (
             fetchjson(ds['c_variablesLink'], cache,
                       self.session)['variables'] or
             {}
         )
+        self.variables = pd.DataFrame(self.variables_).T
 
         # index the variables
-        self.variableindex = Index(VariableSchemaFields, 'label')
+        self.variableindex = variableindex
         self.variableindex.add(self._generateVariableRows())
 
         # keep track of concepts for indexing
-        concepts = set()
-        for var, desc in self.variables.items():
-            concept = desc.get('concept')
-            if concept:
-                concepts.add(concept)
-        self.concepts = list(concepts)
+        self.concepts = list(sorted(set(self.variables['concept'].dropna())))
 
         # list of keywords
         self.keyword = ds.get('keyword', [])
@@ -69,6 +90,15 @@ class CensusDataEndpoint(object):
         else:
             self.tags = []
 
+        # list of groups
+        if 'c_groupsLink' in ds:
+            # list of groups
+            self.groups = {row['name']: row['description'] for row in
+                           fetchjson(ds['c_groupsLink'], cache,
+                                     self.session)['groups']}
+        else:
+            self.groups = []
+
     def searchVariables(self, query):
         """Return for variables matching a query string.
 
@@ -76,9 +106,15 @@ class CensusDataEndpoint(object):
         (grouping of variables).
 
         """
-        return [(hit['variable'],
-                 self.variables[hit['variable']])
-                for hit in self.variableindex.query(query)]
+        return pd.DataFrame(
+            self.variableindex.query(
+                query,
+                api_id=self.id),
+            columns=[
+                'score', 'api_id', 'variable', 'group',
+                'concept', 'label', 'predicate_type'
+            ]
+        ).drop('api_id', axis=1)
 
     @staticmethod
     def _geo2str(geo):
@@ -105,18 +141,19 @@ class CensusDataEndpoint(object):
         j = fetchjson(self.endpoint, cache, self.session, params=params)
         ret = pd.DataFrame(data=j[1:], columns=j[0])
         for field in fields:
-            if self.variables[field].get('predicateType') == 'int':
+            if self.variables_[field].get('predicateType') == 'int':
                 ret[field] = pd.to_numeric(ret[field])
         return ret
 
-    _Row = namedtuple('_Row', VariableSchemaFields)
-
     def _generateVariableRows(self):
-        for k, v in self.variables.items():
-            yield CensusDataEndpoint._Row(
+        for k, v in self.variables_.items():
+            yield dict(
+                api_id=self.id,
                 variable=k,
+                group=v.get('group', ''),
                 label=v.get('label', ''),
                 concept=v.get('concept', ''),
+                predicate_type=v.get('predicateType')
             )
 
     def __repr__(self):

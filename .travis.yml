@@ -2,6 +2,7 @@ language: python
 python:
         - "3.5"
 sudo: false
+services: mongodb
 dist: trusty
 pre-install:
         - pip install virtualenv

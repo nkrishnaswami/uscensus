@@ -18,6 +18,8 @@ setup(
         'docutils>=0.3',
         'pandas',
         'requests',
+        'grequests',
+        'pymongo',
         'whoosh',
     ],
 

@@ -101,10 +101,11 @@ class FilePersister(object):
 
 
 class SqlAlchemyPersister(object):
-    def __init__(self, connstr, table):
+    def __init__(self, connstr, table, extend_existing=False):
         self.connstr = connstr
         self.engine = sqlalchemy.create_engine(self.connstr)
         self.tablename = table
+        self.extend_existing = extend_existing
         self.table = None
         self.cols = None
         self.dtypes = None
@@ -113,7 +114,8 @@ class SqlAlchemyPersister(object):
         self.cols = cols
         self.dtypes = dtypes
         with self.engine.begin() as conn:
-            md = sqlalchemy.MetaData(bind=conn, reflect=True)
+            md = sqlalchemy.MetaData()
+            md.reflect(bind=conn)
             self.table = sqlalchemy.Table(
                 self.tablename,
                 md,
@@ -122,7 +124,8 @@ class SqlAlchemyPersister(object):
                         col, sqlalchemy.String
                     )
                     for col in self.cols
-                )
+                ),
+                extend_existing=self.extend_existing
             )
             md.create_all(bind=conn)
 

@@ -7,22 +7,27 @@ from whoosh.analysis import (KeywordAnalyzer, StandardAnalyzer)
 from whoosh.filedb.filestore import FileStorage, RamStorage
 from whoosh.fields import Schema, KEYWORD, ID, TEXT
 from whoosh.qparser import QueryParser
+from whoosh.writing import AsyncWriter
+
 
 KWAnalyzer = KeywordAnalyzer(lowercase=True) | StopFilter()
 Analyzer = StandardAnalyzer()
 ApiSchemaFields = OrderedDict((
-    ('api_id', ID(stored=True)),
+    ('api_id', ID(unique=True, stored=True)),
     ('title', KEYWORD(analyzer=KWAnalyzer)),
     ('description', TEXT(analyzer=Analyzer)),
     ('geographies', KEYWORD(analyzer=KWAnalyzer)),
     ('concepts', KEYWORD(analyzer=KWAnalyzer)),
     ('keywords', KEYWORD(analyzer=KWAnalyzer)),
     ('tags', KEYWORD(analyzer=KWAnalyzer)),
+    ('variables', KEYWORD(analyzer=KWAnalyzer)),
     ('vintage', ID),
 ))
 
 VariableSchemaFields = OrderedDict((
+    ('api_id', ID(stored=True)),
     ('variable', ID(stored=True)),
+    ('group', ID(stored=True)),
     ('label', TEXT(analyzer=Analyzer)),
     ('concept', KEYWORD(analyzer=Analyzer)),
 ))
@@ -30,7 +35,7 @@ VariableSchemaFields = OrderedDict((
 
 class Index(object):
     """Census API metadata indexer."""
-    def __init__(self, schema_fields, dflt_query_field, path=None):
+    def __init__(self, name, schema_fields, dflt_query_field, path=None):
         """Initialize Whoosh index specified fields.
 
           Arguments:
@@ -43,13 +48,25 @@ class Index(object):
         # Initialize index
         fs = FileStorage(path).create() if path else RamStorage()
         if fs.index_exists():
-            self.index = fs.open_index()
+            self.index = fs.open_index(name)
             schema = self.index.schema()
         else:
             schema = Schema(**self.schema_fields)
-            self.index = fs.create_index(schema)
+            self.index = fs.create_index(schema, name)
         self.qparser = QueryParser(dflt_query_field,
                                    schema=schema)
+        self.writer = None
+
+    def __enter__(self):
+        self.writer = AsyncWriter(
+            self.index, writerargs=dict(limitmb=1000))
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        if exc_type:
+            self.writer.cancel()
+        else:
+            self.writer.commit()
 
     def add(self, iterator, **kwargs):
         """Add entries to the index
@@ -59,10 +76,9 @@ class Index(object):
             api_id, title, description, variables, geographies, concepts,
             keywords, tags, and vintage.
         """
-        with self.index.writer() as writer:
-            for vals in iterator:
-                writer.update_document(
-                    **dict(zip(self.schema_fields, vals)))
+        for vals in iterator:
+            self.writer.add_document(
+                **dict(zip(self.schema_fields, vals)))
 
     def query(self, querystring):
         """Find API IDs matching querystring"""

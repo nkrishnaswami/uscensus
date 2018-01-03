@@ -1,11 +1,14 @@
 configparser
 datetime
+fiona
 geopandas
 nose
 pandas
+pymongo
 pytz
 requests
 grequests
+shapely
 sqlalchemy
 ujson
 whoosh

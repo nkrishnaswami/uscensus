@@ -63,12 +63,13 @@ class FakeSession(object):
                     "c_vintage": "2015",
                     "distribution": [
                         {
-                            "accessURL": "http://api.census.gov/data/timeseries/poverty/histpov2"
+                            "accessURL": "https://api.census.gov/data/timeseries/poverty/histpov2",
+                            "format": "API"
                         }
                     ],
-                    "c_geographyLink": "http://api.census.gov/data/timeseries/poverty/histpov2/geography.json",
-                    "c_variablesLink": "http://api.census.gov/data/timeseries/poverty/histpov2/variables.json",
-                    "c_tagsLink": "http://api.census.gov/data/timeseries/poverty/histpov2/tags.json"
+                    "c_geographyLink": "https://api.census.gov/data/timeseries/poverty/histpov2/geography.json",
+                    "c_variablesLink": "https://api.census.gov/data/timeseries/poverty/histpov2/variables.json",
+                    "c_tagsLink": "https://api.census.gov/data/timeseries/poverty/histpov2/tags.json"
                 }
             ]
         })
@@ -104,7 +105,7 @@ class FakeSession(object):
                     "predicateType": "int"
                 },
                 "FOOTID": {
-                    "label": "Footnotes found at http://www.census.gov/hhes/www/poverty/histpov/footnotes.html",
+                    "label": "Footnotes found at https://www.census.gov/hhes/www/poverty/histpov/footnotes.html",
                     "concept": "Poverty Statistics",
                     "predicateType": "int"
                 }
@@ -139,5 +140,6 @@ def DiscoveryInterface_test():
     print(cl.apis)
     assert len(cl.apis) == 1
     k, v = next(iter(cl.apis.items()))
+    print("key is", k)
     assert k == 'timeseries/poverty/histpov2'
     assert v.tags == ['poverty']
