@@ -1,4 +1,4 @@
-dateutil
+python-dateutil
 fiona
 geopandas
 gevent
@@ -11,7 +11,6 @@ pytz
 requests
 shapely
 sqlalchemy
-sqlite3
 ujson
 whoosh
 
