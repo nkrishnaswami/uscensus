@@ -16,10 +16,18 @@ setup(
 
     install_requires=[
         'docutils>=0.3',
-        'pandas',
-        'requests',
+        'python-dateutil',
+        'fiona',
+        'geopandas',
+        'gevent',
         'grequests',
+        'numpy',
+        'pandas',
         'pymongo',
+        'pytz',
+        'requests',
+        'shapely',
+        'sqlalchemy',
         'whoosh',
     ],
 
