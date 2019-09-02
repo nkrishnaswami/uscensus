@@ -67,8 +67,8 @@ def CensusBulkGeocoder_df_test():
     out.set_index('Key', inplace=True)
     row = out.loc['WH000']
     assert 'Match' == row['Match']
-    assert 'Non_Exact' == row['Exact']
-    assert '1600 PENNSYLVANIA AVE NW, WASHINGTON, DC, 20502' \
+    assert 'Exact' == row['Exact']
+    assert '1600 PENNSYLVANIA AVE NW, WASHINGTON, DC, 20500' \
         == row['Geo.Address']
     assert '-77.03535,38.898754' == row['Geo.Lon.Lat']
     assert '76225813' == row['Geo.TIGER.LineID']
@@ -87,9 +87,10 @@ def CensusBulkGeocoder_rows_test():
          'Washington', 'DC', '20500']])
     out.set_index('Key', inplace=True)
     row = out.loc['WH000']
+    print(row)
     assert 'Match' == row['Match']
-    assert 'Non_Exact' == row['Exact']
-    assert '1600 PENNSYLVANIA AVE NW, WASHINGTON, DC, 20502' \
+    assert 'Exact' == row['Exact']
+    assert '1600 PENNSYLVANIA AVE NW, WASHINGTON, DC, 20500' \
         == row['Geo.Address']
     assert '-77.03535,38.898754' == row['Geo.Lon.Lat']
     assert '76225813' == row['Geo.TIGER.LineID']
@@ -108,8 +109,8 @@ def CensusBulkGeocoder_cols_test():
     out.set_index('Key', inplace=True)
     row = out.loc['WH000']
     assert 'Match' == row['Match']
-    assert 'Non_Exact' == row['Exact']
-    assert '1600 PENNSYLVANIA AVE NW, WASHINGTON, DC, 20502' \
+    assert 'Exact' == row['Exact']
+    assert '1600 PENNSYLVANIA AVE NW, WASHINGTON, DC, 20500' \
         == row['Geo.Address']
     assert '-77.03535,38.898754' == row['Geo.Lon.Lat']
     assert '76225813' == row['Geo.TIGER.LineID']

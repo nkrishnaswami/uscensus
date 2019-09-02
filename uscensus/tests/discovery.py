@@ -32,6 +32,9 @@ class FakeResponse(object):
 
 
 class FakeSession(object):
+    def send(self, req):
+        return self.get(req.url)
+
     def get(self, url, **kwargs):
         ret = FakeResponse()
         if url.endswith('data.json'):

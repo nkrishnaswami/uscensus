@@ -22,8 +22,8 @@ except ImportError:
         return datetime.datetime(*parsedate(date)[:6])
 
 
-def condget(url, date, session, **kwargs):
-    """Conditionally get `url` using `session` if it has been modified
+def condget(req, date, session):
+    """Conditionally get `req` using `session` if it has been modified
     since `date`.
 
     Returns: the modified document or None.
@@ -35,7 +35,8 @@ def condget(url, date, session, **kwargs):
     headers = {}
     if date:
         headers['If-Modified-Since'] = format_datetime(date)
-    r = session.get(url, headers=headers, **kwargs)
+    req.headers = headers
+    r = session.send(req)
     r.raise_for_status()
     if r.status_code == 304:
         return None
@@ -61,6 +62,8 @@ def fetchjson(url, cache, session, **kwargs):
       * ValueError on JSON parse failure
 
     """
+    req = requests.Request('GET', url, **kwargs).prepare()
+    url = req.url
     doc, date = None, None
     # check for a cached document
     try:
@@ -81,10 +84,9 @@ def fetchjson(url, cache, session, **kwargs):
     if not doc or stale:
         # try to get the doc if we don't have it or if it's changed
         text = condget(
-            url,
+            req,
             date,
-            session or requests,
-            **kwargs
+            session or requests.Session()
         )
         if text is None:
             # unchanged; update cache timestamp so we don't do
