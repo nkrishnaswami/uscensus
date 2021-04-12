@@ -71,6 +71,6 @@ class SqliteFts5Index(TextIndexBase):
         for row in self.cursor.execute(
                 f"""SELECT rank as score, {", ".join(self.quoted_fields)}
                 FROM {self.table}
-                WHERE MATCH '{querystring}'
+                WHERE {self.table} MATCH '{querystring}'
                 ORDER BY rank;"""):
             yield row
