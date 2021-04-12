@@ -3,21 +3,16 @@
 Attributes:
     CENSUS_GEO_COLNAMES: column names in output from geocoding API.
 """
-from __future__ import print_function
-from __future__ import unicode_literals
-from builtins import str
-
+import asyncio
 import csv
-import fiona
 from io import StringIO
 from itertools import islice
-import numpy as np
-import geopandas as gpd
-from gevent.pool import Pool
 import glob
-import grequests
 import os
 import os.path
+
+import geopandas as gpd
+import httpx
 import pandas as pd
 import shapely
 import sqlalchemy
@@ -88,7 +83,7 @@ class FilePersister(object):
         with open(self.final, 'w') as f:
             f.write(','.join(self.cols))
             f.write('\n')
-            for fn in glob.glob(self.temp.format('*')):
+            for fn in sorted(glob.glob(self.temp.format('*'))):
                 with open(fn) as part:
                     data = part.read()
                     f.write(data)
@@ -138,16 +133,21 @@ class SqlAlchemyPersister(object):
             self.table.select(),
             self.engine,
         )
-        for col,dtype in self.dtypes.items():
+        for col, dtype in self.dtypes.items():
             ret.dtypes[col] = dtype
         return ret
 
+
 class CensusBulkGeocoder(object):
     """Geocode many addresses."""
+
+    BATCH_ENDPOINT = ('https://geocoding.geo.census.gov/geocoder/' +
+                      'geographies/addressbatch')
+
     def __init__(
             self,
             persister,
-            endpoint='https://geocoding.geo.census.gov/geocoder/geographies/addressbatch',
+            endpoint=BATCH_ENDPOINT,
             benchmark='Public_AR_Current',
             vintage='Current_Current',
             chunksize=1000,
@@ -168,7 +168,7 @@ class CensusBulkGeocoder(object):
     def _generate_requests(
             self,
             rows,
-            session=None
+            client
     ):
         for idx, chunk in enumerate(chunker(self.chunksize, rows)):
             print('Processing chunk #{}: geocoding {} addresses'.format(
@@ -184,14 +184,45 @@ class CensusBulkGeocoder(object):
             files = {
                 'addressFile': ('Addresses.csv', StringIO(req), 'text/csv')
             }
-            yield grequests.post(
+            yield client.build_request(
+                'POST',
                 self.endpoint,
                 params=params,
-                files=files,
-                stream=False,
-                session=session)
+                files=files)
 
-    def geocode_rows(self, rows, session=None):
+    async def _async_geocode_rows(self, rows):
+        async with httpx.AsyncClient(
+                limits=httpx.Limits(max_connections=self.concurrency)
+        ) as client:
+            reqiter = self._generate_requests(rows, client)
+            reqs = list(reqiter)
+            req_to_chunkno = {req: chunkno for chunkno, req in enumerate(reqs)}
+
+            async def handleResp(idx, r, retry=True):
+                chunkno = req_to_chunkno.get(r.request, 'N/A')
+                print('Finished req {}/{} for chunk {}: status {}'.format(
+                    idx+1, len(reqs), chunkno, r.status_code))
+                if r.status_code == 200:
+                    rdr = csv.DictReader(
+                        StringIO(r.text),
+                        fieldnames=CENSUS_GEO_COLNAMES)
+                    self.persister.persistTemp(rdr)
+                else:
+                    print('Failed req {}/{} for chunk {}: '
+                          'status_code={}'.format(
+                              idx+1, len(reqs), chunkno,
+                              r.status))
+                    if retry:
+                        print('Retrying...')
+                        handleResp(idx, await client.send(r.request), False)
+
+            print('Processing {} requests'.format(len(reqs)))
+            for idx, resp in enumerate(asyncio.as_completed(
+                    [client.send(req) for req in reqs])):
+                await handleResp(idx, await resp)
+        print('Processed {} responses'.format(idx+1))
+
+    def geocode_rows(self, rows):
         """Geocode addresses stored as rows.
 
         Arguments:
@@ -206,59 +237,13 @@ class CensusBulkGeocoder(object):
         Returns: DataFrame with geocoding output with rows keyed by
           the input key.
         """
-        reqiter = self._generate_requests(
-            rows,
-            session=session)
-        reqs = list(reqiter)
-        req_to_idx = {req: idx for idx, req in enumerate(reqs)}
-
-        def handleResp(idx, req, retry=True):
-            chunkno = req_to_idx.get(req, 'N/A')
-            if req.response is not None:
-                r = req.response
-                print(
-                    'Finished req {}/{} for chunk#{}: status {}'.format(
-                        idx+1, len(reqs), chunkno, r.status_code))
-                if r.status_code == 200:
-                    rdr = csv.DictReader(
-                        StringIO(r.text),
-                        fieldnames=CENSUS_GEO_COLNAMES)
-                    self.persister.persistTemp(rdr)
-                else:
-                    print('Failed req {}/{} for chunk#{}: '
-                          'status_code={}'.format(
-                              idx+1, len(reqs), chunkno,
-                              r.status_code))
-                    req.response = None
-                    reqs.append(req)
-            else:
-                print('Failed req {}/{} for chunk#{}: '
-                      'exception={}'.format(
-                          idx+1, len(reqs), chunkno,
-                          req.exception))
-                if retry:
-                    print('Retrying...')
-                    req.send()
-                    handleResp(idx, req, False)
-
-        print('Processing {} requests'.format(len(reqs)))
-        # reimplement grequests.imap so that we get back the
-        # request object to use as a correlator.
-        pool = Pool(self.concurrency)
-        for idx, req in enumerate(
-                pool.imap_unordered(
-                    grequests.AsyncRequest.send,
-                    reqs)):
-            handleResp(idx, req)
-        pool.join()
-        print('Processed {} responses'.format(idx+1))
+        asyncio.run(self._async_geocode_rows(rows))
         df = self.persister.persistFinal()
         return df
 
     def geocode_cols(
             self,
             key, street, city, state, zip5,
-            session=None
     ):
         """Geocode addresses stored as separate columns.
         Arguments:
@@ -273,10 +258,9 @@ class CensusBulkGeocoder(object):
           the input key.
         """
         return self.geocode_rows(
-            zip(key, street, city, state, zip5),
-            session)
+            zip(key, street, city, state, zip5))
 
-    def geocode_df(self, df, columns, session=None):
+    def geocode_df(self, df, columns):
         """Geocode from a dataframe.
 
         Arguments:
@@ -296,14 +280,12 @@ class CensusBulkGeocoder(object):
           ValueError: `columns` has the wrong number of elements.
         """
         if len(columns) == 4:
-            it = df.loc[:, columns].itertuples()
+            iter = df.loc[:, columns].itertuples()
         elif len(columns) == 5:
-            it = df.loc[:, columns].itertuples(index=False)
+            iter = df.loc[:, columns].itertuples(index=False)
         else:
             raise ValueError("len(columns) is neither 4 or 5")
-        return self.geocode_rows(
-            it,
-            session)
+        return self.geocode_rows(iter)
 
 
 def parse_lonlat(series):
