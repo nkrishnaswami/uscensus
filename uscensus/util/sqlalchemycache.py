@@ -1,11 +1,7 @@
-from __future__ import print_function
-from __future__ import unicode_literals
 import datetime as dt
-try:
-    import ujson as json
-except ImportError:
-    import json
+import json
 import logging
+
 import sqlalchemy
 
 

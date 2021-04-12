@@ -1,17 +1,14 @@
-from __future__ import print_function
-from __future__ import unicode_literals
-from builtins import str
+import csv
+import glob
+import os
+import os.path
+
+import pandas as pd
 
 from ..geocode.bulk import FilePersister
 from ..geocode.bulk import SqlAlchemyPersister
 from ..geocode.bulk import CensusBulkGeocoder
 from ..geocode.bulk import to_geodataframe
-
-import csv
-import glob
-import os
-import os.path
-import pandas as pd
 
 
 def FilePersister_test():
@@ -35,6 +32,7 @@ def FilePersister_test():
         assert ["21", "22"] == next(rdr)
     df = pers.persistFinal()
     assert 2 == df.shape[0]
+    print(df)
     assert ["11", "12"] == df.iloc[0].values.tolist()
     assert ["21", "22"] == df.iloc[1].values.tolist()
 
@@ -75,8 +73,8 @@ def CensusBulkGeocoder_df_test():
     assert 'L' == row['Geo.TIGER.Side']
     assert '11' == row['Geo.FIPS.State']
     assert '001' == row['Geo.FIPS.County']
-    assert '006202' == row['Geo.Tract']
-    assert '1031' == row['Geo.Block']
+    assert '980000' == row['Geo.Tract']
+    assert '1034' == row['Geo.Block']
 
 
 def CensusBulkGeocoder_rows_test():
@@ -87,7 +85,6 @@ def CensusBulkGeocoder_rows_test():
          'Washington', 'DC', '20500']])
     out.set_index('Key', inplace=True)
     row = out.loc['WH000']
-    print(row)
     assert 'Match' == row['Match']
     assert 'Exact' == row['Exact']
     assert '1600 PENNSYLVANIA AVE NW, WASHINGTON, DC, 20500' \
@@ -97,8 +94,8 @@ def CensusBulkGeocoder_rows_test():
     assert 'L' == row['Geo.TIGER.Side']
     assert '11' == row['Geo.FIPS.State']
     assert '001' == row['Geo.FIPS.County']
-    assert '006202' == row['Geo.Tract']
-    assert '1031' == row['Geo.Block']
+    assert '980000' == row['Geo.Tract']
+    assert '1034' == row['Geo.Block']
 
 
 def CensusBulkGeocoder_cols_test():
@@ -117,8 +114,8 @@ def CensusBulkGeocoder_cols_test():
     assert 'L' == row['Geo.TIGER.Side']
     assert '11' == row['Geo.FIPS.State']
     assert '001' == row['Geo.FIPS.County']
-    assert '006202' == row['Geo.Tract']
-    assert '1031' == row['Geo.Block']
+    assert '980000' == row['Geo.Tract']
+    assert '1034' == row['Geo.Block']
     gout = to_geodataframe(out)
     pt = gout.loc['WH000'].geometry
     assert float('-77.03535') == pt.x

@@ -1,22 +1,9 @@
-from __future__ import print_function
-from __future__ import unicode_literals
+from datetime import datetime as dt
+from email.utils import format_datetime
+import json
 
-from ..util.errors import CensusError
 from ..util.nopcache import NopCache
 from ..data.discovery import DiscoveryInterface
-
-import json
-from datetime import datetime as dt
-try:
-    from email.utils import format_datetime
-except ImportError:
-    # The fn was introduced in 3.3; hack:
-    from email.utils import formatdate
-    import time
-
-    def format_datetime(dt):
-        now = time.mktime(dt.timetuple())
-        return formatdate(now)
 
 
 class FakeResponse(object):

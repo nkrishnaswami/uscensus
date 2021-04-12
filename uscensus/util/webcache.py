@@ -1,10 +1,8 @@
-from __future__ import print_function
-from __future__ import unicode_literals
-
 import datetime
 import logging
-import requests
 import sys
+
+import requests
 
 
 # out of alphabetical order since there's fallback logic

@@ -1,9 +1,8 @@
-from __future__ import print_function, unicode_literals
+import datetime as dt
+
+from supersqlite import sqlite3
 
 from ..util.dbapicache import DBAPICache
-
-import datetime as dt
-import sqlite3
 
 
 def DBAPICache_test():

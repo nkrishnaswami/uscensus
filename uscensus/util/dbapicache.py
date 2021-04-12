@@ -1,15 +1,10 @@
-from __future__ import print_function
-from __future__ import unicode_literals
+import datetime as dt
+import json
+import logging
+
+import dateutil.parser
 
 from ..util.dbapiqueryhelper import DBAPIQueryHelper
-
-import datetime as dt
-import dateutil.parser
-try:
-    import ujson as json
-except ImportError:
-    import json
-import logging
 
 
 class DBAPICache(object):

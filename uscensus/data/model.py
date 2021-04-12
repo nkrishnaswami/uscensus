@@ -1,12 +1,7 @@
-from __future__ import print_function
-from __future__ import unicode_literals
+import pandas as pd
 
-#from ..data.index import Index, VariableSchemaFields
 from ..util.nopcache import NopCache
 from ..util.webcache import fetchjson
-
-from collections import namedtuple
-import pandas as pd
 
 
 class CensusDataEndpoint(object):

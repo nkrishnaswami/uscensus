@@ -1,8 +1,3 @@
-from __future__ import print_function
-from __future__ import unicode_literals
-from builtins import str
-
-
 def ensuretext(val):
     """Turn strings/lists of strings into unicode strings."""
     if isinstance(val, list):

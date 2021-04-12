@@ -1,10 +1,10 @@
-from uscensus.data.discovery import DiscoveryInterface
-from uscensus.data.states import get_state_codes
-from uscensus.geocode.bulk import CensusBulkGeocoder
-from uscensus.util.errors import CensusError
-from uscensus.util.errors import DBError
-from uscensus.util.nopcache import NopCache
-from uscensus.util.sqlalchemycache import SqlAlchemyCache
+from .data.discovery import DiscoveryInterface
+from .data.states import get_state_codes
+from .geocode.bulk import CensusBulkGeocoder
+from .util.errors import CensusError
+from .util.errors import DBError
+from .util.nopcache import NopCache
+from .util.sqlalchemycache import SqlAlchemyCache
 
 """This module reads the Census's API discovery interface at
 http://api.census.gov/data.json, and provides callable wrappers for

@@ -1,5 +1,4 @@
-from __future__ import print_function
-from __future__ import unicode_literals
+from .errors import DBError
 
 
 class DBAPIQueryHelper(object):
@@ -68,4 +67,3 @@ class DBAPIQueryHelper(object):
             return self.conn.execute(querystr, vals)
         else:
             return self.conn.execute(querystr, kwargs)
-
