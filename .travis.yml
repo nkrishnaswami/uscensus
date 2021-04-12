@@ -1,9 +1,9 @@
 language: python
 python:
-        - "3.5"
+        - "3.8"
 sudo: false
 services: mongodb
-dist: trusty
+dist: buster
 pre-install:
         - pip install virtualenv
         - virtualenv create venv
