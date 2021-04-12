@@ -1,12 +1,7 @@
-from __future__ import print_function
-from __future__ import unicode_literals
-
-from ..data.mongoindex import MongoIndex
-#from ..data.index import ApiSchemaFields, VariableSchemaFields
 from ..data.model import CensusDataEndpoint
 from ..util.errors import CensusError
 from ..util.webcache import fetchjson
-#from ..util.ensuretext import ensuretext
+from ..util.textindex import SqliteFts5Index
 
 
 class DiscoveryInterface(object):
@@ -43,7 +38,7 @@ class DiscoveryInterface(object):
         if not datasets:
             raise CensusError("Unable to identify datasets from API " +
                               " discovery endpoint")
-        self.variableindex = MongoIndex('variables', dflt_query_field='label')
+        self.variableindex = SqliteFts5Index('Variable', 'variables', 'idx.db')
         with self.variableindex:
             for ds in datasets:
                 try:
@@ -57,7 +52,7 @@ class DiscoveryInterface(object):
                     print(type(e), e)
                     print()
         print("Indexing metadata")
-        self.index = MongoIndex('apis', dflt_query_field='title')
+        self.index = SqliteFts5Index('API', 'apis', 'idx.db')
         with self.index:
             self.index.add(
                 {'api_id': api.id,
@@ -71,7 +66,8 @@ class DiscoveryInterface(object):
                  }
                 for api in self.apis.values()
             )
-            print("Done indexing metadata")
+            print("Done adding metadata")
+        print("Done committing metadata")
 
     def search(self, query):
         """Find a list of API objects matching the index query.
@@ -92,7 +88,10 @@ class DiscoveryInterface(object):
         Elaborate queries can be constructed using parenthesized
         subqueries, ANDs, and ORs.
         """
-        return {self[hit['api_id']]: hit['description'] for hit in self.index.query(query)}
+        if query.find(':') < 0:
+            query = 'title: ' + query
+        return {self[hit['api_id']]: hit['description']
+                for hit in self.index.query(query)}
 
     def __getitem__(self, api_id):
         """Return an identifier by API ID.

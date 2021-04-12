@@ -1,7 +1,5 @@
-from __future__ import print_function
-from __future__ import unicode_literals
-
 from collections import OrderedDict
+
 from whoosh.analysis.filters import StopFilter
 from whoosh.analysis import (KeywordAnalyzer, StandardAnalyzer)
 from whoosh.filedb.filestore import FileStorage, RamStorage
@@ -9,9 +7,12 @@ from whoosh.fields import Schema, KEYWORD, ID, TEXT
 from whoosh.qparser import QueryParser
 from whoosh.writing import AsyncWriter
 
+from .textindexbase import TextIndexBase
+
 
 KWAnalyzer = KeywordAnalyzer(lowercase=True) | StopFilter()
 Analyzer = StandardAnalyzer()
+
 ApiSchemaFields = OrderedDict((
     ('api_id', ID(unique=True, stored=True)),
     ('title', KEYWORD(analyzer=KWAnalyzer)),
@@ -33,18 +34,24 @@ VariableSchemaFields = OrderedDict((
 ))
 
 
-class Index(object):
+class WhooshIndex(TextIndexBase):
     """Census API metadata indexer."""
-    def __init__(self, name, schema_fields, dflt_query_field, path=None):
+    def __init__(self, name, fieldset, dflt_query_field, path=None):
         """Initialize Whoosh index specified fields.
 
           Arguments:
-            * schema_fields: an OrderedDict of column names to whoosh
-              field types.
+            * fieldset: the string "API" or "Variable", to select a
+              schema.
             * path: if specified, the path in which to create a
               persistent index. If not specified, index to RAM.
+
         """
-        self.schema_fields = schema_fields
+        if fieldset == 'API':
+            self.schema_fields = ApiSchemaFields
+        elif fieldset == 'Variable':
+            self.schema_fields = VariableSchemaFields
+        else:
+            raise KeyError(f'"{fieldset}" is not one of "API" or "Variable"')
         # Initialize index
         fs = FileStorage(path).create() if path else RamStorage()
         if fs.index_exists():

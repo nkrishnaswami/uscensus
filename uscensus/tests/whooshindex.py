@@ -1,13 +1,10 @@
-from __future__ import print_function
-from __future__ import unicode_literals
-
-from ..data.whooshindex import Index, ApiSchemaFields
-
 from collections import namedtuple
+
+from ..util.textindex.whooshindex import ApiSchemaFields, WhooshIndex
 
 
 def Index_test():
-    index = Index('index', ApiSchemaFields, 'title')
+    index = WhooshIndex('index', 'API', 'title')
     Row = namedtuple('Row', ApiSchemaFields)
     data = [
         Row(api_id='id1',

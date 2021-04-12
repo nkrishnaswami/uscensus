@@ -1,10 +1,9 @@
-from __future__ import print_function
-from __future__ import unicode_literals
-
 from pymongo import MongoClient
 
+from .textindexbase import TextIndexBase
 
-class MongoIndex(object):
+
+class MongoIndex(TextIndexBase):
     """Census API metadata indexer based on MongoDb."""
     def __init__(self, name,
                  client=MongoClient('mongodb://localhost:27017'),
@@ -48,8 +47,7 @@ class MongoIndex(object):
                 query,
                 {'_id': False,
                  'score': {'$meta': "textScore"}}
-        ).sort(
-            [('score', {'$meta': "textScore"})]):
+        ).sort([('score', {'$meta': "textScore"})]):
             ret.append(doc)
         return ret
 
