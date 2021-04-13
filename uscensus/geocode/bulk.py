@@ -7,6 +7,7 @@ import asyncio
 import csv
 from io import StringIO
 from itertools import islice
+import logging
 import glob
 import os
 import os.path
@@ -16,6 +17,9 @@ import httpx
 import pandas as pd
 import shapely
 import sqlalchemy
+
+
+_logger = logging.getLogger(__name__)
 
 CENSUS_GEO_COLNAMES = [
     'Key',
@@ -74,7 +78,7 @@ class FilePersister(object):
         self.dtypes = dtypes
 
     def persistTemp(self, rows):
-        with open(self.temp.format('000{}'.format(self.idx)[-4:]), 'w') as f:
+        with open(self.temp.format(f'{self.idx:04}'), 'w') as f:
             wr = csv.DictWriter(f, fieldnames=self.cols)
             wr.writerows(rows)
         self.idx += 1
@@ -171,9 +175,8 @@ class CensusBulkGeocoder(object):
             client
     ):
         for idx, chunk in enumerate(chunker(self.chunksize, rows)):
-            print('Processing chunk #{}: geocoding {} addresses'.format(
-                idx,
-                len(chunk)))
+            _logger.debug(f'Processing chunk #{idx}: geocoding {len(chunk)} ' +
+                          'addresses')
             sio = StringIO()
             csv.writer(sio).writerows(chunk)
             req = sio.getvalue().rstrip()
@@ -200,27 +203,26 @@ class CensusBulkGeocoder(object):
 
             async def handleResp(idx, r, retry=True):
                 chunkno = req_to_chunkno.get(r.request, 'N/A')
-                print('Finished req {}/{} for chunk {}: status {}'.format(
-                    idx+1, len(reqs), chunkno, r.status_code))
+                _logger.debug(f'Finished req {idx+1}/{len(reqs)} for ' +
+                              f'chunk {chunkno}: status {r.status_code}')
                 if r.status_code == 200:
                     rdr = csv.DictReader(
                         StringIO(r.text),
                         fieldnames=CENSUS_GEO_COLNAMES)
                     self.persister.persistTemp(rdr)
                 else:
-                    print('Failed req {}/{} for chunk {}: '
-                          'status_code={}'.format(
-                              idx+1, len(reqs), chunkno,
-                              r.status))
+                    _logger.warn(f'Failed req {idx+1}/{len(reqs)} for ' +
+                                 f'chunk {chunkno}: ' +
+                                 f'status_code={r.status_code}')
                     if retry:
-                        print('Retrying...')
+                        _logger.info('Retrying...')
                         handleResp(idx, await client.send(r.request), False)
 
-            print('Processing {} requests'.format(len(reqs)))
+            _logger.debug(f'Processing {len(reqs)} requests')
             for idx, resp in enumerate(asyncio.as_completed(
                     [client.send(req) for req in reqs])):
                 await handleResp(idx, await resp)
-        print('Processed {} responses'.format(idx+1))
+        _logger.debug(f'Processed {idx+1} responses')
 
     def geocode_rows(self, rows):
         """Geocode addresses stored as rows.

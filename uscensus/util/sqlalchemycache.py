@@ -5,6 +5,9 @@ import logging
 import sqlalchemy
 
 
+_logger = logging.getLogger(__name__)
+
+
 class SqlAlchemyCache(object):
     """Cache HTTP requests/responses to a database via SQLAlchemy."""
 
@@ -21,7 +24,8 @@ class SqlAlchemyCache(object):
         """
         self.connstr = connstr
         self.timeout = timeout
-        self.engine = sqlalchemy.create_engine(self.connstr)
+        self.engine = sqlalchemy.create_engine(
+            self.connstr, logging_name=__name__)
         self.conn = self.engine.connect()
         self.txn = None
         with self.conn.begin():
@@ -47,12 +51,13 @@ class SqlAlchemyCache(object):
 
     def __exit__(self, exc_type, exc_value, traceback):
         txn = self.txn
+        self.txn = None
         if exc_type:
-            logging.warn("Error in cache context; rolling back changes")
+            _logger.warn("Error in cache context; rolling back changes")
             if txn:
                 txn.rollback()
         else:
-            logging.info("Committing cache updates to DB")
+            _logger.info("Committing cache updates to DB")
             if txn:
                 txn.commit()
 
@@ -64,7 +69,7 @@ class SqlAlchemyCache(object):
         Arguments:
           * url: document key.
         """
-        logging.debug('Getting url={}'.format(url))
+        _logger.debug('Getting url={url}')
         cur = self.conn.execute(
             sqlalchemy.select(
                 [self.table.c.data, self.table.c.date],
@@ -76,17 +81,17 @@ class SqlAlchemyCache(object):
         )
         row = cur.fetchone()
         if row:
-            logging.debug('Hit: date={}'.format(row[self.table.c.date]))
+            _logger.debug(f'Hit: date={row[self.table.c.date]}')
             ret = (json.loads(row[self.table.c.data]),
                    row[self.table.c.date])
             cur.close()
             return ret
-        logging.debug('Miss')
+        _logger.debug('Miss')
         return None, None
 
     def delete(self, url):
         """Remove a URL from the cache."""
-        logging.debug('Deleting: url={}'.format(url))
+        _logger.debug(f'Deleting: url={url}')
         self.conn.execute(
             self.table.delete().where(
                 self.table.c.url == sqlalchemy.bindparam('url')
@@ -96,7 +101,7 @@ class SqlAlchemyCache(object):
 
     def touch(self, url, date):
         """Update the last update timestamp for a URL in the cache."""
-        logging.debug('Updating timestamp: url={}'.format(url))
+        _logger.debug('Updating timestamp: url={}'.format(url))
         self.conn.execute(
             self.table.update().where(
                 self.table.c.url == sqlalchemy.bindparam('tgturl'),
@@ -111,7 +116,7 @@ class SqlAlchemyCache(object):
         """Insert the document for the URL into the cache.
         Parse the document as JSON and return it.
         """
-        logging.debug('Inserting: doc={} url={}'.format(not not doc, url))
+        _logger.debug(f'Inserting: doc={bool(doc)} url={url}')
         self.conn.execute(
             self.table.insert(),
             url=url,

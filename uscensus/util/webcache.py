@@ -1,28 +1,18 @@
 import datetime
+from email.utils import format_datetime
 import logging
 import sys
+import time
 
 import requests
 
 
-# out of alphabetical order since there's fallback logic
-try:
-    from email.utils import format_datetime, parsedate_to_datetime
-except ImportError:
-    # these were introduced in 3.3; quick hack:
-    from email.utils import formatdate, parsedate
-    import time
-
-    def format_datetime(dt):
-        return formatdate(time.mktime(dt.timetuple()))
-
-    def parsedate_to_datetime(date):
-        return datetime.datetime(*parsedate(date)[:6])
+_logger = logging.getLogger(__name__)
 
 
-def condget(req, date, session):
+def condget(req, date, session, retries):
     """Conditionally get `req` using `session` if it has been modified
-    since `date`.
+    since `date`, retrying failures `retries` times.
 
     Returns: the modified document or None.
 
@@ -34,14 +24,18 @@ def condget(req, date, session):
     if date:
         headers['If-Modified-Since'] = format_datetime(date)
     req.headers = headers
-    r = session.send(req)
+    for retry in range(retries):
+        r = session.send(req)
+        if r.status_code < 400:
+            break
+        time.sleep(1)
     r.raise_for_status()
     if r.status_code == 304:
         return None
     return r.text
 
 
-def fetchjson(url, cache, session, **kwargs):
+def fetchjson(url, cache, session, *, retries=3, **kwargs):
     """Caching wrapper around requests.py, to get a URL, check for
     errors, and return the parsed JSON reponse.
 
@@ -53,6 +47,7 @@ def fetchjson(url, cache, session, **kwargs):
       * url: URL from which to fetch JSON resonse
       * cache: Cache in which to store response
       * session: optional requests.Session for making API call
+      * retries: number of times to retry failed GETs
       * kwargs: additional arguments to `requests.get`
 
     Exceptions:
@@ -67,16 +62,15 @@ def fetchjson(url, cache, session, **kwargs):
     try:
         doc, date = cache.get(url)
     except Exception as e:
-        logging.debug('cache error: {}: {}'.format(
-            type(e), e), exc_info=sys.exc_info())
+        _logger.debug(f'cache error: {type(e)}: {e}',
+                      exc_info=sys.exc_info())
 
     # check if the cached document is stale
     stale = False
     if date:
         stale = (datetime.datetime.now().timestamp() -
                  date.timestamp()) > cache.timeout.total_seconds()
-    logging.debug('hit={} expiry={} stale={} url={}'.format(
-        not not doc, date, stale, url))
+    _logger.debug(f'hit={bool(doc)} expiry={date} stale={stale} url={url}')
 
     # see if we need to re-fetch
     if not doc or stale:
@@ -84,7 +78,8 @@ def fetchjson(url, cache, session, **kwargs):
         text = condget(
             req,
             date,
-            session or requests.Session()
+            session or requests.Session(),
+            retries
         )
         if text is None:
             # unchanged; update cache timestamp so we don't do

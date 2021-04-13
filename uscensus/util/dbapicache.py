@@ -7,6 +7,9 @@ import dateutil.parser
 from ..util.dbapiqueryhelper import DBAPIQueryHelper
 
 
+_logger = logging.getLogger(__name__)
+
+
 class DBAPICache(object):
     """Cache HTTP requests/responses to a database via DBAPI."""
 
@@ -36,19 +39,20 @@ class DBAPICache(object):
 
     def __exit__(self, exc_type, exc_value, traceback):
         if exc_type:
-            logging.warn("Error in cache context; rolling back changes")
+            _logger.warn("Error in cache context; rolling back changes")
             self.conn.rollback()
         else:
-            logging.info("Committing cache updates to DB")
+            _logger.info("Committing cache updates to DB")
             self.conn.commit()
         self.close()
 
     def open(self, *dbargs, **dbkwargs):
         """Open the DB connection for caching."""
-        logging.debug('Opening DB connection')
+        _logger.debug('Opening DB connection')
         if self.conn:
             raise RuntimeError('Re-opening open DB connection')
         self.conn = self.dbapi.connect(*dbargs, **dbkwargs)
+        self.conn.set_trace_callback(_logger.debug)
         self.query = DBAPIQueryHelper(self.dbapi, self.conn)
         try:
             self.query('SELECT COUNT(*) FROM ' + self.table + ' LIMIT 1')
@@ -60,7 +64,7 @@ class DBAPICache(object):
 
     def close(self):
         """Close the DB connection."""
-        logging.debug('Closing DB connection')
+        _logger.debug('Closing DB connection')
         self.conn.close()
         self.conn = None
         self.query = None
@@ -73,21 +77,21 @@ class DBAPICache(object):
         Arguments:
           * url: document key.
         """
-        logging.debug('Getting url={}'.format(url))
+        _logger.debug('Getting url={url}')
         cur = self.query(
             'SELECT data,date FROM ' + self.table +
             ' WHERE url={url}',
             url=url)
         row = cur.fetchone()
         if row:
-            logging.debug('Hit: date={}'.format(row[1]))
+            _logger.debug('Hit: date={row[1]}')
             return json.loads(row[0]), dateutil.parser.parse(row[1])
-        logging.debug('Miss')
+        _logger.debug('Miss')
         return None, None
 
     def delete(self, url):
         """Remove a URL from the cache."""
-        logging.debug('Deleting: url={}'.format(url))
+        _logger.debug(f'Deleting: url={url}')
         cur = self.query(
             'DELETE FROM ' + self.table +
             ' WHERE url={url}',
@@ -96,7 +100,7 @@ class DBAPICache(object):
 
     def touch(self, url, date):
         """Update the last update timestamp for a URL in the cache."""
-        logging.debug('Updating timestamp: url={}'.format(url))
+        _logger.debug(f'Updating timestamp: url={url}')
         cur = self.query(
             'UPDATE ' + self.table +
             ' SET date={date}'
@@ -108,7 +112,7 @@ class DBAPICache(object):
         """Insert the document for the URL into the cache.
         Parse the document as JSON and return it.
         """
-        logging.debug('Inserting: doc={} url={}'.format(not not doc, url))
+        _logger.debug(f'Inserting: doc={bool(doc)} url={url}')
         self.query(
             'INSERT INTO ' + self.table +
             ' VALUES ({url},{data},{date})',

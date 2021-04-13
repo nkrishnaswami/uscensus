@@ -1,7 +1,12 @@
+import logging
+
 from ..data.model import CensusDataEndpoint
 from ..util.errors import CensusError
 from ..util.webcache import fetchjson
 from ..util.textindex import SqliteFts5Index
+
+
+_logger = logging.getLogger(__name__)
 
 
 class DiscoveryInterface(object):
@@ -30,44 +35,51 @@ class DiscoveryInterface(object):
 
         self.apis = {}
         if vintage:
-            url = 'https://api.census.gov/data/{}.json'.format(vintage)
+            url = f'https://api.census.gov/data/{vintage}.json'
         else:
             url = 'https://api.census.gov/data.json'
+        _logger.debug("Fetching root metadata")
         resp = fetchjson(url, cache, session)
         datasets = resp.get('dataset')
         if not datasets:
             raise CensusError("Unable to identify datasets from API " +
                               " discovery endpoint")
-        self.variableindex = SqliteFts5Index('Variable', 'variables', 'idx.db')
+
+        _logger.debug("Fetching per-API metadata")
+        self.variableindex = SqliteFts5Index('Variable', 'variables')
         with self.variableindex:
             for ds in datasets:
                 try:
                     api = CensusDataEndpoint(
                         key, ds, cache, session,
                         self.variableindex)
-                    # todo: add more indexing; hier by dataset, by vintage, etc
+                    # TODO: add more indexing; groups, hier by
+                    #       dataset, geo schemes, by vintage, etc
                     self.apis[api.id] = api
+                    _logger.debug('Finished processing metadata for API: ' +
+                                  f'{api.id}')
                 except Exception as e:
-                    print("Error processing metadata; skipping API:", ds)
-                    print(type(e), e)
-                    print()
-        print("Indexing metadata")
-        self.index = SqliteFts5Index('API', 'apis', 'idx.db')
+                    _logger.warn('Error processing metadata; skipping API ' +
+                                 f'{ds["title"]}', exc_info=e)
+        _logger.debug("Indexing API metadata")
+        self.index = SqliteFts5Index('API', 'apis')
         with self.index:
             self.index.add(
-                {'api_id': api.id,
-                 'title': api.title,
-                 'description': api.description,
-                 'geography': api.geographies['name'].values.tolist(),
-                 'concept': api.concepts,
-                 'keyword': api.keyword,
-                 'tag': api.tags,
-                 'vintage': api.vintage,
-                 }
+                {
+                    'api_id': api.id,
+                    'title': api.title,
+                    'description': api.description,
+                    'geographies': ' '.join(api.geographies['name']),
+                    'concepts': ' '.join(api.concepts),
+                    'keywords': ' '.join(api.keywords),
+                    'tags': ' '.join(api.tags),
+                    'variables': ' '.join(api.variables['label']),
+                    'vintage': api.vintage
+                }
                 for api in self.apis.values()
             )
-            print("Done adding metadata")
-        print("Done committing metadata")
+            _logger.debug("Done adding metadata")
+        _logger.debug("Done committing metadata")
 
     def search(self, query):
         """Find a list of API objects matching the index query.

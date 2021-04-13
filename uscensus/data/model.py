@@ -1,7 +1,13 @@
+import logging
+
 import pandas as pd
+from requests import HTTPError
 
 from ..util.nopcache import NopCache
 from ..util.webcache import fetchjson
+
+
+_logger = logging.getLogger(__name__)
 
 
 class CensusDataEndpoint(object):
@@ -33,32 +39,27 @@ class CensusDataEndpoint(object):
             if distribution.get('format') == 'API':
                 self.endpoint = distribution['accessURL']
         # short ID
-        self.id = self.endpoint.replace(
-            'https://api.census.gov/data/',
-            '')
+        self.id = self.endpoint.replace('https://api.census.gov/data/', '')
         # list of valid geographies
         self.geographies_ = (
             fetchjson(ds['c_geographyLink'], cache,
                       self.session) or
             {}
         )
-        self.geographies = None
+        geo_cols = [
+            'scheme',
+            'name',
+            'predicate_type',
+            'referenceDate',
+            'requires',
+            'optionalWithWCFor',
+            'wildcard']
+        self.geographies = pd.DataFrame([], columns=geo_cols)
         for scheme in self.geographies_:
             tmp = pd.DataFrame(
-                self.geographies_[scheme],
-                columns=[
-                    'scheme',
-                    'name',
-                    'predicate_type',
-                    'referenceDate',
-                    'requires',
-                    'optionalWithWCFor',
-                    'wildcard'])
+                self.geographies_[scheme], columns=geo_cols)
             tmp['scheme'] = scheme
-            if self.geographies is not None:
-                self.geographies.append(tmp)
-            else:
-                self.geographies = tmp
+            self.geographies.append(tmp)
 
         # list of valid variables
         self.variables_ = (
@@ -66,35 +67,47 @@ class CensusDataEndpoint(object):
                       self.session)['variables'] or
             {}
         )
-        self.variables = pd.DataFrame(self.variables_).T
+        self.variables = pd.DataFrame(
+            self.variables_, columns=[
+                'label', 'concept', 'predicateType', 'group',
+                'limit', 'predicateOnly', 'attributes',
+            ])
 
         # index the variables
         self.variableindex = variableindex
         self.variableindex.add(self._generateVariableRows())
 
         # keep track of concepts for indexing
-        self.concepts = list(sorted(set(self.variables['concept'].dropna())))
+        _logger.info(self.variables)
+        self.concepts = set(self.variables['concept']
+                            .dropna().sort_values().values)
 
         # list of keywords
-        self.keyword = ds.get('keyword', [])
+        self.keywords = ds.get('keyword', [])
         # list of tags
+        self.tags = []
         if 'c_tagsLink' in ds:
             # list of tags
-            self.tags = fetchjson(ds['c_tagsLink'], cache,
-                                  self.session)['tags']
-        else:
-            self.tags = []
+            # Note: as of 2021-04-12, these are all broken
+            try:
+                self.tags = fetchjson(ds['c_tagsLink'], cache,
+                                      self.session)['tags']
+            except HTTPError as e:
+                _logger.warn(f"Unable to fetch {ds['c_tagsLink']}: {e}")
 
         # list of groups
+        self.groups = {}
         if 'c_groupsLink' in ds:
             # list of groups
-            self.groups = {row['name']: row['description'] for row in
-                           fetchjson(ds['c_groupsLink'], cache,
-                                     self.session)['groups']}
-        else:
-            self.groups = []
+            for row in fetchjson(ds['c_groupsLink'], cache,
+                                 self.session)['groups']:
+                self.groups[row['name']] = {'descriptions': row['description']}
+                if row['variables']:
+                    self.groups[row['name']]['variables'] = list(
+                        fetchjson(row['variables'], cache,
+                                  self.session)['variables'].keys())
 
-    def searchVariables(self, query):
+    def searchVariables(self, query, **constraints):
         """Return for variables matching a query string.
 
         Keywords are `variable` (ID), `label` (name) and `concept`
@@ -104,7 +117,8 @@ class CensusDataEndpoint(object):
         return pd.DataFrame(
             self.variableindex.query(
                 query,
-                api_id=self.id),
+                api_id=self.id,
+                **constraints),
             columns=[
                 'score', 'api_id', 'variable', 'group',
                 'concept', 'label', 'predicate_type'
@@ -114,9 +128,10 @@ class CensusDataEndpoint(object):
     @staticmethod
     def _geo2str(geo):
         """Format geography dict as string for query"""
-        return ' '.join('{}:{}'.format(k, v) for k, v in geo.items())
+        return ' '.join(f'{k}:{v}' for k, v in geo.items())
 
-    def __call__(self, fields, geo_for, geo_in=None, cache=NopCache()):
+    def __call__(self, fields, geo_for, *, geo_in=None, cache=NopCache(),
+                 groups=[]):
         """Special method to make API object invocable.
 
         Arguments:
@@ -124,9 +139,11 @@ class CensusDataEndpoint(object):
           * geo_* fields must be given as dictionaries, eg:
             `{'county': '*'}`
           * cache: cache in which to store results. Not cached by default.
+          * groups: variable groups to retrieve
         """
         params = {
-            'get': ','.join(fields),
+            'get': ','.join(fields + [f'group({group})'
+                                      for group in groups]),
             'key': self.key,
             'for': self._geo2str(geo_for),
         }
@@ -135,8 +152,11 @@ class CensusDataEndpoint(object):
 
         j = fetchjson(self.endpoint, cache, self.session, params=params)
         ret = pd.DataFrame(data=j[1:], columns=j[0])
+        for group in groups:
+            if self.groups[group]['variables']:
+                fields += self.groups[group]['variables']
         for field in fields:
-            if self.variables_[field].get('predicateType') == 'int':
+            if self.variables_.loc[field].get('predicateType') == 'int':
                 ret[field] = pd.to_numeric(ret[field])
         return ret
 
@@ -148,7 +168,6 @@ class CensusDataEndpoint(object):
                 group=v.get('group', ''),
                 label=v.get('label', ''),
                 concept=v.get('concept', ''),
-                predicate_type=v.get('predicateType')
             )
 
     def __repr__(self):

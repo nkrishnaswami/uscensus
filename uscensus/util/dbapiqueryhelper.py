@@ -14,11 +14,10 @@ class DBAPIQueryHelper(object):
 
     __paramstyle_format_args = {
         'qmark': lambda names: ['?']*len(names),
-        'numeric': lambda names: [':{}'.format(idx+1)
-                                  for idx in range(len(names))],
-        'named': lambda names: [':{}'.format(name) for name in names],
+        'numeric': lambda names: [f':{idx+1}' for idx in range(len(names))],
+        'named': lambda names: [f':{name}' for name in names],
         'format': lambda names: ['%s']*len(names),
-        'pyformat': lambda names: ['%({})'.format(name) for name in names],
+        'pyformat': lambda names: [f'%({name})' for name in names],
     }
 
     def __init__(self, dbapi, conn):
@@ -58,10 +57,10 @@ class DBAPIQueryHelper(object):
 
         names = sorted([name for name in kwargs],
                        key=lambda x: template.find('{'+x+'}'))
-        querystr = template.format(**dict(zip(names,
-                                              self.fmt_args(names))))
+        querystr = template.format(
+            **dict(zip(names, self.fmt_args(names))))
         if self.positional:
-            vals = [val for key, val in sorted(
+            vals = [val for _, val in sorted(
                 kwargs.items(),
                 key=lambda kv: template.find('{'+kv[0]+'}'))]
             return self.conn.execute(querystr, vals)

@@ -1,5 +1,6 @@
 import csv
 import glob
+import logging
 import os
 import os.path
 
@@ -9,6 +10,9 @@ from ..geocode.bulk import FilePersister
 from ..geocode.bulk import SqlAlchemyPersister
 from ..geocode.bulk import CensusBulkGeocoder
 from ..geocode.bulk import to_geodataframe
+
+
+_logger = logging.getLogger(__name__)
 
 
 def FilePersister_test():
@@ -32,7 +36,6 @@ def FilePersister_test():
         assert ["21", "22"] == next(rdr)
     df = pers.persistFinal()
     assert 2 == df.shape[0]
-    print(df)
     assert ["11", "12"] == df.iloc[0].values.tolist()
     assert ["21", "22"] == df.iloc[1].values.tolist()
 
@@ -46,10 +49,8 @@ def SqlAlchemyPersister_test():
     assert cols == pers.cols
     pers.persistTemp(rows1)
     pers.persistTemp(rows2)
-    print(pers.engine.execute('SELECT * FROM test').fetchall())
     df = pers.persistFinal()
     assert 2 == df.shape[0]
-    print(df.iloc[0].values.tolist())
     assert ["11", "12"] == df.iloc[0].values.tolist()
     assert ["21", "22"] == df.iloc[1].values.tolist()
 

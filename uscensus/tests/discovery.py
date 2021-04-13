@@ -1,9 +1,13 @@
 from datetime import datetime as dt
 from email.utils import format_datetime
 import json
+import logging
 
 from ..util.nopcache import NopCache
 from ..data.discovery import DiscoveryInterface
+
+
+_logger = logging.getLogger(__name__)
 
 
 class FakeResponse(object):
@@ -33,7 +37,7 @@ class FakeSession(object):
         elif url.endswith('tags.json'):
             ret.text = self.getTags()
         else:
-            print('Unexpected url:', url)
+            _logger.warn('Unexpected url:', url)
         return ret
 
     # Yeah, it's gauche to mix quote types, but these are basically
@@ -127,9 +131,9 @@ class FakeSession(object):
 
 def DiscoveryInterface_test():
     cl = DiscoveryInterface('', NopCache(), FakeSession())
-    print(cl.apis)
+    _logger.info(f'APIs are {cl.apis}')
     assert len(cl.apis) == 1
     k, v = next(iter(cl.apis.items()))
-    print("key is", k)
+    _logger.info(f'first key is {k}')
     assert k == 'timeseries/poverty/histpov2'
     assert v.tags == ['poverty']
