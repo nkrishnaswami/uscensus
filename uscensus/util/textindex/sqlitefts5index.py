@@ -38,7 +38,7 @@ class SqliteFts5Index(TextIndexBase):
             self.fields = VariableSchemaFields
         else:
             raise KeyError(f'"{fieldset}" is not one of "API" or "Variable"')
-        self.quoted_fields = [f"'{field}'" for field in self.fields]
+        self.quoted_fields = [f'"{field}"' for field in self.fields]
         self.table = table
         self.conn = self.CONNECTIONS.get_connection(dbname)
         self._execute(
@@ -67,10 +67,13 @@ class SqliteFts5Index(TextIndexBase):
             (dict(row) for row in iterator))
 
     def query(self, querystring, **constraints):
-        if querystring and constraints:
-            querystring += ' AND '
+        if querystring:
+            if not querystring.startswith('"'):
+                querystring = f'"{querystring}"'
+            if constraints:
+                querystring += ' AND '
         querystring += ' AND '.join(
-            (f'{field}: {subquery}'
+            (f'{field}: "{subquery}"'
              for field, subquery in constraints.items()))
         return self._execute(
             f"""SELECT rank as score, {", ".join(self.quoted_fields)}

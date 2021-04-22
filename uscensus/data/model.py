@@ -1,4 +1,5 @@
 import logging
+import re
 
 import pandas as pd
 from requests import HTTPError
@@ -68,17 +69,15 @@ class CensusDataEndpoint(object):
             {}
         )
         self.variables = pd.DataFrame(
-            self.variables_, columns=[
+            self.variables_, index=[
                 'label', 'concept', 'predicateType', 'group',
                 'limit', 'predicateOnly', 'attributes',
-            ])
-
+            ]).T
         # index the variables
         self.variableindex = variableindex
         self.variableindex.add(self._generateVariableRows())
 
         # keep track of concepts for indexing
-        _logger.info(self.variables)
         self.concepts = set(self.variables['concept']
                             .dropna().sort_values().values)
 
@@ -96,16 +95,19 @@ class CensusDataEndpoint(object):
                 _logger.warn(f"Unable to fetch {ds['c_tagsLink']}: {e}")
 
         # list of groups
-        self.groups = {}
+        self.groups_ = {}
         if 'c_groupsLink' in ds:
             # list of groups
             for row in fetchjson(ds['c_groupsLink'], cache,
                                  self.session)['groups']:
-                self.groups[row['name']] = {'descriptions': row['description']}
+                self.groups_[row['name']] = {
+                    'descriptions': row['description']
+                }
                 if row['variables']:
-                    self.groups[row['name']]['variables'] = list(
+                    self.groups_[row['name']]['variables'] = list(
                         fetchjson(row['variables'], cache,
                                   self.session)['variables'].keys())
+        self.groups = pd.DataFrame(self.groups_).T
 
     def searchVariables(self, query, **constraints):
         """Return for variables matching a query string.
@@ -119,10 +121,7 @@ class CensusDataEndpoint(object):
                 query,
                 api_id=self.id,
                 **constraints),
-            columns=[
-                'score', 'api_id', 'variable', 'group',
-                'concept', 'label', 'predicate_type'
-            ]
+            columns=['score'] + list(self.variableindex.fields)
         ).drop('api_id', axis=1)
 
     @staticmethod
@@ -153,10 +152,12 @@ class CensusDataEndpoint(object):
         j = fetchjson(self.endpoint, cache, self.session, params=params)
         ret = pd.DataFrame(data=j[1:], columns=j[0])
         for group in groups:
-            if self.groups[group]['variables']:
-                fields += self.groups[group]['variables']
+            if group in self.groups.index:
+                fields += self.groups.loc[group, 'variables']
         for field in fields:
-            if self.variables_.loc[field].get('predicateType') == 'int':
+            basefield = re.sub(r'(?<=\d)[EM]A?$', 'E', field)
+            if self.variables.loc[basefield, 'predicateType'] in (
+                    'int', 'float'):
                 ret[field] = pd.to_numeric(ret[field])
         return ret
 
