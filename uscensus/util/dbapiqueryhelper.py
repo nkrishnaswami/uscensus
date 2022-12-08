@@ -1,7 +1,11 @@
+from types import ModuleType
+from typing import Generic, TypeVar
 from .errors import DBError
 
+DBConn = TypeVar('DBConn')
 
-class DBAPIQueryHelper(object):
+
+class DBAPIQueryHelper(Generic[DBConn]):
     """Helper to simplify binding DBAPI parameters"""
 
     __paramstyle_positional = {
@@ -20,7 +24,7 @@ class DBAPIQueryHelper(object):
         'pyformat': lambda names: [f'%({name})' for name in names],
     }
 
-    def __init__(self, dbapi, conn):
+    def __init__(self, dbapi: ModuleType, conn: DBConn):
         """Construct a DBAPIQuery helper
 
         Arguments:
@@ -34,13 +38,12 @@ class DBAPIQueryHelper(object):
         self.dbapi = dbapi
         self.conn = conn
         self.positional = self.__paramstyle_positional.get(
-            self.dbapi.paramstyle)
-        self.fmt_args = self.__paramstyle_format_args.get(
-            self.dbapi.paramstyle)
+            self.dbapi.paramstyle, False)
+        self.fmt_args = self.__paramstyle_format_args[self.dbapi.paramstyle]
         if self.positional is None or self.fmt_args is None:
             raise DBError('Invalid paramstyle: ' + self.dbapi.paramstyle)
 
-    def __call__(self, template, **kwargs):
+    def __call__(self, template: str, **kwargs):
         """Query a DBAPI db, agnostic of paramstyle.
 
         Arguments:

@@ -1,44 +1,30 @@
-from datetime import datetime as dt
-from email.utils import format_datetime
 import json
 import logging
 
-from ..util.nopcache import NopCache
-from ..data.discovery import DiscoveryInterface
+import httpx
+from httpx_caching import CachingClient
+
+from .discovery import DiscoveryInterface
 
 
 _logger = logging.getLogger(__name__)
 
 
-class FakeResponse(object):
-    def __init__(self):
-        self.text = ''
-        self.status_code = 200
-        self.headers = {
-            'Date': format_datetime(dt.now())
-        }
-
-    def raise_for_status(self):
-        pass
-
-
-class FakeSession(object):
-    def send(self, req):
-        return self.get(req.url)
-
-    def get(self, url, **kwargs):
-        ret = FakeResponse()
-        if url.endswith('data.json'):
-            ret.text = self.getData()
-        elif url.endswith('variables.json'):
-            ret.text = self.getVars()
-        elif url.endswith('geography.json'):
-            ret.text = self.getGeos()
-        elif url.endswith('tags.json'):
-            ret.text = self.getTags()
+class FakeTransport(httpx.BaseTransport):
+    def handle_request(self, req):
+        if req.url.path.endswith('data.json'):
+            content = self.getData()
+        elif req.url.path.endswith('variables.json'):
+            content = self.getVars()
+        elif req.url.path.endswith('geography.json'):
+            content = self.getGeos()
+        elif req.url.path.endswith('tags.json'):
+            content = self.getTags()
         else:
-            _logger.warn('Unexpected url:', url)
-        return ret
+            _logger.warn('Unexpected url:', req.url)
+        return httpx.Response(200,
+                              headers={'content-type': 'application/json'},
+                              content=content)
 
     # Yeah, it's gauche to mix quote types, but these are basically
     # the repr's for some returned objects, and many of the strings
@@ -129,8 +115,10 @@ class FakeSession(object):
         })
 
 
-def DiscoveryInterface_test():
-    cl = DiscoveryInterface('', NopCache(), FakeSession())
+def test_DiscoveryInterface():
+
+    cl = DiscoveryInterface('', CachingClient(httpx.Client(
+        transport=FakeTransport())))
     _logger.info(f'APIs are {cl.apis}')
     assert len(cl.apis) == 1
     k, v = next(iter(cl.apis.items()))

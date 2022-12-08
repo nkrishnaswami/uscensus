@@ -5,6 +5,7 @@ import os
 import os.path
 
 import pandas as pd
+from pytest import approx
 
 from ..geocode.bulk import FilePersister
 from ..geocode.bulk import SqlAlchemyPersister
@@ -15,7 +16,7 @@ from ..geocode.bulk import to_geodataframe
 _logger = logging.getLogger(__name__)
 
 
-def FilePersister_test():
+def test_FilePersister():
     pers = FilePersister('test/tmp/tmp-{}.csv', 'test/final.csv')
     cols = ['col1', 'col2']
     rows1 = [{'col1': 11, 'col2': 12}]
@@ -40,7 +41,7 @@ def FilePersister_test():
     assert ["21", "22"] == df.iloc[1].values.tolist()
 
 
-def SqlAlchemyPersister_test():
+def test_SqlAlchemyPersister():
     pers = SqlAlchemyPersister('sqlite://', 'test')
     cols = ['col1', 'col2']
     rows1 = [{'col1': 11, 'col2': 12}]
@@ -55,7 +56,7 @@ def SqlAlchemyPersister_test():
     assert ["21", "22"] == df.iloc[1].values.tolist()
 
 
-def CensusBulkGeocoder_df_test():
+def test_CensusBulkGeocoder_df():
     pers = SqlAlchemyPersister('sqlite://', 'test')
     cgc = CensusBulkGeocoder(pers)
     df = pd.DataFrame(
@@ -69,7 +70,9 @@ def CensusBulkGeocoder_df_test():
     assert 'Exact' == row['Exact']
     assert '1600 PENNSYLVANIA AVE NW, WASHINGTON, DC, 20500' \
         == row['Geo.Address']
-    assert '-77.03535,38.898754' == row['Geo.Lon.Lat']
+    lon, lat = map(float, row['Geo.Lon.Lat'].split(','))
+    assert approx(-77.03535) == lon
+    assert approx(38.898754) == lat
     assert '76225813' == row['Geo.TIGER.LineID']
     assert 'L' == row['Geo.TIGER.Side']
     assert '11' == row['Geo.FIPS.State']
@@ -78,7 +81,7 @@ def CensusBulkGeocoder_df_test():
     assert '1034' == row['Geo.Block']
 
 
-def CensusBulkGeocoder_rows_test():
+def test_CensusBulkGeocoder_rows():
     pers = SqlAlchemyPersister('sqlite://', 'test')
     cgc = CensusBulkGeocoder(pers)
     out = cgc.geocode_rows([
@@ -90,7 +93,9 @@ def CensusBulkGeocoder_rows_test():
     assert 'Exact' == row['Exact']
     assert '1600 PENNSYLVANIA AVE NW, WASHINGTON, DC, 20500' \
         == row['Geo.Address']
-    assert '-77.03535,38.898754' == row['Geo.Lon.Lat']
+    lon, lat = map(float, row['Geo.Lon.Lat'].split(','))
+    assert approx(-77.03535) == lon
+    assert approx(38.898754) == lat
     assert '76225813' == row['Geo.TIGER.LineID']
     assert 'L' == row['Geo.TIGER.Side']
     assert '11' == row['Geo.FIPS.State']
@@ -99,7 +104,7 @@ def CensusBulkGeocoder_rows_test():
     assert '1034' == row['Geo.Block']
 
 
-def CensusBulkGeocoder_cols_test():
+def test_CensusBulkGeocoder_cols():
     pers = SqlAlchemyPersister('sqlite://', 'test')
     cgc = CensusBulkGeocoder(pers)
     out = cgc.geocode_cols(['WH000'], ['1600 Pennsylvania Ave NW'],
@@ -110,7 +115,9 @@ def CensusBulkGeocoder_cols_test():
     assert 'Exact' == row['Exact']
     assert '1600 PENNSYLVANIA AVE NW, WASHINGTON, DC, 20500' \
         == row['Geo.Address']
-    assert '-77.03535,38.898754' == row['Geo.Lon.Lat']
+    lon, lat = map(float, row['Geo.Lon.Lat'].split(','))
+    assert approx(-77.03535) == lon
+    assert approx(38.898754) == lat
     assert '76225813' == row['Geo.TIGER.LineID']
     assert 'L' == row['Geo.TIGER.Side']
     assert '11' == row['Geo.FIPS.State']
@@ -119,5 +126,5 @@ def CensusBulkGeocoder_cols_test():
     assert '1034' == row['Geo.Block']
     gout = to_geodataframe(out)
     pt = gout.loc['WH000'].geometry
-    assert float('-77.03535') == pt.x
-    assert float('38.898754') == pt.y
+    assert approx(-77.03535) == pt.x
+    assert approx(38.898754) == pt.y

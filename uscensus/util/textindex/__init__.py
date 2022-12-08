@@ -1,6 +1,9 @@
-from .textindexbase import TextIndexBase
-from .sqlitefts5index import SqliteFts5Index
-from .mongoindex import MongoIndex
-from .whooshindex import WhooshIndex
+from .textindex import TextIndex, FieldSet, DatasetFields, VariableFields
 
-__all__ = ['TextIndexBase', 'MongoIndex', 'SqliteFts5Index', 'WhooshIndex']
+
+__all__ = [
+    'TextIndex',
+    'FieldSet',
+    'DatasetFields',
+    'VariableFields',
+]

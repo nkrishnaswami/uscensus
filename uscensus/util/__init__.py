@@ -1,22 +1,20 @@
-from .dbapicache import DBAPICache
+from .datastores import NopDataStore
+from .datastores import DBAPIDataStore
+from .datastores import SqlAlchemyDataStore
 from .dbapiqueryhelper import DBAPIQueryHelper
 from .ensuretext import ensuretext
 from .errors import CensusError
 from .errors import DBError
-from .nopcache import NopCache
-from .sqlalchemycache import SqlAlchemyCache
-from .webcache import condget
-from .webcache import fetchjson
+from .webcache import fetch
 
 
 __all__ = [
-    'DBAPICache',
+    'DBAPIDataStore',
     'DBAPIQueryHelper',
     'ensuretext',
     'CensusError',
     'DBError',
-    'NopCache',
-    'SqlAlchemyCache',
-    'condget',
-    'fetchjson',
+    'NopDataStore',
+    'SqlAlchemyDataStore',
+    'fetch',
 ]

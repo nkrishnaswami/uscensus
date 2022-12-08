@@ -1,10 +1,14 @@
-from .data.discovery import DiscoveryInterface
-from .data.states import get_state_codes
+from .data import DiscoveryInterface
+from .data import get_county_boundaries
+from .data import get_county_codes
+from .data import get_state_boundaries
+from .data import get_state_codes
 from .geocode.bulk import CensusBulkGeocoder
-from .util.errors import CensusError
-from .util.errors import DBError
-from .util.nopcache import NopCache
-from .util.sqlalchemycache import SqlAlchemyCache
+from .util import CensusError
+from .util import DBError
+from .util import DBAPIDataStore
+from .util import NopDataStore
+from .util import SqlAlchemyDataStore
 
 """This module reads the Census's API discovery interface at
 http://api.census.gov/data.json, and provides callable wrappers for
@@ -22,13 +26,12 @@ Exceptions:
  * DBError(CensusError): errors accessing databases
 
 Classes:
- * SqlAlchemyCache: caches APIa metadata in any SqlAlchemy compatible DBMS
- * DBAPICache: caches API metadata in any DBAPI compatible DBMS
+ * SqlAlchemyDataStore: caches APIa metadata in any SqlAlchemy-compatible DBMS
  * DiscoveryInterface: retrieves and caches census API metadata. This
    indexes metadata and has a dict of wrapper objects for each API.
  * model.CensusDataEndpoint: wraps a Census API endpoint given its
    metadata.  These are constructed by the DiscoveryInterface.
- * NopCache: dummy implementation of the cache interface
+ * NopDataStore: dummy implementation of the datastore interface
 
 Functions:
  * get_state_codes: retrieve state codes/names/abbreviations
@@ -43,10 +46,13 @@ DataFrame.
 __all__ = [
     "CensusBulkGeocoder",
     "DiscoveryInterface",
-    "DBAPICache",
-    "SqlAlchemyCache",
-    "NopCache",
+    "DBAPIDataStore",
+    "SqlAlchemyDataStore",
+    "NopDataStore",
     "CensusError",
     "DBError",
+    "get_county_boundaries",
+    "get_county_codes",
+    "get_state_boundaries",
     "get_state_codes",
 ]

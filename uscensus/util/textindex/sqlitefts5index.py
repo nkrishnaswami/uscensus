@@ -1,46 +1,34 @@
+from collections.abc import Mapping
 import logging
+import sqlite3
+from typing import Iterable, Tuple, Union
 
-from supersqlite import sqlite3
-
-from .textindexbase import TextIndexBase
+from .textindex import TextIndex, FieldSet, DatasetFields, VariableFields
 
 
 _logger = logging.getLogger(__name__)
 
-ApiSchemaFields = ('api_id', 'title', 'description', 'geographies',
-                   'concepts', 'keywords', 'tags', 'variables', 'vintage')
 
-VariableSchemaFields = ('api_id', 'variable', 'group', 'label',
-                        'concept')
+class SqliteFts5Index(TextIndex):
+    """Full-text index backing to a sqlite DB with FTS5."""
+    fields: Tuple
 
-
-class Connections:
-    def __init__(self):
-        self.connections = {}
-
-    def get_connection(self, dbname):
-        conn = self.connections.get(dbname)
-        if conn is None:
-            conn = sqlite3.connect(dbname)
-            conn.row_factory = sqlite3.Row
-            conn.set_trace_callback(_logger.debug)
-            self.connections[dbname] = conn
-        return conn
-
-
-class SqliteFts5Index(TextIndexBase):
-    CONNECTIONS = Connections()
-
-    def __init__(self, fieldset, table, dbname=':memory:'):
-        if fieldset == 'API':
-            self.fields = ApiSchemaFields
-        elif fieldset == 'Variable':
-            self.fields = VariableSchemaFields
+    def __init__(self,
+                 fieldset: Union[DatasetFields, VariableFields],
+                 table: str,
+                 dbname: str = ':memory:'):
+        if fieldset == FieldSet.DATASET:
+            self.fields = DatasetFields._fields
+        elif fieldset == FieldSet.VARIABLE:
+            self.fields = VariableFields._fields
         else:
-            raise KeyError(f'"{fieldset}" is not one of "API" or "Variable"')
+            raise KeyError(f'"{fieldset}" is not one of DATASET or VARIABLE')
         self.quoted_fields = [f'"{field}"' for field in self.fields]
         self.table = table
-        self.conn = self.CONNECTIONS.get_connection(dbname)
+        self.conn = sqlite3.connect(dbname)
+        self.conn.row_factory = sqlite3.Row
+        self.conn.set_trace_callback(_logger.debug)
+
         self._execute(
             f'DROP TABLE IF EXISTS {self.table};')
         self._execute(
@@ -60,13 +48,17 @@ class SqliteFts5Index(TextIndexBase):
                 f"INSERT INTO {self.table}({self.table}) VALUES('optimize');")
         self.conn.__exit__(exc_type, exc_value, traceback)
 
-    def add(self, iterator, **kwargs):
+    def add(self,
+            iterable: Union[Iterable[DatasetFields], Iterable[VariableFields]],
+            **kwargs):
         self._execute_many(
             f"""INSERT INTO {self.table}({", ".join(self.quoted_fields)})
             VALUES (:{", :".join(self.fields)});""",
-            (dict(row) for row in iterator))
+            [fields._asdict() for fields in iterable])
 
-    def query(self, querystring, **constraints):
+    def query(self,
+              querystring: str,
+              **constraints: Mapping[str, str]):
         if querystring:
             if not querystring.startswith('"'):
                 querystring = f'"{querystring}"'

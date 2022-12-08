@@ -7,5 +7,4 @@ def ensuretext(val):
     elif isinstance(val, dict):
         return ' '.join(ensuretext(key) for key in val.keys())
     else:
-        # n.b. in Python 2, the builtins import makes this mean `unicode`.
         return str(val)

@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="uscensus",
-    version="0.2.4",
+    version="0.3.0",
     packages=find_packages(),
     description="US Census API discovery wrappers",
     long_description="""This module fetches metadata for the Census Data API to make it easier to find relevant data sets and variables to query, and returns data as a Pandas dataframe.""",
@@ -16,18 +16,15 @@ setup(
 
     install_requires=[
         'docutils>=0.3',
-        'python-dateutil',
-        'fiona',
         'geopandas',
         'httpx>=0.17.0',
-        'numpy',
+        'httpx_caching',
         'pandas',
         'pymongo',
-        'pytz',
-        'requests',
+        'pytest',
+        'pytest-asyncio',
         'shapely',
-        'sqlalchemy',
-        'supersqlite',
+        'sqlalchemy[asyncio]',
         'whoosh',
     ],
 
