@@ -15,6 +15,8 @@ setup(
     tests_require=['nose'],
 
     install_requires=[
+        'aiosqlite',
+        'aiotools',
         'docutils>=0.3',
         'geopandas',
         'httpx>=0.17.0',
