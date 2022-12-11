@@ -1,16 +1,22 @@
+import logging
 from typing import Iterable, Union
 
 from pymongo import MongoClient
 
-from .textindex import TextIndex, DatasetFields, VariableFields
+from .textindex import TextIndex, FieldSet, DatasetFields, VariableFields
+
+
+_logger = logging.getLogger('pymongo')
 
 
 class MongoIndex(TextIndex):
     """Census API metadata indexer based on MongoDb."""
-    def __init__(self, name,
+    def __init__(self,
+                 fieldset: FieldSet,
+                 name: str,
                  client: MongoClient = MongoClient(
                      'mongodb://localhost:27017'),
-                 db: str = 'census',
+                 db: str = 'varindex',
                  dflt_query_field: str = 'dataset_id'):
         """Initialize index specified fields.
 
@@ -37,7 +43,8 @@ class MongoIndex(TextIndex):
             default_language='en')
 
     def add(self,
-            iterable: Union[Iterable[DatasetFields], Iterable[VariableFields]],
+            documents: Union[Iterable[DatasetFields],
+                             Iterable[VariableFields]],
             **kwargs):
         """Add entries to the index
 
@@ -46,18 +53,23 @@ class MongoIndex(TextIndex):
             dataset_id, title, description, variables, geographies, concepts,
             keywords, tags, and vintage.
         """
-        docs = [doc._asdict() for doc in iterable]
-        if docs:
-            self.coll.insert_many(docs)
+        if documents:
+            self.coll.insert_many([doc._asdict() for doc in documents])
 
-    def query(self, querystring: str, **query):
+    def query(self, querystring: str, **colqueries):
         """Find dataset IDs matching querystring"""
         ret = []
-        query.update({'$text': {'$search': querystring}})
-        for doc in self.coll.find(
-                query,
-                {'_id': False,
-                 'score': {'$meta': "textScore"}}
-        ).sort([('score', {'$meta': "textScore"})]):
+        query = {}
+        proj = {'_id': False}
+        if querystring:
+            query.update({'$text': {'$search': querystring}})
+            proj['score'] = {'$meta': "textScore"}
+        for col, colquery in colqueries.items():
+            query[col] = colquery
+        _logger.debug(f'Final query is {query}')
+        find_op = self.coll.find(query, proj)
+        if 'score' in proj:
+            find_op = find_op.sort([('score', {'$meta': "textScore"})])
+        for doc in find_op:
             ret.append(doc)
         return ret

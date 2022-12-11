@@ -25,6 +25,7 @@ DatasetSchemaFields = OrderedDict((
     ('variables', KEYWORD(analyzer=KWAnalyzer)),
     ('vintage', ID),
 ))
+assert sorted(DatasetSchemaFields) == sorted(DatasetFields._fields)
 
 VariableSchemaFields = OrderedDict((
     ('dataset_id', ID(stored=True)),
@@ -33,6 +34,7 @@ VariableSchemaFields = OrderedDict((
     ('label', TEXT(analyzer=Analyzer)),
     ('concept', KEYWORD(analyzer=Analyzer)),
 ))
+assert sorted(VariableSchemaFields) == sorted(VariableFields._fields)
 
 
 class WhooshIndex(TextIndex):
@@ -41,8 +43,8 @@ class WhooshIndex(TextIndex):
     schema_fields: OrderedDict[str, FieldType]
 
     def __init__(self,
-                 name: str,
                  fieldset: FieldSet,
+                 index_name: str,
                  dflt_query_field: str,
                  path: str = None):
         """Initialize Whoosh index specified fields.
@@ -63,11 +65,11 @@ class WhooshIndex(TextIndex):
         # Initialize index
         fs = FileStorage(path).create() if path else RamStorage()
         if fs.index_exists():
-            self.index = fs.open_index(name)
+            self.index = fs.open_index(index_name)
             schema = self.index.schema()
         else:
             schema = Schema(**self.schema_fields)
-            self.index = fs.create_index(schema, name)
+            self.index = fs.create_index(schema, index_name)
         self.qparser = QueryParser(dflt_query_field,
                                    schema=schema)
         self.writer = None
@@ -99,8 +101,7 @@ class WhooshIndex(TextIndex):
         if not self.writer:
             raise CensusError('Text indexer called outside of context manager')
         for vals in iterable:
-            self.writer.add_document(
-                **dict(zip(self.schema_fields, vals)))
+            self.writer.add_document(**vals._asdict())
 
     def query(self, querystring: str, **query_ignored):
         """Find dataset IDs matching querystring"""

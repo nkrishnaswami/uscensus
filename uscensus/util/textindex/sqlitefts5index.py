@@ -49,18 +49,19 @@ class SqliteFts5Index(TextIndex):
         self.conn.__exit__(exc_type, exc_value, traceback)
 
     def add(self,
-            iterable: Union[Iterable[DatasetFields], Iterable[VariableFields]],
-            **kwargs):
+            documents: Union[Iterable[DatasetFields],
+                             Iterable[VariableFields]],
+            **kwargs) -> None:
         self._execute_many(
             f"""INSERT INTO {self.table}({", ".join(self.quoted_fields)})
             VALUES (:{", :".join(self.fields)});""",
-            [fields._asdict() for fields in iterable])
+            [doc._asdict() for doc in documents])
 
     def query(self,
               querystring: str,
               **constraints: Mapping[str, str]):
         if querystring:
-            if not querystring.startswith('"'):
+            if not (querystring.startswith('"') or ':' in querystring):
                 querystring = f'"{querystring}"'
             if constraints:
                 querystring += ' AND '

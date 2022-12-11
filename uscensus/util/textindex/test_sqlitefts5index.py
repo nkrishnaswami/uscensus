@@ -1,9 +1,9 @@
 from ...util.textindex import FieldSet, DatasetFields
-from ...util.textindex.whooshindex import WhooshIndex
+from ...util.textindex.sqlitefts5index import SqliteFts5Index
 
 
 def test_Index():
-    index = WhooshIndex(FieldSet.DATASET, 'index', 'title')
+    index = SqliteFts5Index(FieldSet.DATASET, 'varindex', 'title')
     data = [
         DatasetFields(dataset_id='id1',
                       title='title one',
