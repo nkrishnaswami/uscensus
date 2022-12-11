@@ -1,19 +1,20 @@
 import logging
-from typing import Optional, Union
+from typing import Dict, Optional, Union
 
 import httpx
 import pandas as pd
 
 from ..data.model import CensusDataEndpoint
 from ..util.errors import CensusError
-from ..util.webcache import fetch
+from ..util.textindex.sqlitefts5index import SqliteFts5Index
 from ..util.textindex.textindex import (TextIndex, FieldSet,
                                         DatasetFields)
+from ..util.webcache import fetch
 
 _logger = logging.getLogger(__name__)
 
 
-class DiscoveryInterface(object):
+class DiscoveryInterface:
     """Discover and bind census datasets.
 
     TODO: Move the functionality into DiscoveryInterface, and make the
@@ -21,14 +22,15 @@ class DiscoveryInterface(object):
 
     """
 
+    datasets: Dict[str, CensusDataEndpoint]
     index: TextIndex
     variableindex: TextIndex
 
     def __init__(self,
                  key: str,
-                 session: httpx.Client,
+                 client: httpx.Client,
                  vintage: Optional[Union[str, int]] = None,
-                 fts_class: Optional[type] = None):
+                 fts_class: type = SqliteFts5Index):
         """Load and wrap census datasets.
 
         Prefers cached metadata if present and not stale, otherwise
@@ -36,15 +38,11 @@ class DiscoveryInterface(object):
 
         Arguments:
           * key: Census API key
-          * session: httpx Client to use for calling API.
+          * client: httpx Client to use for calling API.
           * vintage: discovery only data sets for this vintage, if present.
           * fts_class: utility class to use for full-text indices. If omitted,
                 SqliteFts5Index will be used.
         """
-
-        if fts_class is None:
-            from ..util.textindex.sqlitefts5index import SqliteFts5Index
-            fts_class = SqliteFts5Index
 
         self.datasets = {}
         if vintage:
@@ -52,7 +50,7 @@ class DiscoveryInterface(object):
         else:
             url = 'https://api.census.gov/data.json'
         _logger.debug("Fetching root metadata")
-        resp = fetch(url, session).json()
+        resp = fetch(url, client).json()
         if not resp:
             raise CensusError("Failed to retrieve root metadata from Census " +
                               "API discovery endpoint")
@@ -62,50 +60,62 @@ class DiscoveryInterface(object):
                               " discovery endpoint")
 
         _logger.debug("Fetching per-dataset metadata")
-        self.variableindex = fts_class(FieldSet.VARIABLE, 'variables')
-        with self.variableindex:
-            for ds in datasets:
-                for distribution in ds.get('distribution') or []:
-                    if distribution.get('format') == 'API':
-                        endpoint = distribution['accessURL']
-                ds_id = endpoint.replace(
-                    'http://api.census.gov/data/', ''
-                ).replace(
-                    'https://api.census.gov/data/', ''
-                )
-                _logger.debug(f'Processing dataset {ds_id}')
-                try:
-                    dataset = CensusDataEndpoint(key, ds, session,
-                                             self.variableindex)
-                    # TODO: add more indexing; groups, hier by
-                    #       dataset, geo schemes, by vintage, etc
-                    self.datasets[dataset.id] = dataset
-                    _logger.debug('Finished processing metadata for dataset: ' +
-                                  f'{dataset.id}')
-                except Exception as e:
-                    _logger.warn('Error processing metadata; skipping dataset ' +
-                                 f'{ds["title"]}', exc_info=e)
-
-        _logger.debug("Indexing dataset metadata")
         self.index = fts_class(FieldSet.DATASET, 'datasets')
-        with self.index:
-            self.index.add(
+        self.variableindex = fts_class(FieldSet.VARIABLE, 'variables')
+        with self.index, self.variableindex:
+            for ds in datasets:
+                self._process_one_dataset(key, client, ds)
+
+        _logger.debug("Done processing metadata")
+
+    @staticmethod
+    def _get_ds_id(ds: dict):
+        for distribution in ds.get('distribution') or []:
+            if distribution.get('format') == 'API':
+                endpoint = distribution['accessURL']
+        return endpoint.replace(
+            'http://api.census.gov/data/', ''
+        ).replace(
+            'https://api.census.gov/data/', ''
+        )
+
+    def _process_one_dataset(
+            self,
+            key: str,
+            client: httpx.Client,
+            ds: dict):
+        """Build an CensuDataEndpoint for the specfied dataset
+        metadata.
+
+        This must be called in a self.variableindex context.
+        """
+        ds_id = self._get_ds_id(ds)
+        _logger.debug(f'Processing dataset {ds_id}')
+        try:
+            dataset = CensusDataEndpoint(key, ds, client,
+                                         self.variableindex)
+            # TODO: add more indexing; groups, hier by
+            #       dataset, geo schemes, by vintage, etc
+            self.datasets[dataset.id] = dataset
+            self.index.add([
                 DatasetFields(
                     dataset_id=dataset.id,
                     title=dataset.title,
                     description=dataset.description,
-                    geographies=' '.join(dataset.geographies['name']),
+                    geographies=' '.join(dataset.geographies[
+                        'name'].astype(str)),
                     concepts=' '.join(dataset.concepts),
                     keywords=' '.join(dataset.keywords),
                     tags=' '.join(dataset.tags),
                     variables=' '.join(dataset.variables['label']),
-                    vintage=dataset.vintage)
-                for dataset in self.datasets.values()
-            )
-            _logger.debug("Done adding metadata")
-        _logger.debug("Done committing metadata")
+                    vintage=dataset.vintage)])
+            _logger.debug('Finished processing metadata for ' +
+                          f'dataset: {dataset.id}')
+        except Exception as e:
+            _logger.warn('Error processing metadata; skipping ' +
+                         f'dataset {ds["title"]}', exc_info=e)
 
-    def search(self, query):
+    def search(self, query: str):
         """Find a list of dataset objects matching the index query.
         Index queries default to searching dataset titles, but may also
         search
@@ -132,7 +142,7 @@ class DiscoveryInterface(object):
             columns=cols
         )
 
-    def __getitem__(self, dataset_id):
+    def __getitem__(self, dataset_id: str):
         """Return an identifier by dataset ID.
 
         Arguments:
