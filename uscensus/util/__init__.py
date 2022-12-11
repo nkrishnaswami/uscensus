@@ -6,6 +6,7 @@ from .ensuretext import ensuretext
 from .errors import CensusError
 from .errors import DBError
 from .webcache import fetch
+from .webcache import make_client
 
 
 __all__ = [
@@ -17,4 +18,5 @@ __all__ = [
     'NopDataStore',
     'SqlAlchemyDataStore',
     'fetch',
+    'make_client',
 ]

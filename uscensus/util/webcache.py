@@ -2,12 +2,23 @@ import logging
 import time
 
 import httpx
-from httpx_caching import SyncCachingTransport
+from httpx_caching import CachingClient, SyncCachingTransport
+from httpx_caching._heuristics import ExpiresAfterHeuristic
 
 from ..util.errors import CensusError
 
 
 _logger = logging.getLogger(__name__)
+
+
+def make_client(*, cache, heuristic=ExpiresAfterHeuristic(days=7)):
+    """Create a caching httpx Client with the caller-specified
+    datastore and optionally caching heuristic.
+    """
+    return CachingClient(httpx.Client(follow_redirects=True),
+                         cacheable_status_codes=(200, 203, 300, 301, 302, 308),
+                         heuristic=heuristic,
+                         cache=cache)
 
 
 def fetch(
@@ -63,9 +74,9 @@ def fetch(
     # If we get here, r is not None.
     assert r is not None
     if r.extensions.get('from_cache'):
-        _logger.debug('Cache hit')
+        _logger.debug(f'Cache hit for {url}')
     else:
-        _logger.debug('Cache miss')
+        _logger.debug(f'Cache miss for {url}')
 
     r.raise_for_status()
     return r

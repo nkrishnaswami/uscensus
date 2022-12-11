@@ -2,13 +2,23 @@ import asyncio
 import logging
 
 import httpx
-from httpx_caching import AsyncCachingTransport
+from httpx_caching import CachingClient, AsyncCachingTransport
+from httpx_caching._heuristics import ExpiresAfterHeuristic
 
 from ...util.errors import CensusError
 
 
 _logger = logging.getLogger(__name__)
-_counter = {'hit': 0, 'miss': 0}
+
+
+def make_async_client(*, cache, heuristic=ExpiresAfterHeuristic(days=7)):
+    """Create a caching httpx AsyncClient with the caller-specified
+    datastore and optionally caching heuristic.
+    """
+    return CachingClient(httpx.AsyncClient(follow_redirects=True),
+                         cacheable_status_codes=(200, 203, 300, 301, 302, 308),
+                         heuristic=heuristic,
+                         cache=cache)
 
 
 async def afetch(
@@ -16,7 +26,6 @@ async def afetch(
         session: httpx.AsyncClient,
         *,
         retries: int = 3,
-        counter=_counter,
         **kwargs) -> httpx.Response:
     """Caching wrapper around httpx to get a URL, check for
     errors, and return the pickled reponse.
@@ -64,9 +73,9 @@ async def afetch(
     # If we get here, r is not None.
     assert r is not None
     if r.extensions.get('from_cache'):
-        counter['hit'] += 1
+        _logger.debug(f'Cache hit for {url}')
     else:
-        counter['miss'] += 1
+        _logger.debug(f'Cache miss for {url}')
 
     r.raise_for_status()
     return r
