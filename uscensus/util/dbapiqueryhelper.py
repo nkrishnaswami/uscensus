@@ -1,11 +1,8 @@
-from types import ModuleType
-from typing import Generic, TypeVar
 from .errors import DBError
+from .types.dbapi import DBAPIProtocol, DBAPIConnection
 
-DBConn = TypeVar('DBConn')
 
-
-class DBAPIQueryHelper(Generic[DBConn]):
+class DBAPIQueryHelper:
     """Helper to simplify binding DBAPI parameters"""
 
     __paramstyle_positional = {
@@ -24,7 +21,7 @@ class DBAPIQueryHelper(Generic[DBConn]):
         'pyformat': lambda names: [f'%({name})' for name in names],
     }
 
-    def __init__(self, dbapi: ModuleType, conn: DBConn):
+    def __init__(self, dbapi: DBAPIProtocol, conn: DBAPIConnection):
         """Construct a DBAPIQuery helper
 
         Arguments:
