@@ -11,14 +11,19 @@ from ..util.errors import CensusError
 _logger = logging.getLogger(__name__)
 
 
-def make_client(*, cache, heuristic=ExpiresAfterHeuristic(days=7)):
+def make_client(*, cache, key=None, heuristic=ExpiresAfterHeuristic(days=30)):
     """Create a caching httpx Client with the caller-specified
     datastore and optionally caching heuristic.
+
     """
-    return CachingClient(httpx.Client(follow_redirects=True),
-                         cacheable_status_codes=(200, 203, 300, 301, 302, 308),
-                         heuristic=heuristic,
-                         cache=cache)
+    params = None
+    if key:
+        params = { 'key': key }
+    client = CachingClient(httpx.Client(follow_redirects=True, params=params),
+                           cacheable_status_codes=(200, 203, 300, 301, 302, 308),
+                           heuristic=heuristic,
+                           cache=cache)
+    
 
 
 def fetch(
@@ -69,7 +74,7 @@ def fetch(
                 raise
         if r and r.status_code < 400:
             break
-        time.sleep(3**retry)
+        time.sleep(max(3**retry, 60))
 
     # If we get here, r is not None.
     assert r is not None
