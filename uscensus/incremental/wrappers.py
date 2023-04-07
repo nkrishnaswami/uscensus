@@ -99,7 +99,7 @@ class Dataset:
         Returns:
           Wrappers for each variable group as a dict keyed by group ID.
         """
-        if self.model.c_groupsLink:
+        if self._model.c_groupsLink:
             url = self._model.c_groupsLink.replace('http:', 'https:')
             _logger.debug('Fetching groups:  %s', url)
             return {

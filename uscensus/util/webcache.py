@@ -19,10 +19,10 @@ def make_client(*, cache, key=None, heuristic=ExpiresAfterHeuristic(days=30)):
     params = None
     if key:
         params = { 'key': key }
-    client = CachingClient(httpx.Client(follow_redirects=True, params=params),
-                           cacheable_status_codes=(200, 203, 300, 301, 302, 308),
-                           heuristic=heuristic,
-                           cache=cache)
+    return CachingClient(httpx.Client(follow_redirects=True, params=params),
+                         cacheable_status_codes=(200, 203, 300, 301, 302, 308),
+                         heuristic=heuristic,
+                         cache=cache)
     
 
 

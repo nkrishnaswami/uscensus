@@ -19,40 +19,40 @@ def _make_filter_fn(
 
 def filter_datasets(
         datasets: Iterable[Dataset],
-        *
+        *,
         vintages: list[int] = [],
-        title: Callable[[str], bool] | re.Pattern | str,
-        description: Callable[[str], bool] | re.Pattern | str,
-        variable: Callable[[str], bool] | re.Pattern | str,
-        group: Callable[[str], bool] | re.Pattern | str,
-        tags: Callable[[str], bool] | re.Pattern | str,
-        geography: Callable[[str], bool] | re.Pattern | str,
+        title: Callable[[str], bool] | re.Pattern | str = '',
+        description: Callable[[str], bool] | re.Pattern | str = '',
+        variable: Callable[[str], bool] | re.Pattern | str = '',
+        group: Callable[[str], bool] | re.Pattern | str = '',
+        tags: Callable[[str], bool] | re.Pattern | str = '',
+        geography: Callable[[str], bool] | re.Pattern | str = '',
 ) -> list[Dataset]:
     if vintages:
-        datasets = [dataset for dataset in filter_dataset_vintages(
+        datasets = [dataset for dataset in filter_datasets_vintages(
             datasets, vintages)]
     if title:
-        datasets = [dataset for dataset in filter_dataset_title(
+        datasets = [dataset for dataset in filter_datasets_title(
             datasets, title)]
     if description:
-        datasets = [dataset for dataset in filter_dataset_description(
+        datasets = [dataset for dataset in filter_datasets_description(
             datasets, description)]
     if variable:
-        datasets = [dataset for dataset in filter_dataset_variables(
+        datasets = [dataset for dataset in filter_datasets_variables(
             datasets, variable)]
     if group:
-        datasets = [dataset for dataset in filter_dataset_groups(
+        datasets = [dataset for dataset in filter_datasets_groups(
             datasets, group)]
-    if tag:
-        datasets = [dataset for dataset in filter_dataset_tags(
+    if tags:
+        datasets = [dataset for dataset in filter_datasets_tags(
             datasets, tag)]
     if geography:
-        datasets = [dataset for dataset in filter_dataset_geography(
+        datasets = [dataset for dataset in filter_datasets_geography(
             datasets, geography)]
     return datasets
     
 
-def filter_datasets_vintage(
+def filter_datasets_vintages(
         datasets: Iterable[Dataset],
         vintages: list[int]
 ) -> Generator[Dataset, None, None]:
@@ -63,7 +63,7 @@ def filter_datasets_vintage(
 
 def filter_datasets_title(
         datasets: Iterable[Dataset],
-        
+        filter_: Callable[[str], bool] | re.Pattern | str        
 ) -> Generator[Dataset, None, None]:
     filter_fn = _make_filter_fn(filter_)
     for dataset in datasets:

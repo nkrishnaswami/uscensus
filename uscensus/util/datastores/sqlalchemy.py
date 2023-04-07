@@ -52,22 +52,21 @@ class SqlAlchemyDataStore(DataStore):
         Arguments:
           * key: document key.
         """
-        _logger.debug('get: key={key}')
+        _logger.debug(f'get: key={key}')
         with self.engine.connect() as conn:
             cur = conn.execute(
                 sqlalchemy.select(
-                    [self.table.c.data],
-                    from_obj=self.table,
+                    self.table
                 ).where(
                     self.table.c.key == sqlalchemy.bindparam('key')
                 ),
-                key=key
+                { 'key': key },
             )
             row = cur.fetchone()
             if row:
                 _logger.debug('Hit')
                 return ResponseSerializer().loads(zlib.decompress(
-                    row[self.table.c.data]))
+                    row.data))
             _logger.debug('Miss')
         return None, None
 
@@ -79,7 +78,7 @@ class SqlAlchemyDataStore(DataStore):
                 self.table.delete().where(
                     self.table.c.key == sqlalchemy.bindparam('key')
                 ),
-                key=key,
+                { 'key': key },
             )
 
     def set(self,

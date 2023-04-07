@@ -74,10 +74,10 @@ class QueryBuilder:
         geography, if required.
 
         """
-        for geo_in_level in geo_in:
-            geo_level = self.dataset.geography.levels.get(geo_in_level)
-            if not geo_level:
-                raise ValueError(f'Invalid "in" geography "{geo_in_level}"')
+        #for geo_in_level in geo_in:
+        #    geo_level = self.dataset.geography.levels.get(geo_in_level)
+        #    if not geo_level:
+        #        raise ValueError(f'Invalid "in" geography "{geo_in_level}"')
 
         self.geo_in = dict(geo_in)
         return self
@@ -113,7 +113,7 @@ class QueryBuilder:
         set.
 
         """
-        if not self.dataset.geography.has_default and self.geo_for_value:
+        if not self.dataset.geography.has_default and not self.geo_for_value:
             raise ValueError('Geography is required')
         geo_level = self.dataset.geography.levels[self.geo_for_level]
         for level_id in geo_level.requires:
