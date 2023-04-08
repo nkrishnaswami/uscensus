@@ -3,7 +3,6 @@ from __future__ import annotations
 import datetime
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Optional
 
 import dateutil.parser
 from dataclasses_json import DataClassJsonMixin
@@ -16,7 +15,7 @@ def _date_field(**kwargs):
         metadata=json_config(
             encoder=lambda x: datetime.date.isoformat(x) if x else None,
             decoder=lambda x: datetime.date.fromisoformat(x) if x else None,
-            mm_field=mm_fields.DateTime(format='iso')
+            mm_field=mm_fields.DateTime(format='iso'),
         ),
         **kwargs)
 
@@ -26,7 +25,7 @@ def _datetime_field(**kwargs):
         metadata=json_config(
             encoder=datetime.datetime.isoformat,
             decoder=dateutil.parser.parse,
-            mm_field=mm_fields.DateTime(format='iso')
+            mm_field=mm_fields.DateTime(format='iso'),
         ),
         **kwargs)
 
@@ -41,7 +40,7 @@ class GeographyLevel(DataClassJsonMixin):
     name: str
     geoLevelDisplay: str = ''
     limit: str = ''
-    referenceDate: Optional[datetime.date] = _date_field(default=None)
+    referenceDate: datetime.date | None = _date_field(default=None)
     requires: list[str] = field(default_factory=list)
     wildcard: list[str] = field(default_factory=list)
     optionalWithWCFor: str = ''
@@ -60,8 +59,8 @@ class Variable(DataClassJsonMixin):
     predicateType: str = ''
     group: str = ''
     limit: int = 0
-    predicateOnly: Optional[bool] = None
-    hasGeoCollectionSupport: Optional[bool] = None
+    predicateOnly: bool | None = None
+    hasGeoCollectionSupport: bool | None = None
     attributes: str = ''
     required: str = ''
     universe: str = ''
@@ -101,13 +100,13 @@ class Sorts(DataClassJsonMixin):
 
 
 class PublicPrivate(Enum):
-    public = "public"
-    private = "private"
+    public = 'public'
+    private = 'private'
 
 
 @dataclass(eq=True, frozen=True)
 class DcatDistribution(DataClassJsonMixin):
-    type_: str = field(metadata=json_config(field_name="@type"))
+    type_: str = field(metadata=json_config(field_name='@type'))
     accessURL: str
     description: str
     format: str
@@ -127,12 +126,11 @@ class DcatDatasetType(Enum):
 
 @dataclass(eq=True, frozen=True)
 class Dataset(DataClassJsonMixin):
-    """A DCAT dataset corresponding to Census data.
+    """A DCAT dataset corresponding to Census data."""
 
-    """
-    contactPoint: Optional[DcatContact] = None
-    accessLevel: Optional[PublicPrivate] = None
-    type_: DcatDatasetType = field(metadata=json_config(field_name="@type"),
+    contactPoint: DcatContact | None = None
+    accessLevel: PublicPrivate | None = None
+    type_: DcatDatasetType = field(metadata=json_config(field_name='@type'),
                                    default=DcatDatasetType.Dataset)
     c_dataset: list[str] = field(default_factory=list)
     c_geographyLink: str = ''
@@ -150,24 +148,23 @@ class Dataset(DataClassJsonMixin):
     license: str = ''
     programCode: list[str] = field(default_factory=list)
     references: list[str] = field(default_factory=list)
-    modified: Optional[datetime.datetime] = _datetime_field(default=None)
-    c_vintage: Optional[int] = None
-    c_tagsLink: Optional[str] = None
-    c_isCube: Optional[bool] = None
-    c_isAggregate: Optional[bool] = None
-    c_isAvailable: Optional[bool] = None
-    spatial: Optional[str] = None
-    temporal: Optional[str] = None
+    modified: datetime.datetime | None = _datetime_field(default=None)
+    c_vintage: int | None = None
+    c_tagsLink: str | None = None
+    c_isCube: bool | None = None
+    c_isAggregate: bool | None = None
+    c_isAvailable: bool | None = None
+    spatial: str | None = None
+    temporal: str | None = None
 
 
 @dataclass(eq=True, frozen=True)
 class Catalog(DataClassJsonMixin):
-    """A catalog for Census data API calls.
+    """A catalog for Census data API calls."""
 
-    """
-    context: str = field(metadata=json_config(field_name="@context"))
-    id_: str = field(metadata=json_config(field_name="@id"))
-    type_: str = field(metadata=json_config(field_name="@type"))
+    context: str = field(metadata=json_config(field_name='@context'))
+    id_: str = field(metadata=json_config(field_name='@id'))
+    type_: str = field(metadata=json_config(field_name='@type'))
     conformsTo: str
     describedBy: str
     dataset: list[Dataset]

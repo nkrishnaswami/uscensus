@@ -7,7 +7,7 @@ from __future__ import annotations
 import logging
 from dataclasses import dataclass
 from functools import cached_property
-from typing import TYPE_CHECKING, Type, TypeVar
+from typing import TYPE_CHECKING, TypeVar
 
 if TYPE_CHECKING:
     import httpx
@@ -26,10 +26,9 @@ class Geography:
 
 
 class Group:
-    """A group of related variables on the same topic.
-    """
+    """A group of related variables on the same topic."""
 
-    def __init__(self, model: model.Group, client: httpx.Client):
+    def __init__(self, model: model.Group, client: httpx.AsyncClient) -> None:
         self._model = model
         self.client = client
 
@@ -46,27 +45,25 @@ class Group:
 
 
 class Dataset:
-    def __init__(self, model: model.Dataset, client: httpx.Client):
+    def __init__(self, model: model.Dataset, client: httpx.AsyncClient) -> None:
         self._model = model
         self.client = client
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f'<{self._model.title}:{self._model.c_vintage}:{self._model.c_dataset}>'
-        
-    def __getattr__(self, attr: str):
-        """Delegate attribute access to model.Catalog.
 
-        """
+    def __getattr__(self, attr: str):
+        """Delegate attribute access to model.Catalog."""
         return getattr(self._model, attr)
 
     @cached_property
     def geography(self) -> Geography:
         """Retrieve and process the geography link, if any.
 
-        Returns:
+        Returns
+        -------
           The wrapped model instance.
         """
-
         if self._model.c_geographyLink:
             url = self._model.c_geographyLink.replace('http:', 'https:')
             _logger.debug('Fetching geographies: %s', url)
@@ -83,7 +80,8 @@ class Dataset:
     def tags(self) -> list[str]:
         """Retrieve and process the tags link, if any.
 
-        Returns:
+        Returns
+        -------
           The tag values as a list.
         """
         if self._model.c_tagsLink:
@@ -96,7 +94,8 @@ class Dataset:
     def groups(self) -> dict[str, Group]:
         """Retrieve and process the variable groups link, if any.
 
-        Returns:
+        Returns
+        -------
           Wrappers for each variable group as a dict keyed by group ID.
         """
         if self._model.c_groupsLink:
@@ -113,7 +112,8 @@ class Dataset:
     def variables(self) -> dict[str, model.Variable]:
         """Retrieve and process the variables link, if any.
 
-        Returns:
+        Returns
+        -------
           The wrapped variable in a dict keyed by group ID.
         """
         if self._model.c_variablesLink:
@@ -127,7 +127,8 @@ class Dataset:
     def api_url(self) -> str:
         """Find the distribution link for the JSON API, if any.
 
-        Returns:
+        Returns
+        -------
           The URL if present, otherwise None.
         """
         for distribution in self._model.distribution:
@@ -142,21 +143,22 @@ CAT = TypeVar('CAT', bound='Catalog')
 
 class Catalog:
     @classmethod
-    def get_catalog(cls: Type[CAT],
-                    client: httpx.Client,
+    def get_catalog(cls: type[CAT],
+                    client: httpx.AsyncClient,
                     *,
-                    catalog_subpath: str = '') -> 'Catalog':
+                    catalog_subpath: str = '') -> Catalog:
         """Retrieve and process the root or subpath data catalog
         document from the Census API server.
 
         Arguments:
-          * client: an httpx.Client instance, such as one returned by
-                uscensus.util.webcache.make_client.
+        ---------
+          * client: an httpx.AsyncClient instance, such as one
+                returned by uscensus.util.webcache.make_client.
 
         Returns:
+        -------
           The new Catalog wrapper instance.
         """
-
         if not catalog_subpath:
             url = 'https://api.census.gov/data.json'
         else:
@@ -164,14 +166,12 @@ class Catalog:
         _logger.debug('Fetching catalog:  %s', url)
         return cls(model.Catalog.from_json(fetch(url, client).text), client)
 
-    def __init__(self, model: model.Catalog, client: httpx.Client):
+    def __init__(self, model: model.Catalog, client: httpx.AsyncClient) -> None:
         self._model = model
         self.client = client
 
     def __getattr__(self, attr: str):
-        """Delegate attribute access to model.Catalog.
-        """
-
+        """Delegate attribute access to model.Catalog."""
         return getattr(self._model, attr)
 
     @cached_property
@@ -179,6 +179,5 @@ class Catalog:
         """Return wrapped Dataset instances for each dataset in the
         catalog.
         """
-
         return [Dataset(dataset, self.client)
                 for dataset in self._model.dataset]

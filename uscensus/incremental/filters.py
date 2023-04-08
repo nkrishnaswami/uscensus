@@ -1,14 +1,15 @@
 from __future__ import annotations
 
 import re
-from typing import TYPE_CHECKING, Callable, Generator, Iterable
+from collections.abc import Callable, Generator, Iterable
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from uscensus.incremental.wrappers import Dataset
 
 
 def _make_filter_fn(
-        filter_: Callable[[str], bool] | re.Pattern | str
+        filter_: Callable[[str], bool] | re.Pattern | str,
 ) -> Callable[[str], bool]:
     if isinstance(filter_, str):
         return lambda d: d.find(filter_) >= 0
@@ -29,32 +30,32 @@ def filter_datasets(
         geography: Callable[[str], bool] | re.Pattern | str = '',
 ) -> list[Dataset]:
     if vintages:
-        datasets = [dataset for dataset in filter_datasets_vintages(
-            datasets, vintages)]
+        datasets = list(filter_datasets_vintages(
+            datasets, vintages))
     if title:
-        datasets = [dataset for dataset in filter_datasets_title(
-            datasets, title)]
+        datasets = list(filter_datasets_title(
+            datasets, title))
     if description:
-        datasets = [dataset for dataset in filter_datasets_description(
-            datasets, description)]
+        datasets = list(filter_datasets_description(
+            datasets, description))
     if variable:
-        datasets = [dataset for dataset in filter_datasets_variables(
-            datasets, variable)]
+        datasets = list(filter_datasets_variables(
+            datasets, variable))
     if group:
-        datasets = [dataset for dataset in filter_datasets_groups(
-            datasets, group)]
+        datasets = list(filter_datasets_groups(
+            datasets, group))
     if tags:
-        datasets = [dataset for dataset in filter_datasets_tags(
-            datasets, tag)]
+        datasets = list(filter_datasets_tags(
+            datasets, tags))
     if geography:
-        datasets = [dataset for dataset in filter_datasets_geography(
-            datasets, geography)]
+        datasets = list(filter_datasets_geography(
+            datasets, geography))
     return datasets
-    
+
 
 def filter_datasets_vintages(
         datasets: Iterable[Dataset],
-        vintages: list[int]
+        vintages: list[int],
 ) -> Generator[Dataset, None, None]:
     for dataset in datasets:
         if dataset.c_vintage in vintages:
@@ -63,7 +64,7 @@ def filter_datasets_vintages(
 
 def filter_datasets_title(
         datasets: Iterable[Dataset],
-        filter_: Callable[[str], bool] | re.Pattern | str        
+        filter_: Callable[[str], bool] | re.Pattern | str,
 ) -> Generator[Dataset, None, None]:
     filter_fn = _make_filter_fn(filter_)
     for dataset in datasets:
@@ -73,7 +74,7 @@ def filter_datasets_title(
 
 def filter_datasets_description(
         datasets: Iterable[Dataset],
-        filter_: Callable[[str], bool] | re.Pattern | str
+        filter_: Callable[[str], bool] | re.Pattern | str,
 ) -> Generator[Dataset, None, None]:
     filter_fn = _make_filter_fn(filter_)
     for dataset in datasets:
@@ -83,7 +84,7 @@ def filter_datasets_description(
 
 def filter_datasets_variables(
         datasets: Iterable[Dataset],
-        filter_: Callable[[str], bool] | re.Pattern | str
+        filter_: Callable[[str], bool] | re.Pattern | str,
 ) -> Generator[Dataset, None, None]:
     filter_fn = _make_filter_fn(filter_)
     for dataset in datasets:
@@ -95,7 +96,7 @@ def filter_datasets_variables(
 
 def filter_datasets_groups(
         datasets: Iterable[Dataset],
-        filter_: Callable[[str], bool] | re.Pattern | str
+        filter_: Callable[[str], bool] | re.Pattern | str,
 ) -> Generator[Dataset, None, None]:
     filter_fn = _make_filter_fn(filter_)
     for dataset in datasets:
@@ -108,7 +109,7 @@ def filter_datasets_groups(
 
 def filter_datasets_tags(
         datasets: Iterable[Dataset],
-        filter_: Callable[[str], bool] | re.Pattern | str
+        filter_: Callable[[str], bool] | re.Pattern | str,
 ) -> Generator[Dataset, None, None]:
     filter_fn = _make_filter_fn(filter_)
     for dataset in datasets:

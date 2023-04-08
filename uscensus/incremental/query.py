@@ -18,7 +18,7 @@ def _base_field(field_name: str) -> str:
 
 
 class QueryBuilder:
-    def __init__(self, dataset: Dataset):
+    def __init__(self, dataset: Dataset) -> None:
         if not dataset.api_url:
             raise ValueError('No API URL found')
         self.dataset = dataset
@@ -30,9 +30,7 @@ class QueryBuilder:
         self.predicates : dict[str, int|float|str] = {}
 
     def set_fields(self, fields: list[str]) -> QueryBuilder:
-        """Set the data fields (variables) to request from the API.
-
-        """
+        """Set the data fields (variables) to request from the API."""
         for field in fields:
             base_field = _base_field(field)
             variable = self.dataset.variables.get(base_field)
@@ -45,9 +43,7 @@ class QueryBuilder:
         return self
 
     def set_groups(self, groups: list[str]) -> QueryBuilder:
-        """Set the data groups (tables) to request from the API.
-
-        """
+        """Set the data groups (tables) to request from the API."""
         for group in groups:
             if group not in self.dataset.groups:
                 raise ValueError(f'Unknown group {group}')
@@ -57,9 +53,7 @@ class QueryBuilder:
 
 
     def set_geo_for(self, geo_for: str, value: str) -> QueryBuilder:
-        """Set the Census geography for which to retrieve data.
-
-        """
+        """Set the Census geography for which to retrieve data."""
         geo_level = self.dataset.geography.levels.get(geo_for)
         if not geo_level:
             raise ValueError(f'Invalid "for" geography "{geo_for}"')
@@ -75,9 +69,7 @@ class QueryBuilder:
 
         """
         #for geo_in_level in geo_in:
-        #    geo_level = self.dataset.geography.levels.get(geo_in_level)
         #    if not geo_level:
-        #        raise ValueError(f'Invalid "in" geography "{geo_in_level}"')
 
         self.geo_in = dict(geo_in)
         return self
