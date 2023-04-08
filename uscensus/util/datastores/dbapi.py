@@ -1,13 +1,11 @@
 import logging
-from typing import Optional, Tuple
 import zlib
 
 from httpx_caching._models import Response
 from httpx_caching._serializer import Serializer as ResponseSerializer
 
-from ...util.datastores.datastore import DataStore
-from ...util.dbapiqueryhelper import DBAPIQueryHelper
-
+from uscensus.util.datastores.datastore import DataStore
+from uscensus.util.dbapiqueryhelper import DBAPIQueryHelper
 
 _logger = logging.getLogger(__name__)
 
@@ -19,11 +17,11 @@ class DBAPIDataStore(DataStore):
 
     def __init__(self,
                  dbapi, table='urlcache',
-                 *dbargs, **dbkwargs):
-        """
-        Cache for storing and retrieving web documents.
+                 *dbargs, **dbkwargs) -> None:
+        """Cache for storing and retrieving web documents.
 
         Arguments:
+        ---------
           * dbapi: DBAPI module to use for caching.
           * table: name of table to use/create for cache.
           * dbargs: additional args for `dbapi.connect`.
@@ -46,13 +44,14 @@ class DBAPIDataStore(DataStore):
                 ' (key TEXT, data BLOB, ' +
                 'PRIMARY key(key ASC))')
 
-    def get(self, key: str) -> Tuple[Optional[Response],
-                                     Optional[dict]]:
+    def get(self, key: str) -> tuple[Response | None,
+                                     dict | None]:
         """Check if the key is in the cache.
         If it is not, return the pair (None, None).
         If it is, return its data.
 
         Arguments:
+        ---------
           * key: document key.
         """
         _logger.debug('Getting key={key}')

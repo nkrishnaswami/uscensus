@@ -1,6 +1,6 @@
 import pytest
 
-from uscensus.asyncio.util.datastores import AsyncSqlAlchemyDataStore
+from uscensus.util.datastores import AsyncSqlAlchemyDataStore
 from uscensus.data.states import (
     get_county_boundaries,
     get_county_codes,

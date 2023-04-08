@@ -1,9 +1,9 @@
-from .errors import DBError
-from .types.dbapi import DBAPIProtocol, DBAPIConnection
+from uscensus.util.errors import DBError
+from uscensus.util.types.dbapi import DBAPIConnection, DBAPIProtocol
 
 
 class DBAPIQueryHelper:
-    """Helper to simplify binding DBAPI parameters"""
+    """Helper to simplify binding DBAPI parameters."""
 
     __paramstyle_positional = {
         'qmark': True,
@@ -21,17 +21,17 @@ class DBAPIQueryHelper:
         'pyformat': lambda names: [f'%({name})' for name in names],
     }
 
-    def __init__(self, dbapi: DBAPIProtocol, conn: DBAPIConnection):
-        """Construct a DBAPIQuery helper
+    def __init__(self, dbapi: DBAPIProtocol, conn: DBAPIConnection) -> None:
+        """Construct a DBAPIQuery helper.
 
         Arguments:
+        ---------
           * dbapi: DBAPI module corresponding to `conn`
           * conn: a DBAPI connection
 
         Exceptions:
           * DBEror: if dbapi.paramstyle is not expected
         """
-
         self.dbapi = dbapi
         self.conn = conn
         self.positional = self.__paramstyle_positional.get(
@@ -44,6 +44,7 @@ class DBAPIQueryHelper:
         """Query a DBAPI db, agnostic of paramstyle.
 
         Arguments:
+        ---------
           * template: string to be formatted into a SQL template.
             Bindable-parameters are specified as named format params.
           * kwargs: named arguments to be bound into the formatted
@@ -54,8 +55,7 @@ class DBAPIQueryHelper:
             249 or DBAPI module documentation for details.
 
         """
-
-        names = sorted([name for name in kwargs],
+        names = sorted(list(kwargs),
                        key=lambda x: template.find('{'+x+'}'))
         querystr = template.format(
             **dict(zip(names, self.fmt_args(names))))

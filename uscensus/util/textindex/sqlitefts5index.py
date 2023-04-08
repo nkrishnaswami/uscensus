@@ -1,22 +1,21 @@
-from collections.abc import Mapping
 import logging
 import sqlite3
-from typing import Iterable, Tuple, Union
+from collections.abc import Iterable, Mapping
 
-from .textindex import TextIndex, FieldSet, DatasetFields, VariableFields
-
+from uscensus.util.textindex import DatasetFields, FieldSet, TextIndex, VariableFields
 
 _logger = logging.getLogger(__name__)
 
 
 class SqliteFts5Index(TextIndex):
     """Full-text index backing to a sqlite DB with FTS5."""
-    fields: Tuple
+
+    fields: tuple
 
     def __init__(self,
-                 fieldset: Union[DatasetFields, VariableFields],
+                 fieldset: DatasetFields | VariableFields,
                  table: str,
-                 dbname: str = ':memory:'):
+                 dbname: str = ':memory:') -> None:
         if fieldset == FieldSet.DATASET:
             self.fields = DatasetFields._fields
         elif fieldset == FieldSet.VARIABLE:
@@ -35,7 +34,7 @@ class SqliteFts5Index(TextIndex):
             f'CREATE VIRTUAL TABLE {self.table} USING ' +
             f'fts5({", ".join(self.quoted_fields)});')
         self._execute(
-            f"INSERT INTO {self.table}({self.table}, rank) " +
+            f'INSERT INTO {self.table}({self.table}, rank) ' +
             "VALUES('automerge', 16);")
 
     def __enter__(self):
@@ -49,8 +48,7 @@ class SqliteFts5Index(TextIndex):
         self.conn.__exit__(exc_type, exc_value, traceback)
 
     def add(self,
-            documents: Union[Iterable[DatasetFields],
-                             Iterable[VariableFields]],
+            documents: Iterable[DatasetFields] | Iterable[VariableFields],
             **kwargs) -> None:
         self._execute_many(
             f"""INSERT INTO {self.table}({", ".join(self.quoted_fields)})

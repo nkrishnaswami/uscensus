@@ -1,48 +1,59 @@
+import asyncio
 import logging
-import time
 
 import httpx
-from httpx_caching import CachingClient, SyncCachingTransport
+from httpx_caching import AsyncCachingTransport, CachingClient
 from httpx_caching._heuristics import ExpiresAfterHeuristic
 
-from ..util.errors import CensusError
-
+from uscensus.util.errors import CensusError
 
 _logger = logging.getLogger(__name__)
 
 
-def make_client(*, cache, key=None, heuristic=ExpiresAfterHeuristic(days=30)):
-    """Create a caching httpx Client with the caller-specified
+def make_client(*,
+                cache,
+                key=None,
+                heuristic=ExpiresAfterHeuristic(days=30),
+                transport=None) -> CachingClient:
+    """Create a caching httpx AsyncClient with the caller-specified
     datastore and optionally caching heuristic.
 
     """
     params = None
     if key:
         params = { 'key': key }
-    return CachingClient(httpx.Client(follow_redirects=True, params=params),
-                         cacheable_status_codes=(200, 203, 300, 301, 302, 308),
-                         heuristic=heuristic,
-                         cache=cache)
-    
+    client_args = {
+        'follow_redirects': True,
+        'params': params,
+    }
+    caching_client_args = {
+        'cacheable_status_codes': (200, 203, 300, 301, 302, 308),
+        'heuristic': heuristic,
+        'cache': cache,
+    }
+    return CachingClient(
+        httpx.AsyncClient(**client_args, transport=transport),
+        **caching_client_args)
 
 
-def fetch(
+
+async def afetch(
         url: str,
-        session: httpx.Client,
+        session: httpx.AsyncClient,
         *,
         retries: int = 3,
-        **kwargs
-) -> httpx.Response:
+        **kwargs) -> httpx.Response:
     """Caching wrapper around httpx to get a URL, check for
     errors, and return the pickled reponse.
 
     The document will be retrieved and stored in the cached using the
     DataStore/Cache specified for the httpx CachingClient
-    Session.
+    AsyncSession.
 
     Arguments:
+    ---------
       * url: URL from which to fetch JSON resonse.
-      * session: caching httpx.Client for making API calls.
+      * session: caching httpx.AsyncClient for making API calls.
       * retries: number of times to retry failed GETs.
       * kwargs: additional arguments to `httpx.get`
 
@@ -51,8 +62,7 @@ def fetch(
       * ValueError on JSON parse failure.
 
     """
-
-    if not isinstance(session._transport, SyncCachingTransport):
+    if not isinstance(session._transport, AsyncCachingTransport):
         raise CensusError('Caching not enabled in httpx client')
 
     req = httpx.Request('GET', url, **kwargs)
@@ -63,7 +73,7 @@ def fetch(
         _logger.debug(f'Trying: attempt {retry + 1}/{retries}: {req.url}')
         r = None
         try:
-            r = session.send(req)
+            r = await session.send(req)
         except httpx.HTTPError as e:
             if retry < retries - 1:
                 # Log and drop the exception if we will retry the
@@ -74,7 +84,7 @@ def fetch(
                 raise
         if r and r.status_code < 400:
             break
-        time.sleep(max(3**retry, 60))
+        await asyncio.sleep(3**retry)
 
     # If we get here, r is not None.
     assert r is not None
@@ -85,3 +95,11 @@ def fetch(
 
     r.raise_for_status()
     return r
+
+def fetch(
+        url: str,
+        session: httpx.AsyncClient,
+        *,
+        retries: int = 3,
+        **kwargs) -> httpx.Response:
+    return asyncio.run(afetch(url, session, retries=retries, **kwargs))

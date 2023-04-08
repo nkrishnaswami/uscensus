@@ -1,20 +1,19 @@
+import asyncio
 import logging
-from typing import Dict, Optional, Union
 
+import aiotools
 import httpx
-import pandas as pd
 
-from ..data.model import CensusDataEndpoint
-from ..util.errors import CensusError
-from ..util.textindex.sqlitefts5index import SqliteFts5Index
-from ..util.textindex.textindex import (TextIndex, FieldSet,
-                                        DatasetFields)
-from ..util.webcache import fetch
+from uscensus.data.model import AsyncCensusDataEndpoint, CensusDataEndpoint
+from uscensus.util.errors import CensusError
+from uscensus.util.textindex import DatasetFields, FieldSet, TextIndex
+from uscensus.util.textindex.sqlitefts5index import SqliteFts5Index
+from uscensus.util.webcache import afetch
 
 _logger = logging.getLogger(__name__)
 
 
-class DiscoveryInterface:
+class AsyncDiscoveryInterface:
     """Discover and bind census datasets.
 
     TODO: Move the functionality into DiscoveryInterface, and make the
@@ -22,51 +21,55 @@ class DiscoveryInterface:
 
     """
 
-    datasets: Dict[str, CensusDataEndpoint]
+    datasets: dict[str, AsyncCensusDataEndpoint]
     index: TextIndex
     variableindex: TextIndex
 
-    def __init__(self,
-                 key: str,
-                 client: httpx.Client,
-                 vintage: Optional[Union[str, int]] = None,
-                 fts_class: type = SqliteFts5Index):
+    @staticmethod
+    async def create(key: str,
+                     client: httpx.AsyncClient,
+                     vintage: str | int | None = None,
+                     fts_class: type = SqliteFts5Index):
         """Load and wrap census datasets.
 
         Prefers cached metadata if present and not stale, otherwise
         queries server.
 
         Arguments:
-          * key: Census API key
-          * client: httpx Client to use for calling API.
+        ---------
+          * key: Census dataset key
+          * client: httpx AsyncClient to use for accessing API.
           * vintage: discovery only data sets for this vintage, if present.
           * fts_class: utility class to use for full-text indices. If omitted,
                 SqliteFts5Index will be used.
         """
+        self = AsyncDiscoveryInterface()
 
         self.datasets = {}
         if vintage:
             url = f'https://api.census.gov/data/{vintage}.json'
         else:
             url = 'https://api.census.gov/data.json'
-        _logger.debug("Fetching root metadata")
-        resp = fetch(url, client).json()
-        if not resp:
-            raise CensusError("Failed to retrieve root metadata from Census " +
-                              "API discovery endpoint")
+        _logger.debug('Fetching root metadata')
+        r = await afetch(url, client)
+        resp = r.json()
         datasets = resp.get('dataset')
         if not datasets:
-            raise CensusError("Unable to identify datasets from API " +
-                              " discovery endpoint")
+            raise CensusError('Unable to identify datasets from dataset ' +
+                              ' discovery endpoint')
 
-        _logger.debug("Fetching per-dataset metadata")
         self.index = fts_class(FieldSet.DATASET, 'datasets')
         self.variableindex = fts_class(FieldSet.VARIABLE, 'variables')
         with self.index, self.variableindex:
-            for ds in datasets:
-                self._process_one_dataset(key, client, ds)
+            async with aiotools.TaskGroup(name='discovery') as tg:
+                complete = [0]
+                for ds in datasets:
+                    tg.create_task(
+                        self._process_one_dataset(key, client, ds, complete),
+                        name=ds['title'])
 
-        _logger.debug("Done processing metadata")
+        _logger.info('Done processing datasets')
+        return self
 
     @staticmethod
     def _get_ds_id(ds: dict):
@@ -74,26 +77,28 @@ class DiscoveryInterface:
             if distribution.get('format') == 'API':
                 endpoint = distribution['accessURL']
         return endpoint.replace(
-            'http://api.census.gov/data/', ''
+            'http://api.census.gov/data/', '',
         ).replace(
-            'https://api.census.gov/data/', ''
+            'https://api.census.gov/data/', '',
         )
 
-    def _process_one_dataset(
-            self,
-            key: str,
-            client: httpx.Client,
-            ds: dict):
-        """Build an CensuDataEndpoint for the specfied dataset
+    async def _process_one_dataset(self,
+                                   key: str,
+                                   client: httpx.AsyncClient,
+                                   ds: dict,
+                                   complete: list[int]):
+        """Build an AsyncCensuDataEndpoint for the specfied dataset
         metadata.
 
-        This must be called in a self.variableindex context.
+        This must be called with self.index and self.variableindex
+        entered.
+
         """
         ds_id = self._get_ds_id(ds)
         _logger.debug(f'Processing dataset {ds_id}')
         try:
-            dataset = CensusDataEndpoint(key, ds, client,
-                                         self.variableindex)
+            dataset = await AsyncCensusDataEndpoint.create(
+                key, ds, client, self.variableindex)
             # TODO: add more indexing; groups, hier by
             #       dataset, geo schemes, by vintage, etc
             self.datasets[dataset.id] = dataset
@@ -109,16 +114,21 @@ class DiscoveryInterface:
                     tags=' '.join(dataset.tags),
                     variables=' '.join(dataset.variables['label']),
                     vintage=dataset.vintage)])
-            _logger.debug('Finished processing metadata for ' +
-                          f'dataset: {dataset.id}')
+            _logger.debug('Finished processing metadata for dataset: ' +
+                          f'{dataset.id}')
         except Exception as e:
-            _logger.warn('Error processing metadata; skipping ' +
-                         f'dataset {ds["title"]}', exc_info=e)
+            _logger.warning('Error processing metadata; skipping dataset ' +
+                         f'{ds["title"]}: {ds_id}', exc_info=e)
+            return
+        complete[0] += 1
+        if complete[0] % 100 == 0:
+            _logger.info(f'Processed {complete[0]} datasets')
 
-    def search(self, query: str):
+
+    def search(self, query):
         """Find a list of dataset objects matching the index query.
         Index queries default to searching dataset titles, but may also
-        search
+        search.
 
             * description: long description of an dataset
             * variables: variables to return from query
@@ -136,25 +146,69 @@ class DiscoveryInterface:
         """
         if query.find(':') < 0:
             query = 'title: ' + query
+
         cols = ['score', 'dataset_id', 'title', 'description']
         return pd.DataFrame(
-            [tuple((row[col] for col in cols)) for row in self.index.query(query)],
-            columns=cols
+            [tuple(row[col] for col in cols) for row in self.index.query(query)],
+            columns=cols,
         )
+
+    def __getitem__(self, dataset_id):
+        """Return an identifier by dataset ID.
+
+        Arguments:
+        ---------
+          * dataset_id: the part of its endpoint name without the shared
+                census dataset URL prefix.
+        """
+        return self.datasets.get(dataset_id)
+
+    def __repr__(self) -> str:
+        """The readable string for an Loader is that of its `datasets`
+        dictionary.
+        """
+        return repr(self.datasets)
+
+
+class DiscoveryInterface:
+    """Discover and bind census datasets."""
+
+    datasets: dict[str, CensusDataEndpoint]
+
+    def __init__(self,
+                 key: str,
+                 client: httpx.AsyncClient,
+                 vintage: str | int | None = None,
+                 fts_class: type = SqliteFts5Index) -> None:
+        """Load and wrap census datasets.
+
+        Prefers cached metadata if present and not stale, otherwise
+        queries server.
+
+        Arguments:
+        ---------
+          * key: Census API key
+          * client: httpx AsyncClient to use for calling API.
+          * vintage: discovery only data sets for this vintage, if present.
+          * fts_class: utility class to use for full-text indices. If omitted,
+                SqliteFts5Index will be used.
+        """
+        _logger.debug('Fetching root metadata')
+        self._impl = asyncio.run(AsyncDiscoveryInterface.create(key, client, vintage, fts_class))
+        self.datasets = {
+            key: CensusDataEndpoint(value)
+            for key, value in self._impl.datasets.items()
+        }
 
     def __getitem__(self, dataset_id: str):
         """Return an identifier by dataset ID.
 
         Arguments:
+        ---------
           * dataset_id: the part of its endpoint name without the shared
                 census dataset URL prefix.
         """
-
         return self.datasets.get(dataset_id)
 
-    def __repr__(self):
-        """The readable string for an Loader is that of its `datasets`
-        dictionary.
-        """
-
-        return repr(self.datasets)
+    def __getattr__(self, key):
+        return getattr(self._impl, key)

@@ -1,26 +1,26 @@
 """Bulk geocoding API wrapper.
 
-Attributes:
+Attributes
+----------
     CENSUS_GEO_COLNAMES: column names in output from geocoding API.
 """
-from abc import ABC, abstractmethod
 import asyncio
 import csv
-from io import BytesIO, StringIO
-from itertools import islice
-import logging
 import glob
+import logging
 import os
 import os.path
-from typing import (Any, Iterable, List, Mapping, Optional, Sized,
-                    Type, Union)
+from abc import ABC, abstractmethod
+from collections.abc import Iterable, Mapping, Sized
+from io import BytesIO, StringIO
+from itertools import islice
+from typing import Any
 
 import geopandas as gpd
 import httpx
 import pandas as pd
 import shapely
 import sqlalchemy
-
 
 _logger = logging.getLogger(__name__)
 
@@ -59,20 +59,18 @@ class Persister(ABC):
     calls.
 
     """
+
     @abstractmethod
-    def prepare(self, cols: List[str], dtypes: Mapping[str, Type[str]]) -> None:
+    def prepare(self, cols: list[str], dtypes: Mapping[str, type[str]]) -> None:
         """Prepare the Persister to persist rows."""
-        pass
 
     @abstractmethod
     def persistTemp(self, rows: Iterable[Mapping[str, Any]]) -> None:
         """Persist data to staging area, if needed."""
-        pass
 
     @abstractmethod
     def persistFinal(self) -> pd.DataFrame:
         """Finalize persisted data and return as a dataframe."""
-        pass
 
 
 class FilePersister(Persister):
@@ -80,15 +78,15 @@ class FilePersister(Persister):
 
     temp: str
     final: str
-    cols: List[str]
-    dtypes: Mapping[str, Type[str]]
+    cols: list[str]
+    dtypes: Mapping[str, type[str]]
     idx: int
 
-    def __init__(self, tempOut: str, finalOut: str):
+    def __init__(self, tempOut: str, finalOut: str) -> None:
         """Arguments:
-          * tempOut: filename template with one positional parameter
-            for temporary files.
-          * finalOut: filename for final CSV output.
+        * tempOut: filename template with one positional parameter
+        for temporary files.
+        * finalOut: filename for final CSV output.
         """
         self.temp = tempOut
         self.final = finalOut
@@ -102,7 +100,7 @@ class FilePersister(Persister):
         except FileExistsError:
             pass
 
-    def prepare(self, cols: List[str], dtypes: Mapping[str, Type[str]]) -> None:
+    def prepare(self, cols: list[str], dtypes: Mapping[str, type[str]]) -> None:
         self.cols = cols
         self.dtypes = dtypes
 
@@ -124,12 +122,12 @@ class FilePersister(Persister):
                         f.write('\n')
         return pd.read_csv(
             self.final,
-            dtype=self.dtypes
+            dtype=self.dtypes,
         )
 
 
 class SqlAlchemyPersister(Persister):
-    def __init__(self, connstr, table, extend_existing=False):
+    def __init__(self, connstr, table, extend_existing=False) -> None:
         self.connstr = connstr
         self.engine = sqlalchemy.create_engine(self.connstr)
         self.tablename = table
@@ -138,7 +136,7 @@ class SqlAlchemyPersister(Persister):
         self.cols = None
         self.dtypes = None
 
-    def prepare(self, cols: List[str], dtypes: Mapping[str, Type[str]]) -> None:
+    def prepare(self, cols: list[str], dtypes: Mapping[str, type[str]]) -> None:
         self.cols = cols
         self.dtypes = dtypes
         with self.engine.begin() as conn:
@@ -149,11 +147,11 @@ class SqlAlchemyPersister(Persister):
                 md,
                 *(
                     sqlalchemy.Column(
-                        col, sqlalchemy.String
+                        col, sqlalchemy.String,
                     )
                     for col in self.cols
                 ),
-                extend_existing=self.extend_existing
+                extend_existing=self.extend_existing,
             )
             md.create_all(bind=conn)
 
@@ -171,7 +169,7 @@ class SqlAlchemyPersister(Persister):
         return ret
 
 
-class CensusBulkGeocoder(object):
+class CensusBulkGeocoder:
     """Geocode many addresses."""
 
     BATCH_ENDPOINT = ('https://geocoding.geo.census.gov/geocoder/' +
@@ -185,7 +183,7 @@ class CensusBulkGeocoder(object):
             vintage: str = 'Current_Current',
             chunksize: int = 1000,
             concurrency: int = 10,
-    ):
+    ) -> None:
         self.persister = persister
         self.endpoint = endpoint
         self.benchmark = benchmark
@@ -201,7 +199,7 @@ class CensusBulkGeocoder(object):
     def _generate_requests(
             self,
             rows: Iterable[Iterable[Any]],
-            client: httpx.AsyncClient
+            client: httpx.AsyncClient,
     ):
         for idx, chunk in enumerate(chunker(self.chunksize, rows)):
             _logger.debug(f'Processing chunk #{idx}: geocoding {len(chunk)} ' +
@@ -214,7 +212,7 @@ class CensusBulkGeocoder(object):
                 'vintage': self.vintage,
             }
             files = {
-                'addressFile': ('Addresses.csv', BytesIO(req), 'text/csv')
+                'addressFile': ('Addresses.csv', BytesIO(req), 'text/csv'),
             }
             yield client.build_request(
                 'POST',
@@ -222,12 +220,26 @@ class CensusBulkGeocoder(object):
                 params=params,
                 files=files)
 
-    async def _async_geocode_rows(self,
-                                  rows: Iterable[Iterable[Any]],
-                                  *,
-                                  retries: int = 3):
+    async def async_geocode_rows(self,
+                                 rows: Iterable[Iterable[Any]],
+                                 *,
+                                 retries: int = 3) -> pd.DataFrame:
+        """Geocode addresses stored as rows asynchronously.
+
+        Arguments:
+        ---------
+          * row: iterator of iterables containing
+            * key: unique identifier.
+            * street: street address.
+            * city: city name.
+            * state: state abbreviation.
+            * zip5: ZIP code as string.
+
+        Returns: DataFrame with geocoding output with rows keyed by
+          the input key.
+        """
         async with httpx.AsyncClient(
-                limits=httpx.Limits(max_connections=self.concurrency)
+                limits=httpx.Limits(max_connections=self.concurrency),
         ) as client:
             reqiter = self._generate_requests(rows, client)
             reqs = list(reqiter)
@@ -246,7 +258,7 @@ class CensusBulkGeocoder(object):
                         fieldnames=CENSUS_GEO_COLNAMES)
                     self.persister.persistTemp(rdr)
                 else:
-                    _logger.warn(f'Failed req {idx+1}/{len(reqs)} for ' +
+                    _logger.warning(f'Failed req {idx+1}/{len(reqs)} for ' +
                                  f'chunk {chunkno}: ' +
                                  f'status_code={r.status_code}')
                     if retry < retries:
@@ -261,11 +273,69 @@ class CensusBulkGeocoder(object):
                     [client.send(req) for req in reqs])):
                 await handleResp(idx, await resp)
         _logger.debug(f'Processed {idx+1} responses')
+        return self.persister.persistFinal()
 
-    def geocode_rows(self, rows: Iterable[Iterable[Any]]):
-        """Geocode addresses stored as rows.
+    async def async_geocode_cols(
+            self,
+            key: Iterable[str] | Iterable[int],
+            street: Iterable[str],
+            city: Iterable[str],
+            state: Iterable[str],
+            zip5: Iterable[str],
+    ) -> pd.DataFrame:
+        """Geocode addresses stored as separate columns.
 
         Arguments:
+        ---------
+          * key: unique identifiers.
+          * street: street addresses.
+          * city: city names.
+          * state: state abbreviations.
+          * zip5: ZIP codes as strings.
+
+        Returns: DataFrame with geocoding output with rows keyed by
+          the input key.
+        """
+        return await self.async_geocode_rows(
+            zip(key, street, city, state, zip5))
+
+    async def async_geocode_df(self, df: pd.DataFrame, columns: Sized) -> pd.DataFrame:
+        """Geocode from a dataframe.
+
+        Arguments:
+        ---------
+          * df: the pandas DataFrame
+          * columns: a 4- or 5-tuple/list of columns to extract:
+            0. unique key. If omitted, index will be used.
+            1. street address.
+            2. city name.
+            3. state abbreviation.
+            4. ZIP code as string.
+
+        Returns: DataFrame with geocoding output with rows keyed by
+          the input key.
+
+        Raises:
+        ------
+          ValueError: `columns` has the wrong number of elements.
+        """
+        if len(columns) == 4:
+            iter = df.loc[:, columns].itertuples()
+        elif len(columns) == 5:
+            iter = df.loc[:, columns].itertuples(index=False)
+        else:
+            raise ValueError('len(columns) is neither 4 or 5')
+        return await self.async_geocode_rows(iter)
+
+
+    def geocode_rows(self, rows: Iterable[Iterable[Any]]) -> pd.DataFrame:
+        """Geocode addresses stored as rows.
+
+        This function invokes `asyncio.run`, so cannot be used when an
+        event loop is running.
+
+        Arguments:
+        ---------
           * row: iterator of iterables containing
             * key: unique identifier.
             * street: street address.
@@ -276,26 +346,25 @@ class CensusBulkGeocoder(object):
         Returns: DataFrame with geocoding output with rows keyed by
           the input key.
         """
-        asyncio.run(self._async_geocode_rows(rows))
-        df = self.persister.persistFinal()
-        return df
+        return asyncio.run(self.async_geocode_rows(rows))
 
     def geocode_cols(
             self,
-            key: Union[Iterable[str], Iterable[int]],
+            key: Iterable[str] | Iterable[int],
             street: Iterable[str],
             city: Iterable[str],
             state: Iterable[str],
-            zip5: Iterable[str]
-    ):
+            zip5: Iterable[str],
+    ) -> pd.DataFrame:
         """Geocode addresses stored as separate columns.
+
         Arguments:
+        ---------
           * key: unique identifiers.
           * street: street addresses.
           * city: city names.
           * state: state abbreviations.
           * zip5: ZIP codes as strings.
-          * session: requests session to use for calling census API.
 
         Returns: DataFrame with geocoding output with rows keyed by
           the input key.
@@ -303,10 +372,11 @@ class CensusBulkGeocoder(object):
         return self.geocode_rows(
             zip(key, street, city, state, zip5))
 
-    def geocode_df(self, df: pd.DataFrame, columns: Sized):
+    def geocode_df(self, df: pd.DataFrame, columns: Sized) -> pd.DataFrame:
         """Geocode from a dataframe.
 
         Arguments:
+        ---------
           * df: the pandas DataFrame
           * columns: a 4- or 5-tuple/list of columns to extract:
             0. unique key. If omitted, index will be used.
@@ -314,12 +384,12 @@ class CensusBulkGeocoder(object):
             2. city name.
             3. state abbreviation.
             4. ZIP code as string.
-          * session: requests session to use for calling census API.
 
         Returns: DataFrame with geocoding output with rows keyed by
           the input key.
 
         Raises:
+        ------
           ValueError: `columns` has the wrong number of elements.
         """
         if len(columns) == 4:
@@ -327,7 +397,7 @@ class CensusBulkGeocoder(object):
         elif len(columns) == 5:
             iter = df.loc[:, columns].itertuples(index=False)
         else:
-            raise ValueError("len(columns) is neither 4 or 5")
+            raise ValueError('len(columns) is neither 4 or 5')
         return self.geocode_rows(iter)
 
 
@@ -340,5 +410,5 @@ def parse_lonlat(series: pd.Series) -> pd.Series:
 
 def to_geodataframe(df: pd.DataFrame) -> gpd.GeoDataFrame:
     if 'Geo.Lon.Lat' not in df.columns:
-        raise ValueError("DataFrame has no Geo.Lon.Lat column.")
+        raise ValueError('DataFrame has no Geo.Lon.Lat column.')
     return gpd.GeoDataFrame(df, geometry=parse_lonlat(df['Geo.Lon.Lat']))

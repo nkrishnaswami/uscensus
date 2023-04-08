@@ -1,31 +1,31 @@
 """Retrieves state abbreviations, names, FIPS and GNS codes as a
-pandas DataFrame."""
+pandas DataFrame.
+"""
 
-from functools import cache
 import re
-from tempfile import NamedTemporaryFile
-from typing import Optional, Union
 import zipfile
+from functools import cache
+from tempfile import NamedTemporaryFile
 
 import geopandas as gpd
-import pandas as pd
 import httpx
+import pandas as pd
 
-from ..util.errors import CensusError
-from ..util.webcache import fetch
-
+from uscensus.util.errors import CensusError
+from uscensus.util.webcache import fetch
 
 BOUNDARY_RESOLUTIONS = ('20m', '5m', '500k')
 
 
 @cache
 def _get_boundaries(
-        session: httpx.Client,
+        session: httpx.AsyncClient,
         resolution: str,
         vintage: str,
         layer: str) -> gpd.GeoDataFrame:
     """Retrieves a cartographic boundary file geodatabase, and
-    extracts one layer as GeoDataFrame."""
+    extracts one layer as GeoDataFrame.
+    """
     if resolution not in BOUNDARY_RESOLUTIONS:
         raise ValueError(f'Invalid resolution {resolution}')
     basename = f'cb_{vintage}_us_all_{resolution}'
@@ -53,10 +53,10 @@ def _get_boundaries(
 
 
 def get_county_boundaries(
-        session: httpx.Client,
+        session: httpx.AsyncClient,
         *,
-        state: Optional[str] = None,
-        vintage: Union[str, int] = 2021,
+        state: str | None = None,
+        vintage: str | int = 2021,
         resolution: str = '20m') -> gpd.GeoDataFrame:
     boundaries = _get_boundaries(session, resolution, vintage,
                                  f'cb_{vintage}_us_county_{resolution}')
@@ -71,10 +71,10 @@ def get_county_boundaries(
 
 
 def get_state_boundaries(
-        session: httpx.Client,
+        session: httpx.AsyncClient,
         *,
-        state: Optional[str] = None,
-        vintage: Union[str, int] = 2021,
+        state: str | None = None,
+        vintage: str | int = 2021,
         resolution: str = '20m') -> gpd.GeoDataFrame:
     boundaries = _get_boundaries(session, resolution, vintage,
                                  f'cb_{vintage}_us_state_{resolution}')
@@ -91,9 +91,9 @@ def get_state_boundaries(
 
 
 def get_state_codes(
-        session: httpx.Client,
+        session: httpx.AsyncClient,
         *,
-        vintage: Union[str, int] = 2021) -> pd.DataFrame:
+        vintage: str | int = 2021) -> pd.DataFrame:
     """Return a DataFrame with codes and names for US states and
     territories, for vintage.
     """
@@ -102,10 +102,10 @@ def get_state_codes(
 
 
 def get_county_codes(
-        session: httpx.Client,
+        session: httpx.AsyncClient,
         *,
-        vintage: Union[str, int] = 2021,
-        state: Optional[str] = None) -> pd.DataFrame:
+        vintage: str | int = 2021,
+        state: str | None = None) -> pd.DataFrame:
     """Return a DataFrame with codes and names for US states and
     territories, for vintage and state, if specified.
     """

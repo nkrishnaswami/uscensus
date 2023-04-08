@@ -1,7 +1,12 @@
 from abc import abstractmethod
-from typing import (Any, Generic, Iterator, Optional, Mapping,
-                    Protocol, Sequence, Tuple, TypeVar, Union)
-
+from collections.abc import Iterator, Mapping, Sequence
+from typing import (
+    Any,
+    Generic,
+    Protocol,
+    TypeVar,
+    Union,
+)
 
 T = TypeVar('T')
 PARAM = Union[Sequence, Mapping]
@@ -20,7 +25,7 @@ class DBAPITypeObject(Generic[T], Protocol):
     values: Sequence[T]
 
     @abstractmethod
-    def __init__(self, *values: Sequence[T]):
+    def __init__(self, *values: Sequence[T]) -> None:
         raise NotImplementedError
 
     @abstractmethod
@@ -35,17 +40,17 @@ class DBAPIErrorHandler(Generic[CONN_co, CURSOR_contra], Protocol):
                  errorclass: type,
                  errorvalue: Exception):
         raise NotImplementedError
-    
+
 
 class DBAPICursor(Protocol[CONN]):
     description: Sequence[Sequence[DBAPITypeObject]]
     rowcount: int
     arraysize: int
-    rownumber: Optional[int]
+    rownumber: int | None
     connection: CONN
-    messages: Optional[Sequence[Tuple[type, Exception]]]
-    lastrowid: Optional[DBAPITypeObject]
-    errorhandler: Optional[DBAPIErrorHandler]
+    messages: Sequence[tuple[type, Exception]] | None
+    lastrowid: DBAPITypeObject | None
+    errorhandler: DBAPIErrorHandler | None
 
     @abstractmethod
     def callproc(self, procname: str, *args, **kwargs) -> Sequence:
@@ -62,12 +67,12 @@ class DBAPICursor(Protocol[CONN]):
     @abstractmethod
     def executemany(
             self, operation: str,
-            seq_of_parameters: Sequence[PARAM]
+            seq_of_parameters: Sequence[PARAM],
     ) -> Any:
         raise NotImplementedError
 
     @abstractmethod
-    def fetchone(self) -> Optional[Sequence]:
+    def fetchone(self) -> Sequence | None:
         raise NotImplementedError
 
     @abstractmethod
@@ -79,13 +84,13 @@ class DBAPICursor(Protocol[CONN]):
         raise NotImplementedError
 
     @abstractmethod
-    def nextset(self) -> Optional[bool]:
+    def nextset(self) -> bool | None:
         raise NotImplementedError
 
     @abstractmethod
     def setinputsizes(
             self,
-            sizes: Sequence[Union[int, DBAPITypeObject, type[None]]]
+            sizes: Sequence[int | DBAPITypeObject | type[None]],
     ) -> None:
         raise NotImplementedError
 
@@ -93,7 +98,7 @@ class DBAPICursor(Protocol[CONN]):
     def setoutputsize(
             self,
             size: int,
-            column: Optional[int]
+            column: int | None,
     ) -> None:
         raise NotImplementedError
 
@@ -107,9 +112,9 @@ class DBAPICursor(Protocol[CONN]):
 
 
 class DBAPIConnection(Protocol):
-    messages: Optional[Sequence[Tuple[type, Exception]]]
-    autocommit: Optional[bool]
-    errorhandler: Optional[DBAPIErrorHandler]
+    messages: Sequence[tuple[type, Exception]] | None
+    autocommit: bool | None
+    errorhandler: DBAPIErrorHandler | None
 
     @abstractmethod
     def close(self) -> None:
@@ -134,14 +139,13 @@ class DBAPIConnection(Protocol):
     @abstractmethod
     def executemany(
             self, operation: str,
-            seq_of_parameters: Sequence[PARAM]
+            seq_of_parameters: Sequence[PARAM],
     ) -> DBAPICursor:
         raise NotImplementedError
 
 
 class DBAPIProtocol(Protocol):
-    """A typing protocol for DBAPI 2.0.
-    """
+    """A typing protocol for DBAPI 2.0."""
 
     apilevel: str
     threadsafety: int
@@ -198,7 +202,7 @@ class DBAPIProtocol(Protocol):
     def Timestamp(
             self,
             year: int, month: int, day: int,
-            hour: int, minute: int, second: int
+            hour: int, minute: int, second: int,
     ) -> DBAPITypeObject:
         raise NotImplementedError
 
@@ -234,11 +238,11 @@ class DBAPIProtocol(Protocol):
         raise NotImplementedError
 
     @abstractmethod
-    def tpc_commit(self, xid: Optional[XID]):
+    def tpc_commit(self, xid: XID | None):
         raise NotImplementedError
 
     @abstractmethod
-    def tpc_rollback(self, xid: Optional[XID]):
+    def tpc_rollback(self, xid: XID | None):
         raise NotImplementedError
 
     @abstractmethod

@@ -1,5 +1,4 @@
-from .textindex import TextIndex, FieldSet, DatasetFields, VariableFields
-
+from .textindex import DatasetFields, FieldSet, TextIndex, VariableFields
 
 __all__ = [
     'TextIndex',

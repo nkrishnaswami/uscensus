@@ -1,15 +1,15 @@
-from typing import Iterable, OrderedDict, Union
+from collections import OrderedDict
+from collections.abc import Iterable
 
+from whoosh.analysis import KeywordAnalyzer, StandardAnalyzer
 from whoosh.analysis.filters import StopFilter
-from whoosh.analysis import (KeywordAnalyzer, StandardAnalyzer)
+from whoosh.fields import ID, KEYWORD, TEXT, FieldType, Schema
 from whoosh.filedb.filestore import FileStorage, RamStorage
-from whoosh.fields import Schema, FieldType, KEYWORD, ID, TEXT
 from whoosh.qparser import QueryParser
 from whoosh.writing import AsyncWriter
 
-from ...util.errors import CensusError
-from .textindex import TextIndex, FieldSet, DatasetFields, VariableFields
-
+from uscensus.util.errors import CensusError
+from uscensus.util.textindex import DatasetFields, FieldSet, TextIndex, VariableFields
 
 KWAnalyzer = KeywordAnalyzer(lowercase=True) | StopFilter()
 Analyzer = StandardAnalyzer()
@@ -46,14 +46,15 @@ class WhooshIndex(TextIndex):
                  fieldset: FieldSet,
                  index_name: str,
                  dflt_query_field: str,
-                 path: str = None):
+                 path: str = None) -> None:
         """Initialize Whoosh index specified fields.
 
-          Arguments:
-            * fieldset: the enum FieldSet.DATASET or VARIABLE, to select a
-              schema.
-            * path: if specified, the path in which to create a
-              persistent index. If not specified, index to RAM.
+        Arguments:
+        ---------
+        * fieldset: the enum FieldSet.DATASET or VARIABLE, to select a
+        schema.
+        * path: if specified, the path in which to create a
+        persistent index. If not specified, index to RAM.
 
         """
         if fieldset == FieldSet.DATASET:
@@ -76,7 +77,7 @@ class WhooshIndex(TextIndex):
 
     def __enter__(self):
         self.writer = AsyncWriter(
-            self.index, writerargs=dict(limitmb=1000))
+            self.index, writerargs={'limitmb': 1000})
         return self
 
     def __exit__(self, exc_type, exc_value, traceback):
@@ -86,12 +87,12 @@ class WhooshIndex(TextIndex):
             self.writer.commit()
         self.writer = None
 
-    def add(self, iterable: Iterable[Union[DatasetFields, VariableFields]],
+    def add(self, iterable: Iterable[DatasetFields | VariableFields],
             **kwargs):
-        """Add entries to the index
+        """Add entries to the index.
 
         Arguments:
-
+        ---------
           * iterable: iterable (one for each endpoint) of tuples containing
             data for each schema field, viz.  dataset_id, title, description,
             variables, geographies, concepts, keywords, tags, and
@@ -104,7 +105,7 @@ class WhooshIndex(TextIndex):
             self.writer.add_document(**vals._asdict())
 
     def query(self, querystring: str, **query_ignored):
-        """Find dataset IDs matching querystring"""
+        """Find dataset IDs matching querystring."""
         query = self.qparser.parse(querystring)
         with self.index.searcher() as searcher:
             results = searcher.search(query, limit=None)

@@ -5,6 +5,6 @@ def ensuretext(val):
     elif isinstance(val, str):
         return val
     elif isinstance(val, dict):
-        return ' '.join(ensuretext(key) for key in val.keys())
+        return ' '.join(ensuretext(key) for key in val)
     else:
         return str(val)

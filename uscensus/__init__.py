@@ -1,14 +1,18 @@
-from .data import DiscoveryInterface
-from .data import get_county_boundaries
-from .data import get_county_codes
-from .data import get_state_boundaries
-from .data import get_state_codes
-from .geocode.bulk import CensusBulkGeocoder
-from .util import CensusError
-from .util import DBError
-from .util import DBAPIDataStore
-from .util import NopDataStore
-from .util import SqlAlchemyDataStore
+from uscensus.data import (
+    DiscoveryInterface,
+    get_county_boundaries,
+    get_county_codes,
+    get_state_boundaries,
+    get_state_codes,
+)
+from uscensus.geocode.bulk import CensusBulkGeocoder
+from uscensus.util import (
+    CensusError,
+    DBAPIDataStore,
+    DBError,
+    NopDataStore,
+    SqlAlchemyDataStore,
+)
 
 """This module reads the Census's API discovery interface at
 http://api.census.gov/data.json, and provides callable wrappers for
@@ -44,15 +48,15 @@ DataFrame.
 
 
 __all__ = [
-    "CensusBulkGeocoder",
-    "DiscoveryInterface",
-    "DBAPIDataStore",
-    "SqlAlchemyDataStore",
-    "NopDataStore",
-    "CensusError",
-    "DBError",
-    "get_county_boundaries",
-    "get_county_codes",
-    "get_state_boundaries",
-    "get_state_codes",
+    'CensusBulkGeocoder',
+    'DiscoveryInterface',
+    'DBAPIDataStore',
+    'SqlAlchemyDataStore',
+    'NopDataStore',
+    'CensusError',
+    'DBError',
+    'get_county_boundaries',
+    'get_county_codes',
+    'get_state_boundaries',
+    'get_state_codes',
 ]
