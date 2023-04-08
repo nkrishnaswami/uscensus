@@ -1,11 +1,9 @@
-from pymongo import MongoClient
-
-from ...util.textindex import FieldSet, DatasetFields
-from ...util.textindex.mongoindex import MongoIndex
+from uscensus.util.textindex import DatasetFields, FieldSet
+from uscensus.util.textindex.whooshindex import WhooshIndex
 
 
 def test_Index():
-    index = MongoIndex(FieldSet.DATASET, 'varindex')
+    index = WhooshIndex(FieldSet.DATASET, 'index', 'title')
     data = [
         DatasetFields(dataset_id='id1',
                       title='title one',
@@ -37,17 +35,17 @@ def test_Index():
     assert dataset_ids(index.query('one')) == ['id1']
     assert dataset_ids(index.query('two')) == ['id2']
     assert sorted(dataset_ids(index.query('title'))) == ['id1', 'id2']
-    assert dataset_ids(index.query('', title={'$regex': 'one'})) == ['id1']
-    assert dataset_ids(index.query('', title={'$regex': 'two'})) == ['id2']
+    assert dataset_ids(index.query('title:one')) == ['id1']
+    assert dataset_ids(index.query('title:two')) == ['id2']
 
-    assert dataset_ids(index.query('', description={'$regex': 'one'})) == ['id1']
-    assert dataset_ids(index.query('', description={'$regex': 'two'})) == ['id2']
+    assert dataset_ids(index.query('description:one')) == ['id1']
+    assert dataset_ids(index.query('description:two')) == ['id2']
 
-    assert dataset_ids(index.query('', keywords={'$regex': 'key1'})) == ['id1']
-    assert dataset_ids(index.query('', keywords={'$regex': 'key2'})) == ['id2']
-    assert sorted(dataset_ids(index.query('', keywords={'$regex': 'key'}))) == \
+    assert dataset_ids(index.query('keywords:key1')) == ['id1']
+    assert dataset_ids(index.query('keywords:key2')) == ['id2']
+    assert sorted(dataset_ids(index.query('keywords:key'))) == \
         ['id1', 'id2']
-    assert dataset_ids(index.query('', tags={'$regex': 'tag1'})) == ['id1']
-    assert dataset_ids(index.query('', tags={'$regex': 'tag2'})) == ['id2']
-    assert sorted(dataset_ids(index.query('', tags={'$regex': 'tag'}))) == \
+    assert dataset_ids(index.query('tags:tag1')) == ['id1']
+    assert dataset_ids(index.query('tags:tag2')) == ['id2']
+    assert sorted(dataset_ids(index.query('tags:tag'))) == \
         ['id1', 'id2']

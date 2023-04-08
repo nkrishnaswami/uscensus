@@ -1,5 +1,5 @@
-from ...util.textindex import FieldSet, DatasetFields
-from ...util.textindex.sqlitefts5index import SqliteFts5Index
+from uscensus.util.textindex import DatasetFields, FieldSet
+from uscensus.util.textindex.sqlitefts5index import SqliteFts5Index
 
 
 def test_Index():

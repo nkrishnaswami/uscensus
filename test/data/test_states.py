@@ -1,17 +1,19 @@
 import pytest
-import httpx
-from httpx_caching import CachingClient
 
-from .states import (get_county_boundaries, get_county_codes,
-                     get_state_boundaries, get_state_codes)
-from ..util.datastores import SqlAlchemyDataStore
+from uscensus.asyncio.util.datastores import AsyncSqlAlchemyDataStore
+from uscensus.data.states import (
+    get_county_boundaries,
+    get_county_codes,
+    get_state_boundaries,
+    get_state_codes,
+)
+from uscensus.util.webcache import make_client
 
 
-@pytest.fixture
+@pytest.fixture()
 def client():
-    return CachingClient(
-        httpx.Client(),
-        cache=SqlAlchemyDataStore('sqlite:///testing.db'))
+    return make_client(cache=AsyncSqlAlchemyDataStore(
+        'sqlite+aiosqlite:///testing.db'))
 
 
 def test_get_county_boundaries_no_state_bad_res(client):

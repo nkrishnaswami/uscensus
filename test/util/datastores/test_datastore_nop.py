@@ -1,4 +1,4 @@
-from ...util.datastores.nop import NopDataStore
+from uscensus.util.datastores.nop import NopDataStore
 
 
 def test_NopDatastore():
