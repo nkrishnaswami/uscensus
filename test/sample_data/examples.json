@@ -1,0 +1,256 @@
+{
+  "get": [
+    "NAME",
+    "B01001_001E"
+  ],
+  "tabulate": [
+  ],
+  "fips": [
+    {
+      "name": "us",
+      "exampleValue": "1",
+      "geoLevelDisplay": "010",
+      "referenceDate": "2021-01-01"
+    },
+    {
+      "name": "region",
+      "exampleValue": "3",
+      "geoLevelDisplay": "020",
+      "referenceDate": "2021-01-01"
+    },
+    {
+      "name": "division",
+      "exampleValue": "5",
+      "geoLevelDisplay": "030",
+      "referenceDate": "2021-01-01"
+    },
+    {
+      "name": "state",
+      "exampleValue": "06",
+      "geoLevelDisplay": "040",
+      "referenceDate": "2021-01-01"
+    },
+    {
+      "name": "county",
+      "exampleValue": "037",
+      "geoLevelDisplay": "050",
+      "referenceDate": "2021-01-01",
+      "in": [
+        {
+          "name": "state",
+          "exampleValue": "06",
+          "isOptionalWithWCFor": true,
+          "wildcard": true
+        }
+      ]
+    },
+    {
+      "name": "county subdivision",
+      "exampleValue": "14000",
+      "geoLevelDisplay": "060",
+      "referenceDate": "2021-01-01",
+      "in": [
+        {
+          "name": "state",
+          "exampleValue": "17"
+        },
+        {
+          "name": "county",
+          "exampleValue": "031",
+          "isOptionalWithWCFor": true,
+          "wildcard": true
+        }
+      ]
+    },
+    {
+      "name": "place",
+      "exampleValue": "51000",
+      "geoLevelDisplay": "160",
+      "referenceDate": "2021-01-01",
+      "in": [
+        {
+          "name": "state",
+          "exampleValue": "36",
+          "isOptionalWithWCFor": true,
+          "wildcard": true
+        }
+      ]
+    },
+    {
+      "name": "alaska native regional corporation",
+      "exampleValue": "17140",
+      "geoLevelDisplay": "230",
+      "referenceDate": "2021-01-01",
+      "in": [
+        {
+          "name": "state",
+          "exampleValue": "02",
+          "isOptionalWithWCFor": true,
+          "wildcard": true
+        }
+      ]
+    },
+    {
+      "name": "american indian area/alaska native area/hawaiian home land",
+      "exampleValue": "5620",
+      "geoLevelDisplay": "250",
+      "referenceDate": "2021-01-01"
+    },
+    {
+      "name": "metropolitan statistical area/micropolitan statistical area",
+      "exampleValue": "35620",
+      "geoLevelDisplay": "310",
+      "referenceDate": "2021-01-01"
+    },
+    {
+      "name": "principal city (or part)",
+      "exampleValue": "51000",
+      "geoLevelDisplay": "312",
+      "referenceDate": "2021-01-01",
+      "in": [
+        {
+          "name": "metropolitan statistical area/micropolitan statistical area",
+          "exampleValue": "35620"
+        },
+        {
+          "name": "state (or part)",
+          "exampleValue": "36"
+        }
+      ]
+    },
+    {
+      "name": "metropolitan division",
+      "exampleValue": "35614",
+      "geoLevelDisplay": "314",
+      "referenceDate": "2021-01-01",
+      "in": [
+        {
+          "name": "metropolitan statistical area/micropolitan statistical area",
+          "exampleValue": "35620"
+        }
+      ]
+    },
+    {
+      "name": "combined statistical area",
+      "exampleValue": "408",
+      "geoLevelDisplay": "330",
+      "referenceDate": "2021-01-01"
+    },
+    {
+      "name": "combined new england city and town area",
+      "exampleValue": "715",
+      "geoLevelDisplay": "335",
+      "referenceDate": "2021-01-01"
+    },
+    {
+      "name": "new england city and town area",
+      "exampleValue": "71650",
+      "geoLevelDisplay": "350",
+      "referenceDate": "2021-01-01"
+    },
+    {
+      "name": "principal city",
+      "exampleValue": "07000",
+      "geoLevelDisplay": "352",
+      "referenceDate": "2021-01-01",
+      "in": [
+        {
+          "name": "new england city and town area",
+          "exampleValue": "71650"
+        },
+        {
+          "name": "state (or part)",
+          "exampleValue": "25"
+        }
+      ]
+    },
+    {
+      "name": "necta division",
+      "exampleValue": "71634",
+      "geoLevelDisplay": "355",
+      "referenceDate": "2021-01-01",
+      "in": [
+        {
+          "name": "new england city and town area",
+          "exampleValue": "71650"
+        }
+      ]
+    },
+    {
+      "name": "urban area",
+      "exampleValue": "63217",
+      "geoLevelDisplay": "400",
+      "referenceDate": "2021-01-01"
+    },
+    {
+      "name": "congressional district",
+      "exampleValue": "98",
+      "geoLevelDisplay": "500",
+      "referenceDate": "2021-01-01",
+      "in": [
+        {
+          "name": "state",
+          "exampleValue": "72",
+          "isOptionalWithWCFor": true,
+          "wildcard": true
+        }
+      ]
+    },
+    {
+      "name": "public use microdata area",
+      "exampleValue": "00500",
+      "geoLevelDisplay": "795",
+      "referenceDate": "2021-01-01",
+      "in": [
+        {
+          "name": "state",
+          "exampleValue": "12",
+          "isOptionalWithWCFor": true,
+          "wildcard": true
+        }
+      ]
+    },
+    {
+      "name": "school district (elementary)",
+      "exampleValue": "08610",
+      "geoLevelDisplay": "950",
+      "referenceDate": "2021-01-01",
+      "in": [
+        {
+          "name": "state",
+          "exampleValue": "06",
+          "isOptionalWithWCFor": true,
+          "wildcard": true
+        }
+      ]
+    },
+    {
+      "name": "school district (secondary)",
+      "exampleValue": "06330",
+      "geoLevelDisplay": "960",
+      "referenceDate": "2021-01-01",
+      "in": [
+        {
+          "name": "state",
+          "exampleValue": "04",
+          "isOptionalWithWCFor": true,
+          "wildcard": true
+        }
+      ]
+    },
+    {
+      "name": "school district (unified)",
+      "exampleValue": "20580",
+      "geoLevelDisplay": "970",
+      "referenceDate": "2021-01-01",
+      "in": [
+        {
+          "name": "state",
+          "exampleValue": "36",
+          "isOptionalWithWCFor": true,
+          "wildcard": true
+        }
+      ]
+    }
+  ]
+}

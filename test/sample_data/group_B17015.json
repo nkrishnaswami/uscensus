@@ -1,0 +1,1696 @@
+{
+  "variables": {
+    "B17015_047MA": {
+      "label": "Annotation of Margin of Error!!Total:!!Income in the past 12 months at or above poverty level:!!Other family:!!Female householder, no spouse present:!!Without Social Security income in the past 12 months:!!Without SSI or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_047EA": {
+      "label": "Annotation of Estimate!!Total:!!Income in the past 12 months at or above poverty level:!!Other family:!!Female householder, no spouse present:!!Without Social Security income in the past 12 months:!!Without SSI or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_046EA": {
+      "label": "Annotation of Estimate!!Total:!!Income in the past 12 months at or above poverty level:!!Other family:!!Female householder, no spouse present:!!Without Social Security income in the past 12 months:!!With SSI and/or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_046MA": {
+      "label": "Annotation of Margin of Error!!Total:!!Income in the past 12 months at or above poverty level:!!Other family:!!Female householder, no spouse present:!!Without Social Security income in the past 12 months:!!With SSI and/or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_045EA": {
+      "label": "Annotation of Estimate!!Total:!!Income in the past 12 months at or above poverty level:!!Other family:!!Female householder, no spouse present:!!Without Social Security income in the past 12 months:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_045MA": {
+      "label": "Annotation of Margin of Error!!Total:!!Income in the past 12 months at or above poverty level:!!Other family:!!Female householder, no spouse present:!!Without Social Security income in the past 12 months:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_044EA": {
+      "label": "Annotation of Estimate!!Total:!!Income in the past 12 months at or above poverty level:!!Other family:!!Female householder, no spouse present:!!With Social Security income in the past 12 months:!!Without SSI or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_044MA": {
+      "label": "Annotation of Margin of Error!!Total:!!Income in the past 12 months at or above poverty level:!!Other family:!!Female householder, no spouse present:!!With Social Security income in the past 12 months:!!Without SSI or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_043EA": {
+      "label": "Annotation of Estimate!!Total:!!Income in the past 12 months at or above poverty level:!!Other family:!!Female householder, no spouse present:!!With Social Security income in the past 12 months:!!With SSI and/or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_043MA": {
+      "label": "Annotation of Margin of Error!!Total:!!Income in the past 12 months at or above poverty level:!!Other family:!!Female householder, no spouse present:!!With Social Security income in the past 12 months:!!With SSI and/or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_042MA": {
+      "label": "Annotation of Margin of Error!!Total:!!Income in the past 12 months at or above poverty level:!!Other family:!!Female householder, no spouse present:!!With Social Security income in the past 12 months:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_042EA": {
+      "label": "Annotation of Estimate!!Total:!!Income in the past 12 months at or above poverty level:!!Other family:!!Female householder, no spouse present:!!With Social Security income in the past 12 months:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_041MA": {
+      "label": "Annotation of Margin of Error!!Total:!!Income in the past 12 months at or above poverty level:!!Other family:!!Female householder, no spouse present:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_041EA": {
+      "label": "Annotation of Estimate!!Total:!!Income in the past 12 months at or above poverty level:!!Other family:!!Female householder, no spouse present:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_038E": {
+      "label": "Estimate!!Total:!!Income in the past 12 months at or above poverty level:!!Other family:!!Male householder, no spouse present:!!Without Social Security income in the past 12 months:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_038M": {
+      "label": "Margin of Error!!Total:!!Income in the past 12 months at or above poverty level:!!Other family:!!Male householder, no spouse present:!!Without Social Security income in the past 12 months:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_039E": {
+      "label": "Estimate!!Total:!!Income in the past 12 months at or above poverty level:!!Other family:!!Male householder, no spouse present:!!Without Social Security income in the past 12 months:!!With SSI and/or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_039M": {
+      "label": "Margin of Error!!Total:!!Income in the past 12 months at or above poverty level:!!Other family:!!Male householder, no spouse present:!!Without Social Security income in the past 12 months:!!With SSI and/or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_036E": {
+      "label": "Estimate!!Total:!!Income in the past 12 months at or above poverty level:!!Other family:!!Male householder, no spouse present:!!With Social Security income in the past 12 months:!!With SSI and/or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_036M": {
+      "label": "Margin of Error!!Total:!!Income in the past 12 months at or above poverty level:!!Other family:!!Male householder, no spouse present:!!With Social Security income in the past 12 months:!!With SSI and/or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_037E": {
+      "label": "Estimate!!Total:!!Income in the past 12 months at or above poverty level:!!Other family:!!Male householder, no spouse present:!!With Social Security income in the past 12 months:!!Without SSI or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_037M": {
+      "label": "Margin of Error!!Total:!!Income in the past 12 months at or above poverty level:!!Other family:!!Male householder, no spouse present:!!With Social Security income in the past 12 months:!!Without SSI or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_034E": {
+      "label": "Estimate!!Total:!!Income in the past 12 months at or above poverty level:!!Other family:!!Male householder, no spouse present:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_034M": {
+      "label": "Margin of Error!!Total:!!Income in the past 12 months at or above poverty level:!!Other family:!!Male householder, no spouse present:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_035E": {
+      "label": "Estimate!!Total:!!Income in the past 12 months at or above poverty level:!!Other family:!!Male householder, no spouse present:!!With Social Security income in the past 12 months:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_035M": {
+      "label": "Margin of Error!!Total:!!Income in the past 12 months at or above poverty level:!!Other family:!!Male householder, no spouse present:!!With Social Security income in the past 12 months:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_032E": {
+      "label": "Estimate!!Total:!!Income in the past 12 months at or above poverty level:!!Married-couple family:!!Without Social Security income in the past 12 months:!!Without SSI or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_032M": {
+      "label": "Margin of Error!!Total:!!Income in the past 12 months at or above poverty level:!!Married-couple family:!!Without Social Security income in the past 12 months:!!Without SSI or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_033E": {
+      "label": "Estimate!!Total:!!Income in the past 12 months at or above poverty level:!!Other family:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_033M": {
+      "label": "Margin of Error!!Total:!!Income in the past 12 months at or above poverty level:!!Other family:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_030E": {
+      "label": "Estimate!!Total:!!Income in the past 12 months at or above poverty level:!!Married-couple family:!!Without Social Security income in the past 12 months:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_030M": {
+      "label": "Margin of Error!!Total:!!Income in the past 12 months at or above poverty level:!!Married-couple family:!!Without Social Security income in the past 12 months:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_031E": {
+      "label": "Estimate!!Total:!!Income in the past 12 months at or above poverty level:!!Married-couple family:!!Without Social Security income in the past 12 months:!!With SSI and/or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_031M": {
+      "label": "Margin of Error!!Total:!!Income in the past 12 months at or above poverty level:!!Married-couple family:!!Without Social Security income in the past 12 months:!!With SSI and/or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_046E": {
+      "label": "Estimate!!Total:!!Income in the past 12 months at or above poverty level:!!Other family:!!Female householder, no spouse present:!!Without Social Security income in the past 12 months:!!With SSI and/or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_046M": {
+      "label": "Margin of Error!!Total:!!Income in the past 12 months at or above poverty level:!!Other family:!!Female householder, no spouse present:!!Without Social Security income in the past 12 months:!!With SSI and/or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_047E": {
+      "label": "Estimate!!Total:!!Income in the past 12 months at or above poverty level:!!Other family:!!Female householder, no spouse present:!!Without Social Security income in the past 12 months:!!Without SSI or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_047M": {
+      "label": "Margin of Error!!Total:!!Income in the past 12 months at or above poverty level:!!Other family:!!Female householder, no spouse present:!!Without Social Security income in the past 12 months:!!Without SSI or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_044E": {
+      "label": "Estimate!!Total:!!Income in the past 12 months at or above poverty level:!!Other family:!!Female householder, no spouse present:!!With Social Security income in the past 12 months:!!Without SSI or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_044M": {
+      "label": "Margin of Error!!Total:!!Income in the past 12 months at or above poverty level:!!Other family:!!Female householder, no spouse present:!!With Social Security income in the past 12 months:!!Without SSI or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_045E": {
+      "label": "Estimate!!Total:!!Income in the past 12 months at or above poverty level:!!Other family:!!Female householder, no spouse present:!!Without Social Security income in the past 12 months:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_045M": {
+      "label": "Margin of Error!!Total:!!Income in the past 12 months at or above poverty level:!!Other family:!!Female householder, no spouse present:!!Without Social Security income in the past 12 months:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_042E": {
+      "label": "Estimate!!Total:!!Income in the past 12 months at or above poverty level:!!Other family:!!Female householder, no spouse present:!!With Social Security income in the past 12 months:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_042M": {
+      "label": "Margin of Error!!Total:!!Income in the past 12 months at or above poverty level:!!Other family:!!Female householder, no spouse present:!!With Social Security income in the past 12 months:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_043E": {
+      "label": "Estimate!!Total:!!Income in the past 12 months at or above poverty level:!!Other family:!!Female householder, no spouse present:!!With Social Security income in the past 12 months:!!With SSI and/or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_043M": {
+      "label": "Margin of Error!!Total:!!Income in the past 12 months at or above poverty level:!!Other family:!!Female householder, no spouse present:!!With Social Security income in the past 12 months:!!With SSI and/or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_040E": {
+      "label": "Estimate!!Total:!!Income in the past 12 months at or above poverty level:!!Other family:!!Male householder, no spouse present:!!Without Social Security income in the past 12 months:!!Without SSI or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_040M": {
+      "label": "Margin of Error!!Total:!!Income in the past 12 months at or above poverty level:!!Other family:!!Male householder, no spouse present:!!Without Social Security income in the past 12 months:!!Without SSI or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_041E": {
+      "label": "Estimate!!Total:!!Income in the past 12 months at or above poverty level:!!Other family:!!Female householder, no spouse present:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_041M": {
+      "label": "Margin of Error!!Total:!!Income in the past 12 months at or above poverty level:!!Other family:!!Female householder, no spouse present:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_018E": {
+      "label": "Estimate!!Total:!!Income in the past 12 months below poverty level:!!Other family:!!Female householder, no spouse present:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_018M": {
+      "label": "Margin of Error!!Total:!!Income in the past 12 months below poverty level:!!Other family:!!Female householder, no spouse present:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_019E": {
+      "label": "Estimate!!Total:!!Income in the past 12 months below poverty level:!!Other family:!!Female householder, no spouse present:!!With Social Security income in the past 12 months:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_019M": {
+      "label": "Margin of Error!!Total:!!Income in the past 12 months below poverty level:!!Other family:!!Female householder, no spouse present:!!With Social Security income in the past 12 months:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_016E": {
+      "label": "Estimate!!Total:!!Income in the past 12 months below poverty level:!!Other family:!!Male householder, no spouse present:!!Without Social Security income in the past 12 months:!!With SSI and/or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_016M": {
+      "label": "Margin of Error!!Total:!!Income in the past 12 months below poverty level:!!Other family:!!Male householder, no spouse present:!!Without Social Security income in the past 12 months:!!With SSI and/or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_017E": {
+      "label": "Estimate!!Total:!!Income in the past 12 months below poverty level:!!Other family:!!Male householder, no spouse present:!!Without Social Security income in the past 12 months:!!Without SSI or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_017M": {
+      "label": "Margin of Error!!Total:!!Income in the past 12 months below poverty level:!!Other family:!!Male householder, no spouse present:!!Without Social Security income in the past 12 months:!!Without SSI or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_014E": {
+      "label": "Estimate!!Total:!!Income in the past 12 months below poverty level:!!Other family:!!Male householder, no spouse present:!!With Social Security income in the past 12 months:!!Without SSI or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_014M": {
+      "label": "Margin of Error!!Total:!!Income in the past 12 months below poverty level:!!Other family:!!Male householder, no spouse present:!!With Social Security income in the past 12 months:!!Without SSI or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_015E": {
+      "label": "Estimate!!Total:!!Income in the past 12 months below poverty level:!!Other family:!!Male householder, no spouse present:!!Without Social Security income in the past 12 months:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_015M": {
+      "label": "Margin of Error!!Total:!!Income in the past 12 months below poverty level:!!Other family:!!Male householder, no spouse present:!!Without Social Security income in the past 12 months:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_012E": {
+      "label": "Estimate!!Total:!!Income in the past 12 months below poverty level:!!Other family:!!Male householder, no spouse present:!!With Social Security income in the past 12 months:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_012M": {
+      "label": "Margin of Error!!Total:!!Income in the past 12 months below poverty level:!!Other family:!!Male householder, no spouse present:!!With Social Security income in the past 12 months:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_013E": {
+      "label": "Estimate!!Total:!!Income in the past 12 months below poverty level:!!Other family:!!Male householder, no spouse present:!!With Social Security income in the past 12 months:!!With SSI and/or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_013M": {
+      "label": "Margin of Error!!Total:!!Income in the past 12 months below poverty level:!!Other family:!!Male householder, no spouse present:!!With Social Security income in the past 12 months:!!With SSI and/or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_010E": {
+      "label": "Estimate!!Total:!!Income in the past 12 months below poverty level:!!Other family:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_010M": {
+      "label": "Margin of Error!!Total:!!Income in the past 12 months below poverty level:!!Other family:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_011E": {
+      "label": "Estimate!!Total:!!Income in the past 12 months below poverty level:!!Other family:!!Male householder, no spouse present:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_011M": {
+      "label": "Margin of Error!!Total:!!Income in the past 12 months below poverty level:!!Other family:!!Male householder, no spouse present:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_028E": {
+      "label": "Estimate!!Total:!!Income in the past 12 months at or above poverty level:!!Married-couple family:!!With Social Security income in the past 12 months:!!With SSI and/or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_028M": {
+      "label": "Margin of Error!!Total:!!Income in the past 12 months at or above poverty level:!!Married-couple family:!!With Social Security income in the past 12 months:!!With SSI and/or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_029E": {
+      "label": "Estimate!!Total:!!Income in the past 12 months at or above poverty level:!!Married-couple family:!!With Social Security income in the past 12 months:!!Without SSI or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_029M": {
+      "label": "Margin of Error!!Total:!!Income in the past 12 months at or above poverty level:!!Married-couple family:!!With Social Security income in the past 12 months:!!Without SSI or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_026E": {
+      "label": "Estimate!!Total:!!Income in the past 12 months at or above poverty level:!!Married-couple family:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_026M": {
+      "label": "Margin of Error!!Total:!!Income in the past 12 months at or above poverty level:!!Married-couple family:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_027E": {
+      "label": "Estimate!!Total:!!Income in the past 12 months at or above poverty level:!!Married-couple family:!!With Social Security income in the past 12 months:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_027M": {
+      "label": "Margin of Error!!Total:!!Income in the past 12 months at or above poverty level:!!Married-couple family:!!With Social Security income in the past 12 months:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_024E": {
+      "label": "Estimate!!Total:!!Income in the past 12 months below poverty level:!!Other family:!!Female householder, no spouse present:!!Without Social Security income in the past 12 months:!!Without SSI or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_024M": {
+      "label": "Margin of Error!!Total:!!Income in the past 12 months below poverty level:!!Other family:!!Female householder, no spouse present:!!Without Social Security income in the past 12 months:!!Without SSI or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_025E": {
+      "label": "Estimate!!Total:!!Income in the past 12 months at or above poverty level:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_025M": {
+      "label": "Margin of Error!!Total:!!Income in the past 12 months at or above poverty level:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_022E": {
+      "label": "Estimate!!Total:!!Income in the past 12 months below poverty level:!!Other family:!!Female householder, no spouse present:!!Without Social Security income in the past 12 months:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_022M": {
+      "label": "Margin of Error!!Total:!!Income in the past 12 months below poverty level:!!Other family:!!Female householder, no spouse present:!!Without Social Security income in the past 12 months:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_023E": {
+      "label": "Estimate!!Total:!!Income in the past 12 months below poverty level:!!Other family:!!Female householder, no spouse present:!!Without Social Security income in the past 12 months:!!With SSI and/or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_023M": {
+      "label": "Margin of Error!!Total:!!Income in the past 12 months below poverty level:!!Other family:!!Female householder, no spouse present:!!Without Social Security income in the past 12 months:!!With SSI and/or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_020E": {
+      "label": "Estimate!!Total:!!Income in the past 12 months below poverty level:!!Other family:!!Female householder, no spouse present:!!With Social Security income in the past 12 months:!!With SSI and/or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_020M": {
+      "label": "Margin of Error!!Total:!!Income in the past 12 months below poverty level:!!Other family:!!Female householder, no spouse present:!!With Social Security income in the past 12 months:!!With SSI and/or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_021E": {
+      "label": "Estimate!!Total:!!Income in the past 12 months below poverty level:!!Other family:!!Female householder, no spouse present:!!With Social Security income in the past 12 months:!!Without SSI or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_021M": {
+      "label": "Margin of Error!!Total:!!Income in the past 12 months below poverty level:!!Other family:!!Female householder, no spouse present:!!With Social Security income in the past 12 months:!!Without SSI or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_006E": {
+      "label": "Estimate!!Total:!!Income in the past 12 months below poverty level:!!Married-couple family:!!With Social Security income in the past 12 months:!!Without SSI or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_006M": {
+      "label": "Margin of Error!!Total:!!Income in the past 12 months below poverty level:!!Married-couple family:!!With Social Security income in the past 12 months:!!Without SSI or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_007E": {
+      "label": "Estimate!!Total:!!Income in the past 12 months below poverty level:!!Married-couple family:!!Without Social Security income in the past 12 months:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_007M": {
+      "label": "Margin of Error!!Total:!!Income in the past 12 months below poverty level:!!Married-couple family:!!Without Social Security income in the past 12 months:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_004E": {
+      "label": "Estimate!!Total:!!Income in the past 12 months below poverty level:!!Married-couple family:!!With Social Security income in the past 12 months:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_004M": {
+      "label": "Margin of Error!!Total:!!Income in the past 12 months below poverty level:!!Married-couple family:!!With Social Security income in the past 12 months:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_005E": {
+      "label": "Estimate!!Total:!!Income in the past 12 months below poverty level:!!Married-couple family:!!With Social Security income in the past 12 months:!!With SSI and/or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_005M": {
+      "label": "Margin of Error!!Total:!!Income in the past 12 months below poverty level:!!Married-couple family:!!With Social Security income in the past 12 months:!!With SSI and/or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_002E": {
+      "label": "Estimate!!Total:!!Income in the past 12 months below poverty level:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_002M": {
+      "label": "Margin of Error!!Total:!!Income in the past 12 months below poverty level:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_003E": {
+      "label": "Estimate!!Total:!!Income in the past 12 months below poverty level:!!Married-couple family:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_003M": {
+      "label": "Margin of Error!!Total:!!Income in the past 12 months below poverty level:!!Married-couple family:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_001E": {
+      "label": "Estimate!!Total:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_001M": {
+      "label": "Margin of Error!!Total:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_008E": {
+      "label": "Estimate!!Total:!!Income in the past 12 months below poverty level:!!Married-couple family:!!Without Social Security income in the past 12 months:!!With SSI and/or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_008M": {
+      "label": "Margin of Error!!Total:!!Income in the past 12 months below poverty level:!!Married-couple family:!!Without Social Security income in the past 12 months:!!With SSI and/or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_009E": {
+      "label": "Estimate!!Total:!!Income in the past 12 months below poverty level:!!Married-couple family:!!Without Social Security income in the past 12 months:!!Without SSI or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_009M": {
+      "label": "Margin of Error!!Total:!!Income in the past 12 months below poverty level:!!Married-couple family:!!Without Social Security income in the past 12 months:!!Without SSI or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "int",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_005EA": {
+      "label": "Annotation of Estimate!!Total:!!Income in the past 12 months below poverty level:!!Married-couple family:!!With Social Security income in the past 12 months:!!With SSI and/or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_005MA": {
+      "label": "Annotation of Margin of Error!!Total:!!Income in the past 12 months below poverty level:!!Married-couple family:!!With Social Security income in the past 12 months:!!With SSI and/or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_004MA": {
+      "label": "Annotation of Margin of Error!!Total:!!Income in the past 12 months below poverty level:!!Married-couple family:!!With Social Security income in the past 12 months:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_004EA": {
+      "label": "Annotation of Estimate!!Total:!!Income in the past 12 months below poverty level:!!Married-couple family:!!With Social Security income in the past 12 months:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_003MA": {
+      "label": "Annotation of Margin of Error!!Total:!!Income in the past 12 months below poverty level:!!Married-couple family:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_003EA": {
+      "label": "Annotation of Estimate!!Total:!!Income in the past 12 months below poverty level:!!Married-couple family:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_002MA": {
+      "label": "Annotation of Margin of Error!!Total:!!Income in the past 12 months below poverty level:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_002EA": {
+      "label": "Annotation of Estimate!!Total:!!Income in the past 12 months below poverty level:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_001MA": {
+      "label": "Annotation of Margin of Error!!Total:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_001EA": {
+      "label": "Annotation of Estimate!!Total:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_009MA": {
+      "label": "Annotation of Margin of Error!!Total:!!Income in the past 12 months below poverty level:!!Married-couple family:!!Without Social Security income in the past 12 months:!!Without SSI or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_009EA": {
+      "label": "Annotation of Estimate!!Total:!!Income in the past 12 months below poverty level:!!Married-couple family:!!Without Social Security income in the past 12 months:!!Without SSI or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_008EA": {
+      "label": "Annotation of Estimate!!Total:!!Income in the past 12 months below poverty level:!!Married-couple family:!!Without Social Security income in the past 12 months:!!With SSI and/or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_008MA": {
+      "label": "Annotation of Margin of Error!!Total:!!Income in the past 12 months below poverty level:!!Married-couple family:!!Without Social Security income in the past 12 months:!!With SSI and/or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_007EA": {
+      "label": "Annotation of Estimate!!Total:!!Income in the past 12 months below poverty level:!!Married-couple family:!!Without Social Security income in the past 12 months:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_007MA": {
+      "label": "Annotation of Margin of Error!!Total:!!Income in the past 12 months below poverty level:!!Married-couple family:!!Without Social Security income in the past 12 months:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_006EA": {
+      "label": "Annotation of Estimate!!Total:!!Income in the past 12 months below poverty level:!!Married-couple family:!!With Social Security income in the past 12 months:!!Without SSI or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_006MA": {
+      "label": "Annotation of Margin of Error!!Total:!!Income in the past 12 months below poverty level:!!Married-couple family:!!With Social Security income in the past 12 months:!!Without SSI or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_018EA": {
+      "label": "Annotation of Estimate!!Total:!!Income in the past 12 months below poverty level:!!Other family:!!Female householder, no spouse present:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_018MA": {
+      "label": "Annotation of Margin of Error!!Total:!!Income in the past 12 months below poverty level:!!Other family:!!Female householder, no spouse present:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_017EA": {
+      "label": "Annotation of Estimate!!Total:!!Income in the past 12 months below poverty level:!!Other family:!!Male householder, no spouse present:!!Without Social Security income in the past 12 months:!!Without SSI or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_017MA": {
+      "label": "Annotation of Margin of Error!!Total:!!Income in the past 12 months below poverty level:!!Other family:!!Male householder, no spouse present:!!Without Social Security income in the past 12 months:!!Without SSI or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_016MA": {
+      "label": "Annotation of Margin of Error!!Total:!!Income in the past 12 months below poverty level:!!Other family:!!Male householder, no spouse present:!!Without Social Security income in the past 12 months:!!With SSI and/or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_016EA": {
+      "label": "Annotation of Estimate!!Total:!!Income in the past 12 months below poverty level:!!Other family:!!Male householder, no spouse present:!!Without Social Security income in the past 12 months:!!With SSI and/or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_015MA": {
+      "label": "Annotation of Margin of Error!!Total:!!Income in the past 12 months below poverty level:!!Other family:!!Male householder, no spouse present:!!Without Social Security income in the past 12 months:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_015EA": {
+      "label": "Annotation of Estimate!!Total:!!Income in the past 12 months below poverty level:!!Other family:!!Male householder, no spouse present:!!Without Social Security income in the past 12 months:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_014MA": {
+      "label": "Annotation of Margin of Error!!Total:!!Income in the past 12 months below poverty level:!!Other family:!!Male householder, no spouse present:!!With Social Security income in the past 12 months:!!Without SSI or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_014EA": {
+      "label": "Annotation of Estimate!!Total:!!Income in the past 12 months below poverty level:!!Other family:!!Male householder, no spouse present:!!With Social Security income in the past 12 months:!!Without SSI or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_013MA": {
+      "label": "Annotation of Margin of Error!!Total:!!Income in the past 12 months below poverty level:!!Other family:!!Male householder, no spouse present:!!With Social Security income in the past 12 months:!!With SSI and/or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_013EA": {
+      "label": "Annotation of Estimate!!Total:!!Income in the past 12 months below poverty level:!!Other family:!!Male householder, no spouse present:!!With Social Security income in the past 12 months:!!With SSI and/or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_012EA": {
+      "label": "Annotation of Estimate!!Total:!!Income in the past 12 months below poverty level:!!Other family:!!Male householder, no spouse present:!!With Social Security income in the past 12 months:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_012MA": {
+      "label": "Annotation of Margin of Error!!Total:!!Income in the past 12 months below poverty level:!!Other family:!!Male householder, no spouse present:!!With Social Security income in the past 12 months:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_011EA": {
+      "label": "Annotation of Estimate!!Total:!!Income in the past 12 months below poverty level:!!Other family:!!Male householder, no spouse present:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_011MA": {
+      "label": "Annotation of Margin of Error!!Total:!!Income in the past 12 months below poverty level:!!Other family:!!Male householder, no spouse present:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_010EA": {
+      "label": "Annotation of Estimate!!Total:!!Income in the past 12 months below poverty level:!!Other family:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_010MA": {
+      "label": "Annotation of Margin of Error!!Total:!!Income in the past 12 months below poverty level:!!Other family:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_019EA": {
+      "label": "Annotation of Estimate!!Total:!!Income in the past 12 months below poverty level:!!Other family:!!Female householder, no spouse present:!!With Social Security income in the past 12 months:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_019MA": {
+      "label": "Annotation of Margin of Error!!Total:!!Income in the past 12 months below poverty level:!!Other family:!!Female householder, no spouse present:!!With Social Security income in the past 12 months:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_029EA": {
+      "label": "Annotation of Estimate!!Total:!!Income in the past 12 months at or above poverty level:!!Married-couple family:!!With Social Security income in the past 12 months:!!Without SSI or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_029MA": {
+      "label": "Annotation of Margin of Error!!Total:!!Income in the past 12 months at or above poverty level:!!Married-couple family:!!With Social Security income in the past 12 months:!!Without SSI or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_028EA": {
+      "label": "Annotation of Estimate!!Total:!!Income in the past 12 months at or above poverty level:!!Married-couple family:!!With Social Security income in the past 12 months:!!With SSI and/or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_028MA": {
+      "label": "Annotation of Margin of Error!!Total:!!Income in the past 12 months at or above poverty level:!!Married-couple family:!!With Social Security income in the past 12 months:!!With SSI and/or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_027MA": {
+      "label": "Annotation of Margin of Error!!Total:!!Income in the past 12 months at or above poverty level:!!Married-couple family:!!With Social Security income in the past 12 months:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_027EA": {
+      "label": "Annotation of Estimate!!Total:!!Income in the past 12 months at or above poverty level:!!Married-couple family:!!With Social Security income in the past 12 months:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_026MA": {
+      "label": "Annotation of Margin of Error!!Total:!!Income in the past 12 months at or above poverty level:!!Married-couple family:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_026EA": {
+      "label": "Annotation of Estimate!!Total:!!Income in the past 12 months at or above poverty level:!!Married-couple family:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_025MA": {
+      "label": "Annotation of Margin of Error!!Total:!!Income in the past 12 months at or above poverty level:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_025EA": {
+      "label": "Annotation of Estimate!!Total:!!Income in the past 12 months at or above poverty level:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_024MA": {
+      "label": "Annotation of Margin of Error!!Total:!!Income in the past 12 months below poverty level:!!Other family:!!Female householder, no spouse present:!!Without Social Security income in the past 12 months:!!Without SSI or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_024EA": {
+      "label": "Annotation of Estimate!!Total:!!Income in the past 12 months below poverty level:!!Other family:!!Female householder, no spouse present:!!Without Social Security income in the past 12 months:!!Without SSI or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_023EA": {
+      "label": "Annotation of Estimate!!Total:!!Income in the past 12 months below poverty level:!!Other family:!!Female householder, no spouse present:!!Without Social Security income in the past 12 months:!!With SSI and/or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_023MA": {
+      "label": "Annotation of Margin of Error!!Total:!!Income in the past 12 months below poverty level:!!Other family:!!Female householder, no spouse present:!!Without Social Security income in the past 12 months:!!With SSI and/or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_022EA": {
+      "label": "Annotation of Estimate!!Total:!!Income in the past 12 months below poverty level:!!Other family:!!Female householder, no spouse present:!!Without Social Security income in the past 12 months:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_022MA": {
+      "label": "Annotation of Margin of Error!!Total:!!Income in the past 12 months below poverty level:!!Other family:!!Female householder, no spouse present:!!Without Social Security income in the past 12 months:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_021EA": {
+      "label": "Annotation of Estimate!!Total:!!Income in the past 12 months below poverty level:!!Other family:!!Female householder, no spouse present:!!With Social Security income in the past 12 months:!!Without SSI or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_021MA": {
+      "label": "Annotation of Margin of Error!!Total:!!Income in the past 12 months below poverty level:!!Other family:!!Female householder, no spouse present:!!With Social Security income in the past 12 months:!!Without SSI or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_020EA": {
+      "label": "Annotation of Estimate!!Total:!!Income in the past 12 months below poverty level:!!Other family:!!Female householder, no spouse present:!!With Social Security income in the past 12 months:!!With SSI and/or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_020MA": {
+      "label": "Annotation of Margin of Error!!Total:!!Income in the past 12 months below poverty level:!!Other family:!!Female householder, no spouse present:!!With Social Security income in the past 12 months:!!With SSI and/or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_039MA": {
+      "label": "Annotation of Margin of Error!!Total:!!Income in the past 12 months at or above poverty level:!!Other family:!!Male householder, no spouse present:!!Without Social Security income in the past 12 months:!!With SSI and/or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_039EA": {
+      "label": "Annotation of Estimate!!Total:!!Income in the past 12 months at or above poverty level:!!Other family:!!Male householder, no spouse present:!!Without Social Security income in the past 12 months:!!With SSI and/or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_038MA": {
+      "label": "Annotation of Margin of Error!!Total:!!Income in the past 12 months at or above poverty level:!!Other family:!!Male householder, no spouse present:!!Without Social Security income in the past 12 months:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_038EA": {
+      "label": "Annotation of Estimate!!Total:!!Income in the past 12 months at or above poverty level:!!Other family:!!Male householder, no spouse present:!!Without Social Security income in the past 12 months:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_037MA": {
+      "label": "Annotation of Margin of Error!!Total:!!Income in the past 12 months at or above poverty level:!!Other family:!!Male householder, no spouse present:!!With Social Security income in the past 12 months:!!Without SSI or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_037EA": {
+      "label": "Annotation of Estimate!!Total:!!Income in the past 12 months at or above poverty level:!!Other family:!!Male householder, no spouse present:!!With Social Security income in the past 12 months:!!Without SSI or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_036MA": {
+      "label": "Annotation of Margin of Error!!Total:!!Income in the past 12 months at or above poverty level:!!Other family:!!Male householder, no spouse present:!!With Social Security income in the past 12 months:!!With SSI and/or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_036EA": {
+      "label": "Annotation of Estimate!!Total:!!Income in the past 12 months at or above poverty level:!!Other family:!!Male householder, no spouse present:!!With Social Security income in the past 12 months:!!With SSI and/or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_035EA": {
+      "label": "Annotation of Estimate!!Total:!!Income in the past 12 months at or above poverty level:!!Other family:!!Male householder, no spouse present:!!With Social Security income in the past 12 months:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_035MA": {
+      "label": "Annotation of Margin of Error!!Total:!!Income in the past 12 months at or above poverty level:!!Other family:!!Male householder, no spouse present:!!With Social Security income in the past 12 months:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_034EA": {
+      "label": "Annotation of Estimate!!Total:!!Income in the past 12 months at or above poverty level:!!Other family:!!Male householder, no spouse present:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_034MA": {
+      "label": "Annotation of Margin of Error!!Total:!!Income in the past 12 months at or above poverty level:!!Other family:!!Male householder, no spouse present:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_033EA": {
+      "label": "Annotation of Estimate!!Total:!!Income in the past 12 months at or above poverty level:!!Other family:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_033MA": {
+      "label": "Annotation of Margin of Error!!Total:!!Income in the past 12 months at or above poverty level:!!Other family:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_032EA": {
+      "label": "Annotation of Estimate!!Total:!!Income in the past 12 months at or above poverty level:!!Married-couple family:!!Without Social Security income in the past 12 months:!!Without SSI or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_032MA": {
+      "label": "Annotation of Margin of Error!!Total:!!Income in the past 12 months at or above poverty level:!!Married-couple family:!!Without Social Security income in the past 12 months:!!Without SSI or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_031MA": {
+      "label": "Annotation of Margin of Error!!Total:!!Income in the past 12 months at or above poverty level:!!Married-couple family:!!Without Social Security income in the past 12 months:!!With SSI and/or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_031EA": {
+      "label": "Annotation of Estimate!!Total:!!Income in the past 12 months at or above poverty level:!!Married-couple family:!!Without Social Security income in the past 12 months:!!With SSI and/or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_030MA": {
+      "label": "Annotation of Margin of Error!!Total:!!Income in the past 12 months at or above poverty level:!!Married-couple family:!!Without Social Security income in the past 12 months:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_030EA": {
+      "label": "Annotation of Estimate!!Total:!!Income in the past 12 months at or above poverty level:!!Married-couple family:!!Without Social Security income in the past 12 months:",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_040MA": {
+      "label": "Annotation of Margin of Error!!Total:!!Income in the past 12 months at or above poverty level:!!Other family:!!Male householder, no spouse present:!!Without Social Security income in the past 12 months:!!Without SSI or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    },
+    "B17015_040EA": {
+      "label": "Annotation of Estimate!!Total:!!Income in the past 12 months at or above poverty level:!!Other family:!!Male householder, no spouse present:!!Without Social Security income in the past 12 months:!!Without SSI or cash public assistance income in the past 12 months",
+      "concept": "POVERTY STATUS IN THE PAST 12 MONTHS OF FAMILIES BY FAMILY TYPE BY SOCIAL SECURITY INCOME BY SUPPLEMENTAL SECURITY INCOME (SSI) AND CASH PUBLIC ASSISTANCE INCOME",
+      "predicateType": "string",
+      "group": "B17015",
+      "limit": 0,
+      "predicateOnly": true,
+      "universe": "Families"
+    }
+  }
+}
