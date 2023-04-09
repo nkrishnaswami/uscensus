@@ -81,7 +81,7 @@ class Group(DataClassJsonMixin):
     name: str
     description: str
     variables: str
-    universe: str
+    universe: str = ''
 
 
 @dataclass(eq=True, frozen=True)

@@ -120,7 +120,7 @@ class QueryBuilder:
             if value == '*' and level_id not in geo_level.wildcard:
                 raise ValueError(f'Unexpected wildcard in "in" geography "{level_id}"')
 
-    def _make_params(self) -> dict[str, str]:
+    def make_params(self) -> dict[str, str]:
         """Assemble the QueryBuilder contents into request query
         parameters.
 
@@ -146,7 +146,7 @@ class QueryBuilder:
         resp = fetch(
             self.dataset.api_url,
             self.dataset.client,
-            params=self._make_params())
+            params=self.make_params())
         resp.raise_for_status()
         data = resp.json()
         ret = pd.DataFrame(data=data[1:], columns=data[0])
