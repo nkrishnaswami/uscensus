@@ -9,14 +9,10 @@ if TYPE_CHECKING:
 
     from uscensus.incremental.wrappers import Dataset
 
-    FilterSpec = Callable[[str], bool] | re.Pattern | str
-    StringPredicate = Callable[[str], bool]
-    DatasetGenerator = Generator[Dataset, None, None]
-
 
 def _make_filter_fn(
-        filter_spec: FilterSpec,
-) -> StringPredicate:
+        filter_spec: Callable[[str], bool] | re.Pattern | str,
+) -> Callable[[str], bool]:
     if isinstance(filter_spec, str):
         return lambda d: d.find(filter_spec) >= 0
     if isinstance(filter_spec, re.Pattern):
@@ -25,8 +21,8 @@ def _make_filter_fn(
 
 
 def _make_filter_eq_fn(
-        filter_spec: FilterSpec,
-) -> StringPredicate:
+        filter_spec: Callable[[str], bool] | re.Pattern | str,
+) -> Callable[[str], bool]:
     if isinstance(filter_spec, str):
         return lambda d: d == filter_spec
     if isinstance(filter_spec, re.Pattern):
@@ -38,12 +34,12 @@ def filter_datasets(
         datasets: Iterable[Dataset],
         *,
         vintages: list[int] = [],
-        title: FilterSpec = '',
-        description: FilterSpec = '',
-        variable: FilterSpec = '',
-        group: FilterSpec = '',
-        tags: FilterSpec = '',
-        geography: FilterSpec = '',
+        title: Callable[[str], bool] | re.Pattern | str = '',
+        description: Callable[[str], bool] | re.Pattern | str = '',
+        variable: Callable[[str], bool] | re.Pattern | str = '',
+        group: Callable[[str], bool] | re.Pattern | str = '',
+        tags: Callable[[str], bool] | re.Pattern | str = '',
+        geography: Callable[[str], bool] | re.Pattern | str = '',
 ) -> list[Dataset]:
     if vintages:
         datasets = list(filter_datasets_vintages(
@@ -72,7 +68,7 @@ def filter_datasets(
 def filter_datasets_vintages(
         datasets: Iterable[Dataset],
         vintages: list[int],
-) -> DatasetGenerator:
+) -> Generator[Dataset, None, None]:
     for dataset in datasets:
         if dataset.c_vintage in vintages:
             yield dataset
@@ -80,8 +76,8 @@ def filter_datasets_vintages(
 
 def filter_datasets_title(
         datasets: Iterable[Dataset],
-        filter_: FilterSpec,
-) -> DatasetGenerator:
+        filter_: Callable[[str], bool] | re.Pattern | str,
+) -> Generator[Dataset, None, None]:
     filter_fn = _make_filter_fn(filter_)
     for dataset in datasets:
         if filter_fn(dataset.title):
@@ -90,8 +86,8 @@ def filter_datasets_title(
 
 def filter_datasets_description(
         datasets: Iterable[Dataset],
-        filter_: FilterSpec,
-) -> DatasetGenerator:
+        filter_: Callable[[str], bool] | re.Pattern | str,
+) -> Generator[Dataset, None, None]:
     filter_fn = _make_filter_fn(filter_)
     for dataset in datasets:
         if filter_fn(dataset.description):
@@ -100,8 +96,8 @@ def filter_datasets_description(
 
 def filter_datasets_variables(
         datasets: Iterable[Dataset],
-        filter_: FilterSpec,
-) -> DatasetGenerator:
+        filter_: Callable[[str], bool] | re.Pattern | str,
+) -> Generator[Dataset, None, None]:
     filter_fn = _make_filter_fn(filter_)
     for dataset in datasets:
         for variable_name, variable in dataset.variables.items():
@@ -112,8 +108,8 @@ def filter_datasets_variables(
 
 def filter_datasets_groups(
         datasets: Iterable[Dataset],
-        filter_: FilterSpec,
-) -> DatasetGenerator:
+        filter_: Callable[[str], bool] | re.Pattern | str,
+) -> Generator[Dataset, None, None]:
     filter_fn = _make_filter_fn(filter_)
     for dataset in datasets:
         for group_name, group in dataset.groups.items():
@@ -125,8 +121,8 @@ def filter_datasets_groups(
 
 def filter_datasets_tags(
         datasets: Iterable[Dataset],
-        filter_: FilterSpec,
-) -> DatasetGenerator:
+        filter_: Callable[[str], bool] | re.Pattern | str,
+) -> Generator[Dataset, None, None]:
     filter_fn = _make_filter_fn(filter_)
     for dataset in datasets:
         for tag in dataset.tags:
@@ -137,7 +133,7 @@ def filter_datasets_tags(
 
 def filter_datasets_geography(
         datasets: Iterable[Dataset],
-        filter_: FilterSpec) -> DatasetGenerator:
+        filter_: Callable[[str], bool] | re.Pattern | str) -> Generator[Dataset, None, None]:
     filter_fn = _make_filter_eq_fn(filter_)
     for dataset in datasets:
         for level in dataset.geography.levels:
