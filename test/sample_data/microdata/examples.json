@@ -1,0 +1,37 @@
+{
+  "get": [
+    "A_LFSR",
+    "A_MARITL",
+    "A_FNLWGT"
+  ],
+  "tabulate": [
+    {
+      "name": "A_FNLWGT",
+      "position": "weight"
+    },
+    {
+      "name": "A_LFSR",
+      "position": "col"
+    },
+    {
+      "name": "A_MARITL",
+      "position": "row"
+    }
+  ],
+  "predicates": {
+    "A_HGA": "12"
+  },
+  "defaultGeography": [
+    {
+      "isDefault": "true"
+    }
+  ],
+  "fips": [
+    {
+      "name": "state",
+      "exampleValue": "01",
+      "geoLevelDisplay": "040",
+      "referenceDate": "2001-01-01"
+    }
+  ]
+}

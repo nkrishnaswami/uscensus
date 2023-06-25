@@ -1,8 +1,8 @@
-from uscensus.util.datastores.nop import NopDataStore
+from uscensus.util.datastores.nop import AsyncNopDataStore
 
 
-def test_NopDatastore():
-    nc = NopDataStore()
-    doc, vary = nc.get('test')
+async def test_NopDatastore():
+    nc = AsyncNopDataStore()
+    doc, vary = await nc.aget('test')
     assert doc is None
     assert vary is None

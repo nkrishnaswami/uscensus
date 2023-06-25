@@ -225,8 +225,9 @@ class CensusDataEndpoint:
           * cache: cache in which to store results. Not cached by default.
           * groups: variable groups to retrieve
         """
-        return asyncio.run(self._impl(fields, geo_for, geo_in=geo_in,
-                                     groups=groups))
+        return asyncio.get_event_loop().run_until_complete(
+            self._impl(fields, geo_for, geo_in=geo_in,
+                       groups=groups))
 
     def __getattr__(self, key):
         return getattr(self._impl, key)

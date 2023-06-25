@@ -3,6 +3,7 @@ import logging
 
 import aiotools
 import httpx
+import pandas as pd
 
 from uscensus.data.model import AsyncCensusDataEndpoint, CensusDataEndpoint
 from uscensus.util.errors import CensusError
@@ -44,7 +45,6 @@ class AsyncDiscoveryInterface:
                 SqliteFts5Index will be used.
         """
         self = AsyncDiscoveryInterface()
-
         self.datasets = {}
         if vintage:
             url = f'https://api.census.gov/data/{vintage}.json'
@@ -194,7 +194,8 @@ class DiscoveryInterface:
                 SqliteFts5Index will be used.
         """
         _logger.debug('Fetching root metadata')
-        self._impl = asyncio.run(AsyncDiscoveryInterface.create(key, client, vintage, fts_class))
+        self._impl = asyncio.get_event_loop().run_until_complete(
+            AsyncDiscoveryInterface.create(key, client, vintage, fts_class))
         self.datasets = {
             key: CensusDataEndpoint(value)
             for key, value in self._impl.datasets.items()

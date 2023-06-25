@@ -1,0 +1,72 @@
+{
+  "@context": "https://project-open-data.cio.gov/v1.1/schema/catalog.jsonld",
+  "@id": "http://api.census.gov/data/1989/cps/basic/apr.json",
+  "@type": "dcat:Catalog",
+  "conformsTo": "https://project-open-data.cio.gov/v1.1/schema",
+  "describedBy": "https://project-open-data.cio.gov/v1.1/schema/catalog.json",
+  "dataset": [
+    {
+      "c_vintage": 1989,
+      "c_dataset": [
+        "cps",
+        "basic",
+        "apr"
+      ],
+      "c_geographyLink": "http://api.census.gov/data/1989/cps/basic/apr/geography.json",
+      "c_variablesLink": "http://api.census.gov/data/1989/cps/basic/apr/variables.json",
+      "c_tagsLink": "http://api.census.gov/data/1989/cps/basic/apr/tags.json",
+      "c_examplesLink": "http://api.census.gov/data/1989/cps/basic/apr/examples.json",
+      "c_groupsLink": "http://api.census.gov/data/1989/cps/basic/apr/groups.json",
+      "c_sorts_url": "http://api.census.gov/data/1989/cps/basic/apr/sorts.json",
+      "c_documentationLink": "https://www.census.gov/developer/",
+      "c_isMicrodata": true,
+      "c_isCube": true,
+      "c_isAvailable": true,
+      "@type": "dcat:Dataset",
+      "title": "Apr 1989 Current Population Survey: Basic Monthly",
+      "accessLevel": "public",
+      "bureauCode": [
+        "006:07"
+      ],
+      "description": "To provide estimates of employment, unemployment, and other characteristics of the general labor force, of the population as a whole, and of various subgroups of the population. Monthly labor force data for the country are used by the Bureau of Labor Statistics (BLS) to determine the distribution of funds under the Job Training Partnership Act. These data are collected through combined computer-assisted personal interviewing (CAPI) and computer-assisted telephone interviewing (CATI). In addition to the labor force data, the CPS basic funding provides annual data on work experience, income, and migration from the March Annual Demographic Supplement and on school enrollment of the population from the October Supplement. Other supplements, some of which are sponsored by other agencies, are conducted biennially or intermittently.",
+      "distribution": [
+        {
+          "@type": "dcat:Distribution",
+          "accessURL": "http://api.census.gov/data/1989/cps/basic/apr",
+          "description": "API endpoint",
+          "format": "API",
+          "mediaType": "application/json",
+          "title": "API endpoint"
+        }
+      ],
+      "contactPoint": {
+        "fn": "CPS Staff",
+        "hasEmail": "mailto:dsd.cps@census.gov"
+      },
+      "identifier": "https://api.census.gov/data/id/CPSBASIC198904",
+      "keyword": [
+        "census"
+      ],
+      "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "modified": "2021-12-16 00:00:00.0",
+      "programCode": [
+        "006:004"
+      ],
+      "references": [
+        "https://www.census.gov/developers/"
+      ],
+      "publisher": {
+        "@type": "org:Organization",
+        "name": "U.S. Census Bureau",
+        "subOrganizationOf": {
+             "@type": "org:Organization",
+             "name": "U.S. Department Of Commerce",
+             "subOrganizationOf": {
+                 "@type": "org:Organization",
+                 "name": "U.S. Government"
+             }
+         }
+      }
+    }
+  ]
+}

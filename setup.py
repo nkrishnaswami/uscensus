@@ -17,6 +17,7 @@ setup(
     install_requires=[
         'aiosqlite',
         'aiotools',
+        'dataclasses_json',
         'docutils>=0.3',
         'geopandas',
         'httpx>=0.17.0',

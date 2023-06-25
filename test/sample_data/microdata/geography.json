@@ -1,0 +1,14 @@
+{
+  "default": [
+    {
+      "isDefault": "true"
+    }
+  ],
+  "fips": [
+    {
+      "name": "state",
+      "geoLevelDisplay": "040",
+      "referenceDate": "2001-01-01"
+    }
+  ]
+}

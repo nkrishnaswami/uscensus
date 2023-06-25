@@ -1,0 +1,4787 @@
+{
+  "variables": {
+    "for": {
+      "label": "Census API FIPS 'for' clause",
+      "concept": "Census API Geography Specification",
+      "predicateType": "fips-for",
+      "group": "N/A",
+      "limit": 0,
+      "predicateOnly": true
+    },
+    "in": {
+      "label": "Census API FIPS 'in' clause",
+      "concept": "Census API Geography Specification",
+      "predicateType": "fips-in",
+      "group": "N/A",
+      "limit": 0,
+      "predicateOnly": true
+    },
+    "ucgid": {
+      "label": "Uniform Census Geography Identifier clause",
+      "concept": "Census API Geography Specification",
+      "predicateType": "ucgid",
+      "group": "N/A",
+      "limit": 0,
+      "predicateOnly": true
+    },
+    "HG_FIPS": {
+      "label": "Geography-FIPS state code",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "20": "KS",
+          "42": "PA",
+          "46": "SD",
+          "49": "UT",
+          "56": "WY",
+          "8": "CO",
+          "24": "MD",
+          "28": "MS",
+          "55": "WI",
+          "16": "ID",
+          "27": "MN",
+          "30": "MT",
+          "39": "OH",
+          "51": "VA",
+          "10": "DE",
+          "9": "CT",
+          "21": "KY",
+          "37": "NC",
+          "53": "WA",
+          "11": "DC",
+          "25": "MA",
+          "44": "RI",
+          "47": "TN",
+          "50": "VT",
+          "17": "IL",
+          "18": "IN",
+          "5": "AR",
+          "6": "CA",
+          "34": "NJ",
+          "35": "NM",
+          "38": "ND",
+          "41": "OR",
+          "45": "SC",
+          "48": "TX",
+          "19": "IA",
+          "2": "AK",
+          "23": "ME",
+          "26": "MI",
+          "32": "NV",
+          "36": "NY",
+          "40": "OK",
+          "54": "WV",
+          "12": "FL",
+          "13": "GA",
+          "15": "HI",
+          "1": "AL",
+          "4": "AZ",
+          "22": "LA",
+          "29": "MO",
+          "31": "NE",
+          "33": "NH"
+        }
+      }
+    },
+    "AXWHYNL": {
+      "label": "Labor Force-reasons not looking for work (allocation flag)",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "3": "Value to value",
+          "2": "Blank to value",
+          "4": "Allocated",
+          "1": "Value to blank",
+          "0": "No change"
+        }
+      }
+    },
+    "A_UNTYPE": {
+      "label": "Labor Force-reason",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "4": "Re-entrant",
+          "3": "Job leaver",
+          "2": "Other job loser",
+          "1": "Job loser - on layoff",
+          "5": "New entrant",
+          "-1": "Not in Universe"
+        }
+      }
+    },
+    "H_TENURE": {
+      "label": "Household-tenure",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "3": "No cash rent",
+          "1": "Owned or being bought",
+          "-1": "Not in Universe",
+          "2": "Rent"
+        }
+      }
+    },
+    "AXWHYNA": {
+      "label": "Labor Force-why not (allocation flag)",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "2": "Blank to value",
+          "3": "Value to value",
+          "0": "No change",
+          "4": "Allocated",
+          "1": "Value to blank"
+        }
+      }
+    },
+    "A_ENRLW": {
+      "label": "School Enrollment-enrolled/attending an inst. of educ.",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "-1": "Not in Universe",
+          "1": "Yes",
+          "2": "No"
+        }
+      }
+    },
+    "HXLIVQRT": {
+      "label": "Household-living quarters (allocation flag)",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "4": "Allocated",
+          "0": "No change",
+          "7": "Blank to NA - no error"
+        }
+      }
+    },
+    "A_PFFTPT": {
+      "label": "Labor Force-full-time/part-time status",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "0": "Not in primary family",
+          "3": "Some full time, some part time",
+          "5": "Not in universe",
+          "4": "All earners part time",
+          "2": "All earners full-time",
+          "-1": "Not in universe (MIS 1, 2, 3, 5, 6, 7)",
+          "1": "No earners"
+        }
+      }
+    },
+    "AXMAJACT": {
+      "label": "Labor Force-activities last week (allocation flag)",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "4": "Allocated",
+          "2": "Blank to value",
+          "0": "No change",
+          "1": "Value to blank",
+          "3": "Value to value"
+        }
+      }
+    },
+    "A_AGE": {
+      "label": "Demographic-age",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "range": [
+          {
+            "min": "15",
+            "max": "90",
+            "description": "Adult Age"
+          }
+        ]
+      }
+    },
+    "AXHSCOL": {
+      "label": "School Enrollment-institution (allocation flag)",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "1": "Value to blank",
+          "3": "Value to value",
+          "4": "Allocated",
+          "0": "No change",
+          "2": "Blank to value"
+        }
+      }
+    },
+    "AXPARENT": {
+      "label": "Demographic-parent's line number (allocation flag)",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "2": "Blank to value",
+          "0": "No change",
+          "5": "Value to value - no error",
+          "3": "Value to value"
+        }
+      }
+    },
+    "AXHGC": {
+      "label": "Allocation Flag for A_HGC",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "2": "Blank to value",
+          "0": "No change"
+        }
+      }
+    },
+    "A_OCC": {
+      "label": "Indus.&Occ.-(main job)occupation code",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "805": "Truck drivers, light (8214)",
+          "826": "Rail vehicle operators, n.e.c. (8239)",
+          "707": "Rolling machine operators (7316, 7516)",
+          "849": "Crane and tower operators (8315)",
+          "855": "Grader, dozer, and scraper operators (8317)",
+          "856": "Industrial truck and tractor equipment operators (8318)",
+          "737": "Miscellaneous printing machine operators (6849, 7449, 7649)",
+          "867": "Helpers, extractive occupations (865)",
+          "869": "Construction laborers (871)",
+          "755": "Extruding and forming machine operators (7463, 7663)",
+          "515": "Aircraft mechanics, except engine (6116)",
+          "878": "Machine feeders and offbearers (8725)",
+          "517": "Farm equipment mechanics (6118)",
+          "645": "Patternmakers and model makers, metal (6817)",
+          "527": "Telephone line installers and repairers (6157)",
+          "407": "Private hhld cleaners and servants (502, 507, 509)",
+          "533": "Miscellaneous electrical and electronic equipment repairers (6152, 6159)",
+          "414": "Supervisors, police and detectives (5112)",
+          "417": "Firefighting occupations (5123)",
+          "785": "Assemblers (772, 774)",
+          "305": "Supervisors, financial records processing (4521)",
+          "547": "Specified mechanics and repairers, n.e.c. (6177, 6179)",
+          "668": "Upholsterers (6853)",
+          "309": "Peripheral equipment operators (4613)",
+          "554": "Supervisors, carpenters and rel. workers (6313)",
+          "797": "Production testers (783)",
+          "317": "Hotel clerks (4643)",
+          "439": "Kitchen workers, food preparation (5217)",
+          "683": "Electrical/electronic equipment assemblers (6867)",
+          "688": "Food batchmakers (6873, 6879)",
+          "454": "Elevator operators (5245)",
+          "13": "managers, marketing, advertising, and public relations (125)",
+          "483": "Marine life cultivation workers (5618)",
+          "485": "Supervisors, rel. agricultural occupations (5621)",
+          "129": "Computer science teachers (2228)",
+          "29": "buyers, wholesale and retail trade except farm products (1442)",
+          "494": "Supervisors, forestry and logging workers (571)",
+          "496": "Timber cutting and logging occupations (573, 579)",
+          "137": "Art, drama, and music teachers (2235)",
+          "139": "Education teachers (2237)",
+          "34": "business and promotion agents (145)",
+          "263": "Sales workers, motor vehicles and boats (4342, 4344)",
+          "264": "Sales workers, apparel (4346)",
+          "266": "Sales workers, furniture and home furnishings (4348)",
+          "159": "Teachers, n.e.c. (236, 239)",
+          "56": "Engineers, industrial (1634)",
+          "284": "Auctioneers (447)",
+          "164": "Librarians (251)",
+          "285": "Sales support occupations, n.e.c. (444, 446, 449)",
+          "166": "Economists (1912)",
+          "169": "Social scientists, n.e.c. (1913, 1914, 1919)",
+          "65": "operations and systems researchers and analysts (172)",
+          "68": "Mathematical scientists, n.e.c. (1739)",
+          "78": "Biological and life scientists (1854)",
+          "184": "Technical writers (398)",
+          "97": "Dietitians (302)",
+          "585": "Plumbers, pipefitters, and steamfitters (part 645)",
+          "105": "Therapists, n.e.c. (3039)",
+          "347": "Office mach. operators, n.e.c. (4729)",
+          "348": "Telephone operators (4732)",
+          "473": "Farmers, except horticultural (5512-5514)",
+          "353": "Communications equipment operators, n.e.c. (4739)",
+          "598": "Drillers, earth (6474)",
+          "4": "chief executives and general administrators, public administration (112)",
+          "5": "administrators and officials, public administration (1132-1139)",
+          "8": "personnel and labor relations managers (123)",
+          "825": "Railroad brake, signal, and switch operators (8233)",
+          "713": "Forging machine operators (7319, 7519)",
+          "844": "Operating engineers (8312)",
+          "725": "Misc metal and plastic processing machine operators (7349, 7549)",
+          "726": "Wood lathe, routing, and planing machine operators (7431, 7432, 7631, 7632)",
+          "738": "Winding and twisting machine operators (7451, 7651)",
+          "743": "Textile cutting machine operators (7654)",
+          "864": "Helpers, mechanics, and repairers (863)",
+          "744": "Textile sewing machine operators (7655)",
+          "509": "Small engine repairers (6114)",
+          "637": "Machinists (part 6813)",
+          "758": "Compressing and compacting machine operators (7467, 7667)",
+          "647": "Precious stones and metals workers (Jewelers) (6822, 6866)",
+          "889": "Laborers, except construction (8769)",
+          "769": "Slicing and cutting machine operators (7478, 7678)",
+          "653": "Sheet metal workers (part 6824)",
+          "656": "Patternmkrs and model makers, wood (6831)",
+          "536": "Locksmiths and safe repairers (6173)",
+          "423": "Sheriffs, bailiffs, and other law enforcement officers (5134)",
+          "786": "Hand cutting and trimming occupations (7753)",
+          "789": "Hand painting, coating, and decorating occupations (7756)",
+          "427": "Protective service occupations, n.e.c. (5149)",
+          "433": "Supervisors, food preparation and service occupations (5211)",
+          "564": "Brickmason and stonemason apprentices (part 6412, part 6413)",
+          "323": "Information clerks, n.e.c. (4649)",
+          "565": "Tile setters, hard and soft (part 6414, part 6462)",
+          "445": "Dental assistants (5232)",
+          "326": "Correspondence clerks (4663)",
+          "213": "Electrical and electronic technicians (3711)",
+          "456": "Supervisors, personal service occupations (5251)",
+          "15": "managers, medicine and health (131)",
+          "17": "postmasters and mail superintendents (1344)",
+          "484": "Nursery workers (5619)",
+          "125": "Sociology teachers (2224)",
+          "377": "Eligibility clerks, social welfare (4784)",
+          "33": "purch. agents and buyers, n.e.c. (144)",
+          "37": "management rel. occupations, n.e.c. (149)",
+          "385": "Data-entry keyers (4793)",
+          "145": "Law teachers (2243)",
+          "269": "Sales workers, parts (4367)",
+          "48": "chemical engineers (1626)",
+          "274": "Sales workers, other commodities (4345, 4347, 4354, 4356, 4359, 4362, 4369)",
+          "276": "Cashiers (4364)",
+          "278": "News vendors (4365)",
+          "53": "civil engineers (1628)",
+          "59": "engineers, n.e.c. (1639)",
+          "63": "surveyors and mapping scientists (164)",
+          "176": "Clergy (2042)",
+          "179": "Judges (212)",
+          "186": "Musicians and composers (323)",
+          "89": "Health diagnosing practitioners, n.e.c. (289)",
+          "194": "Artists, performers, and rel. workers, n.e.c. (328,329)",
+          "198": "Announcers (333)",
+          "583": "Paperhangers (6443)",
+          "343": "Cost and rate clerks (4716)",
+          "227": "Air traffic controllers (392)",
+          "228": "Broadcast equipment operators (393)",
+          "233": "Tool programmers, numerical control (3974)",
+          "115": "Chemistry teachers (2214)",
+          "6": "administrators, protective services (1131)",
+          "9": "purchasing managers (124)",
+          "804": "Truck drivers, heavy (8212, 8213)",
+          "828": "Ship captains and mates, except fishing boats (part 8241, 8242)",
+          "833": "Marine engineers (8244)",
+          "714": "Numerical control machine operators (7326)",
+          "719": "Molding and casting machine operators (7315, 7342, 7515, 7542)",
+          "848": "Hoist and winch operators (8314)",
+          "614": "Drillers, oil well (652)",
+          "866": "Helpers, surveyor (8646)",
+          "748": "Laundering and dry cleaning machine operators (6855, 7658)",
+          "873": "Production helpers (861, 862)",
+          "877": "Stock handlers and baggers (8724)",
+          "766": "Furnace, kiln, and oven operators, except food (7675)",
+          "525": "Data processing equipment repairers (6154)",
+          "406": "Child care workers, private hhld (506)",
+          "529": "Telephone installers and repairers (6158)",
+          "777": "Miscellaneous machine operators, n.e.c. (part 7479, 7665, 7679)",
+          "658": "Furniture and wood finishers (6835)",
+          "543": "Elevator installers and repairers (6176)",
+          "303": "Supervisors, general office (4511, 4513, 4514, 4516, 4519, 4529)",
+          "667": "Tailors (part 6852)",
+          "669": "Shoe repairers (6854)",
+          "313": "Secretaries (4622)",
+          "434": "Bartenders (5212)",
+          "555": "Supervisors, electricians and power transmission installers (6314)",
+          "678": "Dental laboratory and medical appliance technicians (6865)",
+          "438": "Food counter, fountain and rel. occupations (5216)",
+          "444": "Miscellaneous food preparation occupations (5219)",
+          "686": "Butchers and meat cutters (6871)",
+          "203": "Clinical laboratory technologists and technicians (362)",
+          "566": "Carpet installers (part 6462)",
+          "328": "Personnel clerks, except payroll and timekeeping (4692)",
+          "695": "Power plant operators (part 693)",
+          "696": "Stationary engineers (part 693, 7668)",
+          "363": "Production coordinators (4752)",
+          "373": "Expediters (4758)",
+          "133": "Medical science teachers (2231)",
+          "376": "Investigators and adjusters, except insurance (4783)",
+          "135": "Business, commerce, and marketing teachers (2233)",
+          "256": "Advertising and rel. sales occupations (4153)",
+          "499": "Hunters and trappers (584)",
+          "143": "English teachers (2238)",
+          "267": "Sales workers, radio, Tv, hi-fi, and appliances (4343, 4352)",
+          "49": "nuclear engineers (1627)",
+          "153": "Teachers, postsecondary, n.e.c. (2249)",
+          "57": "Engineers, mechanical (1635)",
+          "175": "Recreation workers (2033)",
+          "73": "Chemists, except biochemists (1845)",
+          "76": "Physical scientists, n.e.c. (1849)",
+          "187": "Actors and directors (324)",
+          "195": "Editors and reporters (331)",
+          "337": "Bookkeepers, accounting, and auditing clerks (4712)",
+          "218": "Surveying and mapping technicians (373)",
+          "223": "Biological technicians (382)",
+          "465": "Public transportation attendants (5257)",
+          "224": "Chemical technicians (3831)",
+          "226": "Airplane pilots and navigators (825)",
+          "595": "Roofers (6468)",
+          "234": "Legal assistants (396)",
+          "114": "Biological science teachers (2213)",
+          "477": "Supervisors, farm workers (5611)",
+          "116": "Physics teachers (2215)",
+          "119": "Economics teachers (2218)",
+          "3": "legislators (111)",
+          "823": "Railroad conductors and yardmasters (8113)",
+          "704": "Operators, lathe and turning machine (7512)",
+          "834": "Bridge, lock, and lighthouse tenders (8245)",
+          "724": "Heat treating equipment operators (7344, 7544)",
+          "745": "Shoe machine operators (7656)",
+          "506": "Auto mechanic apprentices (part 6111)",
+          "754": "Packaging and filling machine operators (7462, 7662)",
+          "876": "Stevedores (8723)",
+          "756": "Mixing and blending machine operators (7664)",
+          "636": "Precision assemblers, metal (6812)",
+          "757": "Separating, filtering, and clarifying machine operators (7476, 7666, 7676)",
+          "999": "Occupation not reported",
+          "518": "Industrial machinery repairers (613)",
+          "883": "Freight, stock, and material handlers, n.e.c. (8726)",
+          "415": "Supervisors, guards (5113)",
+          "418": "Police and detectives, public service (5132)",
+          "425": "Crossing guards (5142)",
+          "306": "Chief communications operators (4523)",
+          "307": "Supervisors, distribution, scheduling, and adjusting clerks (4522, 4524-4528)",
+          "549": "Not specified mechanics and repairers",
+          "794": "Hand grinding and polishing occupations (7758)",
+          "676": "Patternmakers, lay-out workers, and cutters (6862)",
+          "677": "Optical goods workers (6864, part 7477, part 7677)",
+          "557": "Supervisors, plumbers, pipefitters, and steamfitters (6316)",
+          "437": "Short-order cooks (5215)",
+          "443": "Waiters'/waitresses' assistants (5218)",
+          "447": "Nursing aides, orderlies, and attendants (5236)",
+          "208": "Health technologists and technicians, n.e.c. (369)",
+          "694": "Water and sewage treatment plant operators (691)",
+          "453": "Janitors and cleaners (5244)",
+          "214": "Industrial engineering technicians (3712)",
+          "457": "Barbers (5252)",
+          "14": "admin, education and rel. fields (128)",
+          "19": "managers and administrators, n.e.c. (121, 126, 127, 132-139, except 1344, 1353, part 1359)",
+          "243": "Supervisors and Proprietors, Sales Occupations (40)",
+          "25": "other financial officers (1415, 1419)",
+          "26": "management analysts (142)",
+          "253": "Insurance sales occupations (4122)",
+          "378": "Bill and account collectors (4786)",
+          "258": "Sales engineers (421)",
+          "379": "General office clerks (463)",
+          "138": "Physical education teachers (2236)",
+          "384": "Proofreaders (4792)",
+          "387": "Teachers' aides (4795)",
+          "146": "Social work teachers (2244)",
+          "47": "petroleum engineers (1625)",
+          "154": "Postsecondary teachers, subject not specified",
+          "155": "Teachers, prekindergarten and kindergarten (231)",
+          "163": "Counselors, Educational and Vocational (24)",
+          "69": "Physicists and astronomers (1842, 1843)",
+          "177": "Religious workers, n.e.c. (2049)",
+          "178": "Lawyers (211)",
+          "75": "Geologists and geodesists (1847)",
+          "188": "Painters, sculptors, craft-artists, and artist printmakers (325)",
+          "189": "Photographers (326)",
+          "85": "Dentists (262)",
+          "905": "Assigned to persons whose current labor force status is unemployed and last job was Armed Forces",
+          "217": "Drafting occupations (372)",
+          "338": "Payroll and timekeeping clerks (4713)",
+          "459": "Attendants, amusement and recreation facilities (5254)",
+          "463": "Guides (5255)",
+          "466": "Baggage porters and bellhops (5262)",
+          "104": "Speech therapists (3034)",
+          "349": "Telegraphers (4733)",
+          "593": "Insulation workers (6465)",
+          "596": "Sheetmetal duct installers (6472)",
+          "809": "Taxicab drivers and chauffeurs (8216)",
+          "705": "Milling and planing machine operators (7313, 7513)",
+          "708": "Drilling and boring machine operators (7318, 7518)",
+          "709": "Grinding, abrading, buffing, and polishing machine operators (7322, 7324, 7522)",
+          "723": "Metal plating machine operators (7343, 7543)",
+          "727": "Sawing machine operators (7433, 7633)",
+          "733": "Miscellaneous woodworking machine operators (7434, 7439, 7634, 7639)",
+          "615": "Explosives workers (653)",
+          "617": "Mining occupations, n.e.c. (656)",
+          "865": "Helpers, construction trades (8641-8645, 8648)",
+          "505": "Automobile mechanics (part 6111)",
+          "747": "Pressing machine operators (7657)",
+          "644": "Precision grinders, filers, and tool sharpeners (6816)",
+          "765": "Folding machine operators (7474, 7674)",
+          "403": "Launderers and ironers (503)",
+          "887": "Vehicle washers and equipment cleaners (875)",
+          "646": "Lay-out workers (6821)",
+          "888": "Hand packers and packagers (8761)",
+          "768": "Crushing and grinding machine operators (part 7477, part 7677)",
+          "773": "Motion picture projectionists (part 7479)",
+          "657": "Cabinet makers and bench carpenters (6832)",
+          "538": "Office machine repairers (6174)",
+          "783": "Welders and cutters (7332, 7532, 7714)",
+          "787": "Hand molding, casting, and forming occupations (7754, 7755)",
+          "426": "Guards and police, except public service (5144)",
+          "673": "Apparel and fabric patternmakers (6856)",
+          "795": "Miscellaneous hand working occupations (7759)",
+          "675": "Hand molders and shapers, except jewelers (6861)",
+          "314": "Stenographers (4623)",
+          "435": "Waiters and waitresses (5213)",
+          "799": "Graders and sorters, except agricultural (785)",
+          "558": "Supervisors, construction, n.e.c. (6311, 6318)",
+          "679": "Bookbinders (6844)",
+          "687": "Bakers (6872)",
+          "204": "Dental hygienists (363)",
+          "325": "Classified-ad clerks (4662)",
+          "567": "Carpenters (part 6422)",
+          "573": "Drywall installers (6424)",
+          "576": "Electrician apprentices (part 6432)",
+          "336": "Records clerks (4699)",
+          "16": "managers, properties and real estate (1353)",
+          "365": "Stock and inventory clerks (4754)",
+          "486": "Groundskeepers and gardeners, except farm (5622)",
+          "487": "Animal caretakers, except farm (5624)",
+          "489": "Inspectors, agricultural products (5627)",
+          "254": "Real estate sales occupations (4123)",
+          "497": "Captains and other officers, fishing vessels (part 8241)",
+          "498": "Fishers (583)",
+          "275": "Sales counter clerks (4363)",
+          "156": "Teachers, elementary school (232)",
+          "157": "Teachers, secondary school (233)",
+          "54": "agricultural engineers (1632)",
+          "55": "Engineers, electrical and electronic (1633, 1636)",
+          "167": "Psychologists (1915)",
+          "67": "Statisticians (1733)",
+          "174": "Social workers (2032)",
+          "79": "Forestry and conservation scientists (1852)",
+          "83": "Medical scientists (1855)",
+          "84": "Physicians (261)",
+          "87": "Optometrists (281)",
+          "99": "Occupational therapists (3032)",
+          "458": "Hairdressers and cosmetologists (5253)",
+          "579": "Painters, construction and maintenance (6442)",
+          "339": "Billing clerks (4715)",
+          "584": "Plasterers (6444)",
+          "344": "Billing, posting, and calculating machine operators (4718)",
+          "587": "Plumber, pipefitter, and steamfitter apprentices (part 645)",
+          "346": "Mail preparing and paper handling machine operators (4723)",
+          "589": "Glaziers (6464)",
+          "594": "Paving, surfacing, and tamping equipment operators (6466)",
+          "354": "Postal clerks, except mail carriers (4742)",
+          "113": "Earth, environmental, and marine science teachers (2212)",
+          "355": "Mail carriers, postal service (4743)",
+          "235": "Technicians, n.e.c. (399)",
+          "803": "Supervisors, motor vehicle operators (8111)",
+          "808": "Bus drivers (8215)",
+          "824": "Locomotive operating occupations (8232)",
+          "706": "Punching and stamping press machine operators (7314, 7317, 7514, 7517)",
+          "717": "Fabricating machine operators, n.e.c. (7339, 7539)",
+          "853": "Excavating and loading machine operators (8316)",
+          "613": "Supervisors, extractive occupations (632)",
+          "736": "Typesetters and compositors (6841, 7642)",
+          "507": "Bus, truck, and stationary engine mechanics (6112)",
+          "749": "Miscellaneous textile machine operators (7459, 7659)",
+          "633": "Supervisors, production occupations (67, 71)",
+          "519": "Machinery maintenance occupations (614)",
+          "885": "Garage and service station rel. occupations (873)",
+          "404": "Cooks, private household (504)",
+          "526": "Hhld appliance and power tool repairers (6156)",
+          "649": "Engravers, metal (6823)",
+          "413": "Supervisors, firefighting and fire prevention occupations(5111)",
+          "535": "Camera, watch, and musical instrument repairers (6171, 6172)",
+          "416": "Fire inspection and fire prevention occupations (5122)",
+          "779": "Machine operators, not specified",
+          "666": "Dressmakers (part 6852, part 7752)",
+          "308": "Computer operators (4612)",
+          "553": "Supervisors, brickmasons, stonemasons, and tile setters (6312)",
+          "796": "Production inspectors, checkers, and examiners (782, 787)",
+          "556": "Supervisors, painters, paperhangers, and plasterers (6315)",
+          "318": "Transportation ticket and reservation agents (4644)",
+          "563": "Brickmasons and stonemasons (part 6412, part 6413)",
+          "569": "Carpenter apprentices (part 6422)",
+          "207": "Licensed practical nurses (366)",
+          "449": "Maids and housemen (5242, 5249)",
+          "575": "Electricians (part 6432)",
+          "123": "History teachers (2222)",
+          "366": "Meter readers (4755)",
+          "368": "Weighers, measurers, and checkers (4756)",
+          "369": "Samplers (4757)",
+          "374": "Material recording, scheduling, and distributing clerks, n.e.c. (4759)",
+          "259": "Sales representatives, mining, manufacturing, and wholesale (423, 424)",
+          "265": "Sales workers, shoes (4351)",
+          "277": "Street and door-to-door sales workers (4366)",
+          "58": "marine and naval architects (1637)",
+          "173": "Urban planners (192)",
+          "74": "Atmospheric and space scientists (1846)",
+          "86": "Veterinarians (27)",
+          "98": "Respiratory therapists (3031)",
+          "103": "Physical therapists (3033)",
+          "467": "Welfare service aides (5263)",
+          "588": "Concrete and terrazzo finishers (6463)",
+          "106": "Physicians' assistants (304)",
+          "229": "Computer programmers (3971, 3972)",
+          "474": "Horticultural specialty farmers (5515)",
+          "356": "Mail clerks, except postal service (4744)",
+          "359": "Dispatchers (4751)",
+          "813": "Parking lot attendants (874)",
+          "703": "Set-up operators, lathe and turning machine (7312)",
+          "829": "Sailors and deckhands (8243)",
+          "715": "Miscellaneous metal, plastic, stone, and glass working machine operators (7329, 7529)",
+          "843": "Supervisors, material moving equipment operators (812)",
+          "845": "Longshore equipment operators (8313)",
+          "734": "Printing press operators (7443, 7643)",
+          "735": "Photoengravers and lithographers (6842, 7444, 7644)",
+          "863": "Supervisors, handlers, equipment cleaners, and laborers, n.e.c. (85)",
+          "753": "Cementing and gluing machine operators (7661)",
+          "634": "Tool and die makers (part 6811)",
+          "514": "Automobile body and rel. repairers (6115)",
+          "635": "Tool and die mkr apprentices (part 6811)",
+          "643": "Boilermakers (6814)",
+          "764": "Washing, cleaning, and pickling machine operators (7673)",
+          "774": "Photographic process machine operators (6863, 6868, 7671)",
+          "534": "Heating, air conditioning, and refrigeration mechanics (616)",
+          "655": "Misc precision metal workers (6829)",
+          "659": "Misc precision woodworkers (6839)",
+          "539": "Mechanical controls and valve repairers (6175)",
+          "544": "Millwrights (6178)",
+          "315": "Typists (4624)",
+          "436": "Cooks, except short order (5214)",
+          "316": "Interviewers (4642)",
+          "446": "Health aides, except nursing (5233)",
+          "689": "Inspectors, testers, and graders (6881, 828)",
+          "206": "Radiologic technicians (365)",
+          "327": "Order clerks (4664)",
+          "448": "Supervisors, cleaning and building service workers (5241)",
+          "577": "Electrical power installers and repairers (6433)",
+          "124": "Political science teachers (2223)",
+          "488": "Grader and sorter, agricultural products (5625)",
+          "23": "accountants and auditors (1412)",
+          "24": "underwriters (1414)",
+          "375": "Insurance adjusters, examiners, and investigators (4782)",
+          "136": "Agriculture and forestry teachers (2234)",
+          "35": "construction inspectors (1472)",
+          "36": "inspectors and compliance officers, except construction (1473)",
+          "386": "Statistical clerks (4794)",
+          "268": "Sales workers, hardware and building supplies (4353)",
+          "148": "Trade and industrial teachers (2246)",
+          "43": "architects (161)",
+          "44": "aerospace engineers(1622)",
+          "45": "metallurgical and materials engineers (1623)",
+          "165": "Archivists and curators (252)",
+          "64": "computer systems analysts and scientists (171)",
+          "66": "Actuaries (1732)",
+          "77": "Agricultural and food scientists (1853)",
+          "199": "Athletes (34)",
+          "96": "Pharmacists (301)",
+          "699": "Miscellaneous plant and system operators (692, 694, 695, 696)",
+          "464": "Ushers (5256)",
+          "345": "Duplicating machine operators (4722)",
+          "468": "Child care workers, except private hhld (5264)",
+          "597": "Structural metal workers (6473)",
+          "357": "Messengers (4745)",
+          "599": "Construction trades, n.e.c. (6467, 6475, 6476, 6479)",
+          "118": "Psychology teachers (2217)",
+          "7": "financial managers (122)",
+          "806": "Driver-sales workers (8218)",
+          "814": "Motor transportation occupations, n.e.c. (8219)",
+          "728": "Shaping and joining machine operators (7435, 7635)",
+          "729": "Nailing and tacking machine operators (7636)",
+          "616": "Mining machine operators (654)",
+          "859": "Misc material moving equipment operators (8319)",
+          "739": "Knitting, looping, taping, and weaving machine operators (7452, 7652)",
+          "503": "Supervisors, mechanics and repairers (60)",
+          "508": "Aircraft engine mechanics (6113)",
+          "875": "Garbage collectors (8722)",
+          "516": "Heavy equipment mechanics (6117)",
+          "759": "Painting and paint spraying machine operators (7669)",
+          "639": "Machinist apprentices (part 6813)",
+          "763": "Roasting and baking machine operators, food (7472, 7672)",
+          "523": "Electronic repairers, communications and industrial equipment (6151, 6153, 6155)",
+          "405": "Housekeepers and butlers (505)",
+          "654": "Sheet metal wrkr apprentices (part 6824)",
+          "784": "Solderers and brazers (7333, 7533, 7717)",
+          "424": "Correctional institution officers (5133)",
+          "304": "Supervisors, computer equipment operators (4512)",
+          "793": "Hand engraving and printing occupations (7757)",
+          "674": "Misc precision apparel and fabric workers (6859, part 7752)",
+          "798": "Production samplers and weighers (784)",
+          "319": "Receptionists (4645)",
+          "684": "Msc precision workers, n.e.c. (6869)",
+          "205": "Health record technologists and technicians (364)",
+          "329": "Library clerks (4694)",
+          "693": "Adjusters and calibrators (6882)",
+          "455": "Pest control occupations (5246)",
+          "335": "File clerks (4696)",
+          "215": "Mechanical engineering technicians (3713)",
+          "18": "funeral directors (part 1359)",
+          "364": "Traffic, shipping, and receiving clerks (4753)",
+          "126": "Social science teachers, n.e.c. (2225)",
+          "127": "Engineering teachers (2226)",
+          "128": "Math. science teachers (2227)",
+          "27": "personnel, training, and labor relations specialists (143)",
+          "28": "purchasing agents and buyers, farm products (1443)",
+          "495": "Forestry workers, except logging (572)",
+          "134": "Health specialties teachers (2232)",
+          "255": "Securities and financial services sales occupations (4124)",
+          "257": "Sales occupations, other business services (4152)",
+          "383": "Bank tellers (4791)",
+          "144": "Foreign language teachers (2242)",
+          "147": "Theology teachers (2245)",
+          "389": "Administrative support occupations, n.e.c. (4787, 4799)",
+          "149": "Home economics teachers (2247)",
+          "46": "mining engineers (1624)",
+          "158": "Teachers, special education (235)",
+          "283": "Demonstrators, promoters and models, sales (445)",
+          "168": "Sociologists (1916)",
+          "183": "Authors (321)",
+          "185": "Designers (322)",
+          "88": "Podiatrists (283)",
+          "193": "Dancers (327)",
+          "197": "Public relations specialists (332)",
+          "95": "Registered nurses (29)",
+          "216": "Engineering technicians, n.e.c. (3719)",
+          "225": "Science technicians, n.e.c. (3832, 3833, 384, 389)",
+          "469": "Personal service occupations, n.e.c. (5258, 5269)",
+          "475": "Managers, farms, except horticultural (5522-5524)",
+          "476": "Managers, horticultural specialty farms (5525)",
+          "479": "Farm workers (5612-5617)",
+          "117": "Natural science teachers, n.e.c. (2216)"
+        }
+      }
+    },
+    "A_FAMNUM": {
+      "label": "Demographic-family number",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "00": "Not a family member",
+          "01": "Primary family member only"
+        },
+        "range": [
+          {
+            "min": "2",
+            "max": "19",
+            "description": "Subfamily member"
+          }
+        ]
+      }
+    },
+    "A_CLSWKR": {
+      "label": "Indus.&Occ.-class of worker",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "1": "2)Private",
+          "4": "5)Local government",
+          "3": "4)State government",
+          "-1": "1)Not in universe",
+          "2": "3)Federal government",
+          "6": "7)Self-employed -- not incorporated",
+          "7": "8)Without pay",
+          "5": "6)Self-employed -- incorporated",
+          "8": "9)Never worked"
+        }
+      }
+    },
+    "AXHGA": {
+      "label": "Demographic-highest deg., grade completed (allocation flag)",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "0": "No change",
+          "4": "Allocated"
+        }
+      }
+    },
+    "A_HRSCHK": {
+      "label": "Labor Force-interviewer check",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "2": "1-34",
+          "3": "35-48",
+          "-1": "Not in Universe",
+          "1": "49+"
+        }
+      }
+    },
+    "A_CHKWJ": {
+      "label": "Indus.&Occ.-interviewer check item",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "-1": "1)Not in universe",
+          "3": "4)All other cases",
+          "2": "3)Entry (or NA) in I23B & P, F, S or L in I23E",
+          "1": "2)Entry (or NA) in I20A & P, F, S or L in I23E"
+        }
+      }
+    },
+    "HG_CMSA": {
+      "label": "Geography-CMSA code",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "77": "Philadelphia-Wilmington-Atlantic City, PA-NJ-DE-MD",
+          "14": "Chicago-Gary-Kenosha, IL-IN-WI",
+          "63": "Milwaukee-Racine, WI",
+          "00": "Not in CMSA, not identified",
+          "35": "Detroit-Ann Arbor-Flint, MI",
+          "49": "Los Angeles-Riverside-Orange County, CA",
+          "28": "Cleveland-Akron, OH",
+          "70": "New York-Northern New Jersey-Long Island, NY-NJ-CT-PA",
+          "84": "San Francisco-Oakland-San Jose, CA",
+          "42": "Houston-Galveston-Brazoria, TX",
+          "91": "Seattle-Tacoma-Bremerton, WA",
+          "21": "Cincinnati-Hamilton, OH-KY-IN",
+          "34": "Denver-Boulder-Greeley, CO",
+          "56": "Miami-Fort Lauderdale, FL",
+          "7": "Boston-Worcester-Lawrence, MA-NH-ME-CT",
+          "31": "Dallas-Fort Worth, TX",
+          "79": "Portland-Salem, OR-WA",
+          "82": "Sacramento-Yolo, CA",
+          "97": "Washington-Baltimore, DC-MD-VA-WV"
+        }
+      }
+    },
+    "A_EXPLF": {
+      "label": "Labor Force-employment status",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "2": "Unemployed",
+          "1": "Employed",
+          "-1": "Not in experienced labor force"
+        }
+      }
+    },
+    "A_FTLF": {
+      "label": "Labor Force-f/t labor force",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "1": "In universe",
+          "-1": "Not in Universe"
+        }
+      }
+    },
+    "A_HRS1": {
+      "label": "Labor Force-total hours worked",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "-1": "Not in Universe"
+        },
+        "range": [
+          {
+            "min": "0",
+            "max": "99",
+            "description": "Number of hrs"
+          }
+        ]
+      }
+    },
+    "AXUSLHRS": {
+      "label": "Earnings-hours/week worked (allocation flag)",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "3": "Value to value",
+          "4": "Allocated",
+          "1": "Value to blank",
+          "0": "No change",
+          "2": "Blank to value"
+        }
+      }
+    },
+    "A_RACE": {
+      "label": "Demographic-race",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "2": "Black",
+          "3": "Amer. Indian, Aleut Eskimo",
+          "5": "Other",
+          "4": "Asian or Pacific Isl.",
+          "1": "White"
+        }
+      }
+    },
+    "A_MJOCC": {
+      "label": "Indus.&Occ.-major occupation code",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "1": "Executive, Admin, & Managerial Occs",
+          "6": "Private Household Occs",
+          "11": "Transportation And Material Moving Occs",
+          "-1": "Not in Universe",
+          "7": "Protective Service Occs",
+          "8": "Service Occs, Exc. Protective & Hhld",
+          "9": "Precision Prod., Craft & Repair Occs",
+          "10": "Machine Opers, Assemblers & Inspectors",
+          "14": "Armed Forces",
+          "4": "Sales Occs",
+          "12": "Handlers,equip Cleaners,helpers,laborrs",
+          "2": "Professional Specialty Occs",
+          "13": "Farming, Forestry And Fishing Occs",
+          "15": "No previous experience -- never worked",
+          "3": "Technicians And Related Support Occs",
+          "5": "Admin. Support Occs, Incl. Clerical"
+        }
+      }
+    },
+    "A_OVRTIM": {
+      "label": "Labor Force-overtime worked",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "-1": "Not in Universe",
+          "2": "No",
+          "1": "Yes"
+        }
+      }
+    },
+    "AXFTABS": {
+      "label": "Labor Force-hours worked/week (allocation flag)",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "0": "No change",
+          "1": "Value to blank",
+          "3": "Value to value",
+          "2": "Blank to value",
+          "4": "Allocated"
+        }
+      }
+    },
+    "AXPAYABS": {
+      "label": "Labor Force-paid absences (allocation flag)",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "3": "Value to value",
+          "4": "Allocated",
+          "1": "Value to blank",
+          "0": "No change",
+          "2": "Blank to value"
+        }
+      }
+    },
+    "H_ID": {
+      "label": "Household-unique household identifier",
+      "predicateType": "string",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT"
+    },
+    "AXCLSWKR": {
+      "label": "Indus.&Occ.-class of worker (allocation flag)",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "4": "Allocated",
+          "2": "Blank to value",
+          "1": "Value to blank",
+          "0": "No change",
+          "3": "Value to value"
+        }
+      }
+    },
+    "HXTELAVL": {
+      "label": "Household-telephone available (allocation flag)",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "4": "Allocated",
+          "1": "Value to blank",
+          "0": "No change"
+        }
+      }
+    },
+    "AXVET": {
+      "label": "Demographic-veteran status (allocation flag)",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "0": "No change",
+          "3": "Value to value",
+          "4": "Allocated",
+          "2": "Blank to value"
+        }
+      }
+    },
+    "HXHHNUM": {
+      "label": "Household-household number (allocation flag)",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "0": "No change",
+          "2": "Blank to value",
+          "8": "Blank to NA - Error"
+        }
+      }
+    },
+    "A_USLFT": {
+      "label": "Labor Force-hours usually worked/week",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "1": "Yes",
+          "2": "No",
+          "-1": "Not in Universe"
+        }
+      }
+    },
+    "A_WKSCH": {
+      "label": "Labor Force-time worked/lost",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "2": "3)With job, not at work",
+          "-1": "1)Not in universe",
+          "4": "5)Unemployed, seeks p/t",
+          "3": "4)Unemployed, seeks f/t",
+          "1": "2)At work"
+        }
+      }
+    },
+    "A_HSCOL": {
+      "label": "School Enrollment-institution",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "2": "College or univ.",
+          "1": "HIGH SCHOOL",
+          "-1": "Not in Universe"
+        }
+      }
+    },
+    "A_PFREL": {
+      "label": "Demographic-primary family relationship",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "5": "Unmarried reference person",
+          "2": "Wife",
+          "3": "Own child",
+          "0": "Not in primary family",
+          "4": "Other relative",
+          "1": "Husband"
+        }
+      }
+    },
+    "AXRACE": {
+      "label": "Demographic-race (allocation flag)",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "0": "No change",
+          "2": "Blank to value",
+          "4": "Allocated"
+        }
+      }
+    },
+    "A_ANYWK": {
+      "label": "Labor Force-work",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "-1": "Not in Universe",
+          "2": "No",
+          "1": "Yes"
+        }
+      }
+    },
+    "A_EMP": {
+      "label": "Labor Force-employed persons",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "1": "In universe",
+          "-1": "Not in Universe"
+        }
+      }
+    },
+    "H_TIMINT": {
+      "label": "Household-time of interview",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "4": "Noon to 3 p.m.",
+          "7": "9 p.m. to midnight",
+          "2": "6 to 9 a.m.",
+          "3": "9 a.m. to noon",
+          "-1": "Blank",
+          "6": "6 to 9 p.m.",
+          "1": "Midnight to 6 a.m.",
+          "5": "3 to 6 p.m."
+        }
+      }
+    },
+    "AXWKSLK": {
+      "label": "Labor Force-number of weeks laid off (allocation flag)",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "0": "No change",
+          "1": "Value to blank",
+          "3": "Value to value",
+          "4": "Allocated",
+          "2": "Blank to value"
+        }
+      }
+    },
+    "H_TYPINT": {
+      "label": "Household-type interview",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "2": "Personal",
+          "-1": "Blank or impossible",
+          "5": "ICR filled",
+          "4": "Tel. - call back",
+          "1": "Noninterview",
+          "3": "Tel. - regular"
+        }
+      }
+    },
+    "AXMTHD": {
+      "label": "Labor Force-attempts to look for work (allocation flag)",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "4": "Allocated",
+          "1": "Value to blank",
+          "0": "No change",
+          "2": "Blank to value",
+          "3": "Value to value"
+        }
+      }
+    },
+    "A_LKFTPT": {
+      "label": "Labor Force-full-time/part-time",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "1": "FULL-TIME",
+          "2": "PART-TIME",
+          "-1": "Not in Universe"
+        }
+      }
+    },
+    "AXJOBABS": {
+      "label": "Labor Force-absence from job (allocation flag)",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "3": "Value to value",
+          "4": "Allocated",
+          "0": "No change",
+          "1": "Value to blank",
+          "2": "Blank to value"
+        }
+      }
+    },
+    "AXHRSCHK": {
+      "label": "Labor Force-interviewer check (allocation flag)",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "1": "Value to blank",
+          "3": "Value to value",
+          "0": "No change",
+          "2": "Blank to value",
+          "4": "Allocated"
+        }
+      }
+    },
+    "AXLINENO": {
+      "label": "Demographic-line number (allocation flag)",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "2": "Blank to value",
+          "0": "No change",
+          "3": "Value to value"
+        }
+      }
+    },
+    "H_METSTA": {
+      "label": "Geography-metropolitan/non-metropolitan",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "1": "Metropolitan",
+          "2": "Non-metropolitan",
+          "3": "Not Identified"
+        }
+      }
+    },
+    "HXOCCINT": {
+      "label": "Household-unit occupancy (allocation flag)",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "1": "Value to blank",
+          "0": "No change",
+          "4": "Allocated"
+        }
+      }
+    },
+    "A_SEX": {
+      "label": "Demographic-sex",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "2": "Female",
+          "1": "Male"
+        }
+      }
+    },
+    "A_PFNOCD": {
+      "label": "Demographic-# of children < 18",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "0": "Not in primary family",
+          "9": "8+ children",
+          "1": "No children",
+          "6": "5 children",
+          "7": "6 children",
+          "5": "4 children",
+          "4": "3 children",
+          "3": "2 children",
+          "2": "1 child",
+          "8": "7 children"
+        }
+      }
+    },
+    "H_DAYCMP": {
+      "label": "Household-day interview complete",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "7": "Saturday",
+          "1": "Sunday",
+          "2": "Monday",
+          "4": "Wednesday",
+          "3": "Tuesday",
+          "6": "Friday",
+          "-1": "Blank",
+          "5": "Thursday",
+          "8": "After interview week"
+        }
+      }
+    },
+    "HG_MSSZ": {
+      "label": "Geography-MSA size",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "3": "250,000 - 499,999",
+          "5": "1 Million - 2,499,999",
+          "8": "10 Million or more",
+          "7": "5 Million - 9,999,999",
+          "6": "2.5 Million - 4,999,999",
+          "1": "Not identified, not an MSA",
+          "2": "100,000 - 249,999",
+          "4": "500,000 - 999,999"
+        }
+      }
+    },
+    "H_FAMINC": {
+      "label": "Household-family income",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "12": "$60,000 to $74,999",
+          "2": "$7,500 to $9,999",
+          "9": "$35,000 to $39,999",
+          "11": "$50,000 to $59,999",
+          "13": "$75,000 and over",
+          "0": "Less than $5,000",
+          "1": "$5,000 to $7,499",
+          "3": "$10,000 to $12,499",
+          "8": "$30,000 to $34,999",
+          "7": "$25,000 to $29,999",
+          "10": "$40,000 to $49,999",
+          "19": "Not answered",
+          "-1": "Not in Universe",
+          "4": "$12,500 to $14,999",
+          "5": "$15,000 to $19,999",
+          "6": "$20,000 to $24,999"
+        }
+      }
+    },
+    "AXHRSPAY": {
+      "label": "Earnings-hourly earnings (allocation flag)",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "2": "Blank to value",
+          "1": "Value to blank",
+          "4": "Allocated",
+          "0": "No change",
+          "-1": "Not in Universe",
+          "3": "Value to value"
+        }
+      }
+    },
+    "A_PFSIZE": {
+      "label": "Demographic-size",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "00": "Not in primary family"
+        },
+        "range": [
+          {
+            "min": "2",
+            "max": "39",
+            "description": "Number of individuals"
+          }
+        ]
+      }
+    },
+    "H_MONTH": {
+      "label": "Household-month of survey",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "03": "March",
+          "12": "December",
+          "07": "July",
+          "08": "August",
+          "11": "November",
+          "05": "May",
+          "10": "October",
+          "01": "January",
+          "02": "February",
+          "06": "June",
+          "04": "April",
+          "09": "September"
+        }
+      }
+    },
+    "A_DTOCC": {
+      "label": "Indus.&Occ.-detailed occupation code",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "11": "Lawyers and judges",
+          "16": "Supervisors and proprietors, sales occs",
+          "2": "Other executive, admin. & managerial",
+          "40": "Construction laborers",
+          "41": "Freight, stock & materials handlers",
+          "46": "Armed forces",
+          "10": "Teachers, except college and university",
+          "13": "Health technologists and technicians",
+          "9": "Teachers, college and university",
+          "27": "Private household service occs",
+          "31": "Cleaning and building service",
+          "32": "Personal service",
+          "14": "Engineering and science technicians",
+          "17": "Sales reps, finance and business serv.",
+          "18": "Sales reps, commodities, exc. retail",
+          "6": "Natural Scientists",
+          "45": "Forestry and fishing occs",
+          "35": "Other precision prod., craft, & repair",
+          "-1": "In Universe, Met No Conditions To Assign",
+          "37": "Fabricatrs,assemblrs,inspectrs,samplrs",
+          "5": "Mathematical and computer scientists",
+          "43": "Farm operators and managers",
+          "34": "Construction trades",
+          "36": "Machine opertrs and tenders,exc precis.",
+          "38": "Motor vehicle operators",
+          "3": "Management related occupations",
+          "20": "Sales related occs",
+          "21": "Supervisors, admin. support",
+          "22": "Computer equipment operators",
+          "44": "Farm workers and related occupations",
+          "25": "Mail and message distributing",
+          "39": "Other transp. & material moving occs",
+          "1": "Officials & administrators, pub. admin.",
+          "4": "Engineers",
+          "7": "Health diagnosing occs.",
+          "8": "Health assessment and treatment occs.",
+          "23": "Secretaries, stenographers, and typists",
+          "24": "Financial records processing",
+          "33": "Mechanics and repairers",
+          "15": "Technicians, exc. health,engin.&science",
+          "19": "Sales workers, retail & personal serv.",
+          "26": "Other admin support, inc. clerical",
+          "28": "Protective service",
+          "29": "Food service",
+          "30": "Health service",
+          "12": "Other professional specialty occs.",
+          "42": "Oth handlrs,equip.cleanrs,helprs,labrrs"
+        }
+      }
+    },
+    "HXTIMINT": {
+      "label": "Household-time of interview (allocation flag)",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "2": "Blank to value",
+          "0": "No change"
+        }
+      }
+    },
+    "A_WHYNA": {
+      "label": "Labor Force-why not",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "3": "Going to school",
+          "1": "Already has a job",
+          "2": "Temporary illness",
+          "-1": "Not in Universe",
+          "4": "OTHER"
+        }
+      }
+    },
+    "AXAVAIL": {
+      "label": "Labor Force-available job (allocation flag)",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "3": "Value to value",
+          "1": "Value to blank",
+          "4": "Allocated",
+          "0": "No change",
+          "2": "Blank to value"
+        }
+      }
+    },
+    "A_AG_NA": {
+      "label": "Indus.&Occ.-agriculture, non-agriculture",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "2": "Non-agriculture industry",
+          "-1": "Not in univers",
+          "1": "Agriculture industry"
+        }
+      }
+    },
+    "AXLKWK": {
+      "label": "Labor Force-looking for work (allocation flag)",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "4": "Allocated",
+          "0": "No change",
+          "2": "Blank to value",
+          "1": "Value to blank",
+          "3": "Value to value"
+        }
+      }
+    },
+    "AXENRLW": {
+      "label": "School Enrollment-enrolled/attend a school(allocation flag)",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "0": "No change",
+          "2": "Blank to value",
+          "4": "Allocated",
+          "1": "Value to blank",
+          "3": "Value to value"
+        }
+      }
+    },
+    "A_ERNEL": {
+      "label": "Earnings-eligibility",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "0": "Not Earnings Eligible",
+          "1": "Earnings Eligible"
+        }
+      }
+    },
+    "H_CPSCHK": {
+      "label": "Household-interviewer check item",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "4": "Third, Fourth, etc. CPS-1",
+          "2": "First CPS-1 of continuation household",
+          "3": "Second CPS-1 of continuation household",
+          "-1": "Blank",
+          "1": "Only CPS-1 for household"
+        }
+      }
+    },
+    "A_PFPRCD": {
+      "label": "Demographic-children < 18 in primary family",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "13": "6)Children 0-2, 3-5 and 14-17 ( none 6-13)",
+          "14": "7)Children 0-2, 6-13 and 14-17 (none 3-5)",
+          "16": "9)Children from all age groups",
+          "6": "14)Children 0-2 and 3-5 (none 6-17)",
+          "11": "4)Children 6-13 and 14-17 (none 0-5)",
+          "10": "3)Children 3-5 and 14-17 (none 0-2 or 6-13)",
+          "12": "5)Children 0-2, 3-5 and 6-13 (none 14-17)",
+          "15": "8)Children 3-5, 6-13 and 14-17 (none 0-2)",
+          "4": "12)All children 6-13 years old",
+          "1": "2)No children < 18 years old",
+          "8": "16)Children 0-2 and 14-17 (none 3-13)",
+          "9": "17)Children 3-5 and 6-13 (none 0-2 or 14-17)",
+          "5": "13)All children 14-17 years old",
+          "7": "15)Children 0-2 and 6-13 (none 3-5 or 14-17)",
+          "2": "10)All children < 18 years old",
+          "3": "11)All children 3-5 years old",
+          "0": "1)Not in primary family"
+        }
+      }
+    },
+    "H_TELAVL": {
+      "label": "Household-telephone available",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "1": "Yes",
+          "2": "No",
+          "-1": "Not in Universe"
+        }
+      }
+    },
+    "A_WKSTAT": {
+      "label": "Labor Force-full/part-time status",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "4": "Part-time for non-economic reasons, usually p/t",
+          "6": "Unemployed f/t",
+          "5": "P/t for economic reasons, usually p/t",
+          "2": "Full-time schedule",
+          "1": "Not in labor force",
+          "3": "Part-time for economic reasons, usually f/t",
+          "7": "Unemployed p/t"
+        }
+      }
+    },
+    "HXAREASN": {
+      "label": "Household-reason (allocation flag)",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "0": "No change",
+          "1": "Value to blank"
+        }
+      }
+    },
+    "A_MTHD6": {
+      "label": "Labor Force-nothing",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "-1": "Not in Universe",
+          "1": "Entry"
+        }
+      }
+    },
+    "A_MTHD5": {
+      "label": "Labor Force-placed, answered ADS",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "1": "Entry",
+          "-1": "Not in Universe"
+        }
+      }
+    },
+    "A_LFESF": {
+      "label": "Labor Force-labor force, earner status (female)",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "1": "Employed earner",
+          "2": "Self-employed",
+          "0": "Not in primary family/no female",
+          "3": "Without pay",
+          "6": "Armed Forces",
+          "4": "Unemployed",
+          "5": "Not in labor force"
+        }
+      }
+    },
+    "A_FAMREL": {
+      "label": "Demographic-family relationship",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "1": "Reference person",
+          "0": "Not a family member",
+          "2": "Spouse",
+          "4": "Other relative (primary family & unrel. subfamily only)",
+          "3": "Child"
+        }
+      }
+    },
+    "A_PFNOEM": {
+      "label": "Labor Force-number of employed",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "0": "No one employed",
+          "9": "9+ employed",
+          "-1": "Not in Universe"
+        },
+        "range": [
+          {
+            "min": "1",
+            "max": "8",
+            "description": "1-8 employed"
+          }
+        ]
+      }
+    },
+    "A_MTHD7": {
+      "label": "Labor Force-other",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "1": "Entry",
+          "-1": "Not in Universe"
+        }
+      }
+    },
+    "A_MTHD2": {
+      "label": "Labor Force-private emp. agency",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "-1": "Not in Universe",
+          "1": "Entry"
+        }
+      }
+    },
+    "HXTELINT": {
+      "label": "Household-telephone interview acceptable (allocation flag)",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "4": "Allocated",
+          "0": "No change",
+          "1": "Value to blank"
+        }
+      }
+    },
+    "A_MTHD1": {
+      "label": "Labor Force-public employment agency",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "-1": "Not in Universe",
+          "1": "Entry"
+        }
+      }
+    },
+    "A_LFESM": {
+      "label": "Labor Force-labor force, earner status (male)",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "4": "Unemployed",
+          "6": "Armed Forces",
+          "3": "Without pay",
+          "2": "Self-employed",
+          "5": "Not in labor force",
+          "0": "Not in primary family/no male",
+          "1": "Employed earner"
+        }
+      }
+    },
+    "A_MTHD4": {
+      "label": "Labor Force-friends/relatives",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "-1": "Not in Universe",
+          "1": "Entry"
+        }
+      }
+    },
+    "HXRESPNM": {
+      "label": "Household-line no. hhld resp. (allocation flag)",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "0": "No change",
+          "2": "Blank to value"
+        }
+      }
+    },
+    "A_MTHD3": {
+      "label": "Labor Force-employer",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "-1": "Not in Universe",
+          "1": "Entry"
+        }
+      }
+    },
+    "A_CIVLF": {
+      "label": "Labor Force-civilian labor force",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "1": "In universe",
+          "-1": "Not in Universe"
+        }
+      }
+    },
+    "A_ABSREA": {
+      "label": "Labor Force-reasons for absence, pay status",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "09": "10)All other (usually work p/t paid)",
+          "12": "13)All other(not paid)",
+          "05": "6)Illness(not paid)",
+          "03": "4)All other(usually work f/t paid)",
+          "07": "8)Vacation (usually work p/t paid)",
+          "10": "11)Vacation(not paid)",
+          "02": "3)Illness(usually work f/t paid)",
+          "04": "5)Vacation(not paid)",
+          "08": "9)Illness (usually work p/t paid)",
+          "11": "12)Illness(not paid)",
+          "01": "2)Vacation(usually work f/t paid)",
+          "06": "7)All other(not paid)",
+          "-1": "1)Not in universe"
+        }
+      }
+    },
+    "A_LOSTIM": {
+      "label": "Labor Force-lost time, time off from work",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "1": "Yes",
+          "-1": "Not in Universe",
+          "2": "No"
+        }
+      }
+    },
+    "A_WANTJB": {
+      "label": "Labor Force-want regular job",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "3": "Maybe -- it depends",
+          "4": "Don't know",
+          "2": "No",
+          "-1": "Not in Universe",
+          "1": "Yes"
+        }
+      }
+    },
+    "A_RECTYP": {
+      "label": "Demographic-record type",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "2": "Type A Non-Interview",
+          "3": "Type B/C non-interview",
+          "1": "Interviewed adult",
+          "4": "Armed Forces record",
+          "5": "Children's record"
+        }
+      }
+    },
+    "A_EARNRT": {
+      "label": "Earnings-interviewer check item",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "1": "MIS 1, 2, 3, 5, 6, 7",
+          "2": "MIS 4, 8",
+          "-1": "Not in Universe"
+        }
+      }
+    },
+    "HG_MSAC": {
+      "label": "Geography-FIPS code",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "0000": "Not MSA/PMSA, not identified"
+        },
+        "range": [
+          {
+            "min": "40",
+            "max": "9340",
+            "description": "MST/PMSA code"
+          }
+        ]
+      }
+    },
+    "HXTYPEBC": {
+      "label": "Household-type b/c (allocation flag)",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "1": "Value to blank",
+          "0": "No change"
+        }
+      }
+    },
+    "HG_MSAR": {
+      "label": "Geography-rank",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "000": "Not an MSA, no identified"
+        },
+        "range": [
+          {
+            "min": "1",
+            "max": "252",
+            "description": "Ranking of MSAS or CMSAS by population (see geographic appendix)"
+          }
+        ]
+      }
+    },
+    "A_PFNOUN": {
+      "label": "Labor Force-number of unemployed",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "9": "9+ unemployed",
+          "-1": "Not in universe (not in primary family)",
+          "0": "No unemployed"
+        },
+        "range": [
+          {
+            "min": "1",
+            "max": "8",
+            "description": "1-8 unemployed"
+          }
+        ]
+      }
+    },
+    "A_RRP": {
+      "label": "Demographic-relationship to reference person",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "3": "Husband",
+          "1": "Ref. per. with other relatives in HHLD",
+          "6": "PARENT",
+          "9": "Non-rel. of Ref. per. w/ own rels. in HHLD",
+          "2": "Ref. per.with no other relatives in HHLD",
+          "4": "Wife",
+          "5": "Own Child",
+          "7": "BROTHER/SISTER",
+          "8": "Other relative of ref. per.",
+          "10": "Non-rel. of ref. per. - no own rels. in HHLD"
+        }
+      }
+    },
+    "A_WHYLK": {
+      "label": "Labor Force-reasons why looking for work",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "-1": "Not in Universe",
+          "5": "Change in home or family responsibilities",
+          "6": "Left military service",
+          "1": "Lost Job",
+          "4": "Wanted temporary work",
+          "2": "Quit Job",
+          "7": "Other",
+          "3": "Left school"
+        }
+      }
+    },
+    "A_FTPT": {
+      "label": "School Enrollment-f/t or p/t student",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "2": "Part Time",
+          "1": "Full Time",
+          "-1": "Not in Universe"
+        }
+      }
+    },
+    "AXORIGIN": {
+      "label": "Demographic-origin (allocation flag)",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "0": "No change",
+          "5": "Value to value - no error",
+          "2": "Blank to value",
+          "8": "Blank to N/A code"
+        }
+      }
+    },
+    "A_PFWS": {
+      "label": "Labor Force-wage and salary",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "2": "4)Some employed - no wage and salary workers",
+          "3": "5)With wage and salary workers, husband/wife or reference person self-employed",
+          "1": "3)No one employed",
+          "0": "2)Not in primary family",
+          "5": "7)With wage and salary workers only",
+          "4": "6)With wage and salary workers, husb/wife or ref pers not self-employed other hh member self-emplo",
+          "-1": "1)Not in primary family"
+        }
+      }
+    },
+    "AXWHYLK": {
+      "label": "Labor Force-reasons why looking for work (allocation flag)",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "1": "Value to blank",
+          "2": "Blank to value",
+          "4": "Allocated",
+          "0": "No change",
+          "3": "Value to value"
+        }
+      }
+    },
+    "A_LFSR": {
+      "label": "Labor Force-labor force status recode",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "3": "Unemployed, looking for work",
+          "6": "NILF - unavailable",
+          "1": "Working",
+          "2": "With job, not at work",
+          "4": "Unemployed, on layoff",
+          "5": "NILF - working w/o pay < 15 hrs; temp. absent from w/o pay job",
+          "7": "Other NILF"
+        }
+      }
+    },
+    "HG_MSAS": {
+      "label": "Geography-MSA status",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "2": "In MSA, not in CC",
+          "3": "Not in MSA",
+          "1": "In MSA, in CC",
+          "4": "Not Identified"
+        }
+      }
+    },
+    "AXNLFLJ": {
+      "label": "Labor Force-work for pay (allocation flag)",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "2": "Blank to value",
+          "0": "No change",
+          "1": "Value to blank",
+          "3": "Value to value",
+          "4": "Allocated"
+        }
+      }
+    },
+    "A_FTREAS": {
+      "label": "Labor Force-hours usually worked/week",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "12": "Too busy with house, school, etc.",
+          "2": "Material shortage",
+          "3": "Plant or machine repair",
+          "11": "On vacation",
+          "5": "Job terminated during week",
+          "9": "Bad weather",
+          "10": "Own illness",
+          "15": "Other",
+          "7": "Holiday",
+          "-1": "Not in Universe",
+          "4": "New job started during week",
+          "1": "Slack work",
+          "6": "Could find only part time work",
+          "8": "Labor dispute",
+          "14": "Full-time work weeks < 35 hours",
+          "13": "Did not want full time work"
+        }
+      }
+    },
+    "AXOCC": {
+      "label": "Indus.&Occ.-occupation (allocation flag)",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "0": "No change",
+          "4": "Allocated",
+          "2": "Blank to value",
+          "3": "Value to value",
+          "1": "Value to blank"
+        }
+      }
+    },
+    "A_EXPRRP": {
+      "label": "Demographic-expanded relationship code",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "2": "Ref person without relatives",
+          "13": "Partner/roommate",
+          "3": "Husband",
+          "7": "Grandchild",
+          "14": "Non-rel without relatives",
+          "10": "Other relative",
+          "6": "Step Child",
+          "8": "Parent",
+          "4": "Wife",
+          "12": "Non-relative with relatives",
+          "1": "Reference person with relatives",
+          "5": "Natural/adopted child",
+          "9": "Brother/sister",
+          "11": "Foster child"
+        }
+      }
+    },
+    "A_INTEND": {
+      "label": "Labor Force-intend to look for work",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "2": "It depends",
+          "-1": "Not in Universe",
+          "4": "Don't know",
+          "3": "NO",
+          "1": "Yes"
+        }
+      }
+    },
+    "H_SEASON": {
+      "label": "Household-seasonal status",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "-1": "Not in Universe",
+          "1": "YEAR ROUND",
+          "2": "BY MIGRATORY WORKERS",
+          "3": "SEASONALLY"
+        }
+      }
+    },
+    "H_STATUS": {
+      "label": "Household-status change",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "-1": "Blank",
+          "2": "No",
+          "1": "Yes"
+        }
+      }
+    },
+    "H_TYPE": {
+      "label": "Household-household type",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "4": "Unmarried civilian female primary family hhlder",
+          "6": "Civilian Male Primary Individual",
+          "1": "Husband/Wife primary family (neither husband or wife in Armed Forces)",
+          "2": "Husband/wife primary family (husband and/or wife in Armed Forces)",
+          "8": "Primary indiv hhld - reference person in Armed Forces",
+          "3": "Unmarried Civilian male primary family hhlder",
+          "0": "Non- interview household",
+          "9": "Group quarters",
+          "5": "Primary family hhld - reference person in Armed Forces and unmarried",
+          "7": "Civilian Female Primary Individual"
+        }
+      }
+    },
+    "AXWHENLJ": {
+      "label": "Labor Force-last work f/t job 2+ weeks (allocation flag)",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "4": "Allocated",
+          "1": "Value to blank",
+          "3": "Value to value",
+          "0": "No change",
+          "2": "Blank to value"
+        }
+      }
+    },
+    "AXSPOUSE": {
+      "label": "Demographic-spouse's line number (allocation flag)",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "3": "Value to value",
+          "5": "Value to value - no error",
+          "0": "No change",
+          "2": "Blank to value"
+        }
+      }
+    },
+    "AXAGE": {
+      "label": "Demographic-age (allocation flag)",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "0": "No change",
+          "4": "Allocated",
+          "2": "Blank to value"
+        }
+      }
+    },
+    "AXHRLYWK": {
+      "label": "Earnings-hourly wage (allocation flag)",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "3": "Value to value",
+          "-1": "Not in Universe",
+          "1": "Value to blank",
+          "2": "Blank to value",
+          "4": "Allocated",
+          "0": "No change"
+        }
+      }
+    },
+    "HXTENURE": {
+      "label": "Household-tenure (allocation flag)",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "1": "Value to blank",
+          "4": "Allocated",
+          "0": "No change"
+        }
+      }
+    },
+    "A_MARITL": {
+      "label": "Demographic-marital status",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "4": "Widowed",
+          "1": "Married - civilian spouse present",
+          "3": "Married - spouse absent (exc separated)",
+          "5": "Divorced",
+          "6": "Separated",
+          "7": "Never married",
+          "2": "Married - AF spouse present"
+        }
+      }
+    },
+    "A_PFNOER": {
+      "label": "Earnings-number of earners",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "0": "No earners",
+          "-1": "Not in universe (not in primary family)",
+          "9": "9+ earners"
+        },
+        "range": [
+          {
+            "min": "1",
+            "max": "8",
+            "description": "1-8 earners"
+          }
+        ]
+      }
+    },
+    "A_REORGN": {
+      "label": "Demographic-origin",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "3": "Mexican (Mexicano)",
+          "9": "Don't know",
+          "6": "Central or South American",
+          "8": "All other",
+          "7": "Other Spanish",
+          "2": "Chicano",
+          "5": "Cuban",
+          "1": "Mexican American",
+          "4": "Puerto Rican",
+          "10": "Na"
+        }
+      }
+    },
+    "A_IND": {
+      "label": "Indus.&Occ.-(main job)industry code",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "751": "Automotive repair shops (753)",
+          "752": "Electrical repair shops (762, 7694)",
+          "512": "Electrical goods (506)",
+          "880": "Religious organizations (866)",
+          "640": "Stores, hhld appliances, TV and radio (572, 573)",
+          "761": "PRIVATE HOUSEHOLDS (88)",
+          "892": "Miscellaneous professional and rel. services (899)",
+          "530": "Machinery, equipment, and supplies (508)",
+          "661": "Sewing, needlework, and piece goods stores (5949)",
+          "662": "Mail order houses (5961)",
+          "790": "Dressmaking shops (part 729)",
+          "561": "Farm supplies (5191)",
+          "441": "Telephone (wire and radio) (481)",
+          "321": "Office and accounting machines (357, except 3573)",
+          "461": "Gas and steam supply systems (492, 496)",
+          "470": "Water supply and irrigation (494, 497)",
+          "472": "Not specified utilities",
+          "111": "Bakery products (205)",
+          "241": "Miscellaneous wood products (244, 249)",
+          "370": "Cycles and miscellaneous transportation equipment (375, 379)",
+          "130": "Tobacco manufactures (21)",
+          "251": "Cement, concrete, gypsum, and plaster products (324, 327)",
+          "372": "Optical and health services supplies (383, 384, 385)",
+          "700": "Banking (60)",
+          "392": "Not spec manufacturing industries",
+          "710": "Security, commodity brokerage, and investment companies (62, 67)",
+          "161": "Miscellaneous paper and pulp products (264)",
+          "162": "Paperboard containers and boxes (265)",
+          "840": "Health services, n.e.c. (807, 808, 809)",
+          "602": "Stores, dairy products (545)",
+          "291": "Metal forgings and stampings (346)",
+          "182": "Soaps and cosmetics (284)",
+          "620": "Stores, Auto and home supply (553)",
+          "870": "Residential care facilities, w/out nursing (836)",
+          "991": "Assigned to persons whose labor force status is unemployed and whose last job was",
+          "630": "Stores, apparel and accessory, except shoe (56, except 566)",
+          "511": "Metals and minerals, except petroleum (505)",
+          "762": "Hotels and motels (701)",
+          "891": "Noncommercial educational and scientific research (892)",
+          "650": "Liquor stores (592)",
+          "651": "Stores, sporting goods, bicycles, and hobby (5941, 5945, 5946)",
+          "410": "Trucking service (421, 423)",
+          "411": "Warehousing and storage (422)",
+          "672": "Fuel and ice dealers (598)",
+          "552": "Petroleum products (517)",
+          "312": "Construction and material handling machines (353)",
+          "200": "Petroleum refining (291)",
+          "442": "Telegraph and miscellaneous communications services (482, 489)",
+          "332": "Not specified machinery",
+          "220": "Leather tanning and finishing (311)",
+          "901": "General government, n.e.c. (919)",
+          "471": "Sanitary services (495)",
+          "230": "Logging (241)",
+          "231": "Sawmills, planing mills, and millwork (242, 243)",
+          "10": "Agricultural production, crops (01)",
+          "362": "Guided missiles, space vehicles, and parts (376)",
+          "140": "Dyeing and finishing textiles, except wool and knit goods (226)",
+          "390": "Toys, amusement, and sporting goods (394)",
+          "830": "Health practitioners offices and clinics, n.e.c. (8049)",
+          "832": "Nursing and personal care facilities (805)",
+          "281": "Cutlery, handtools, and general hardware (342)",
+          "60": "CONSTRUCTION (15, 16, 17)",
+          "292": "Ordnance (348)",
+          "730": "Commercial research, development, and testing labs (7391, 7397)",
+          "732": "Business management and consulting services (7392)",
+          "740": "Computer and data processing services (737)",
+          "861": "Job training and vocational rehabilitation services (833)",
+          "510": "Sporting goods, toys, and hobby goods (504)",
+          "641": "Eating and drinking places (58)",
+          "521": "Hardware, plumbing and heating supplies (507)",
+          "522": "Not specified electrical and hardware products",
+          "542": "Apparel, fabrics, and notions (513)",
+          "310": "Engines and turbines (351)",
+          "582": "Stores, Retail nurseries and garden (526)",
+          "581": "Hardware stores (525)",
+          "462": "Electric and gas, and other combinations (493)",
+          "221": "Footwear, except rubber and plastic (313, 314)",
+          "592": "Variety stores (533)",
+          "11": "Agricltrl production, livestock (02)",
+          "122": "Not specified food industries",
+          "922": "Human resources programs administration(94)",
+          "20": "Agricultrl services, except horticultural (07, except 078)",
+          "371": "Scientific and controlling instruments (381, 382)",
+          "31": "Fishing, hunting, and trapping (09)",
+          "381": "Watches, clocks, and clockwork operated devices (387)",
+          "261": "Pottery and related products (326)",
+          "821": "Chiropractors offices (8041)",
+          "831": "HOSPITALS (806)",
+          "280": "Other primary metal industries (3331-3333, 3339, part 334, 3351, 3356, 3357, 3362,",
+          "600": "Stores, misc general merchandise (539)",
+          "172": "Printing, publishing, and allied industries, except newspapers (272-279)",
+          "851": "Business, trade, and vocational schools (824)",
+          "731": "Personnel supply services (736)",
+          "852": "Libraries (823)",
+          "180": "Plastics, synthetics, and resins (282)",
+          "742": "Business services, n.e.c. (732, 733, 735, 7394, 7395, 7396, 7399)",
+          "501": "Furniture and home furnishings (502)",
+          "652": "Stores, Book and stationery (5942, 5943)",
+          "782": "Shoe repair shops (725)",
+          "420": "Water transportation (44)",
+          "421": "Air transportation (45)",
+          "682": "Stores, Miscellaneous retail (593, 5947, 5948, 5993, 5994, 5999)",
+          "562": "Misc wholesale, nondurable goods (5194, 5198, 5199)",
+          "210": "Tires and inner tubes (301)",
+          "212": "Miscellaneous plastics products (307)",
+          "102": "Canned and preserved fruits and vegetables (203)",
+          "900": "Executive and legislative offices (911-913)",
+          "232": "Wood buildings and mobile homes (245)",
+          "242": "Furniture and fixtures (25)",
+          "930": "Environmental quality and housing programs administration(95)",
+          "380": "Photographic equipment and supplies (386)",
+          "822": "Optometrists offices (8042)",
+          "271": "Iron and steel foundries (332)",
+          "272": "Primary aluminum industries (3334, part 334, 3353-3355, 3361)",
+          "721": "Advertising (731)",
+          "171": "Newspaper publishing and printing (271)",
+          "500": "Motor vehcls and equipment (501)",
+          "190": "Paints, varnishes, and rel. products (285)",
+          "872": "Museums, art galleries, and zoos (84)",
+          "400": "Railroads (40)",
+          "770": "Lodging places, except hotels and motels (702, 703, 704)",
+          "772": "Beauty shops (723)",
+          "532": "Miscellaneous wholesale, durable goods (5094, 5099)",
+          "660": "Jewelry stores (5944)",
+          "541": "Drugs, chemicals and allied products (512, 516)",
+          "301": "Not specified metal industries",
+          "432": "Services incidental to transportation (47)",
+          "201": "Miscellaneous petroleum and coal products (295, 299)",
+          "580": "Lumber and building material retailing (521, 523)",
+          "341": "Radio, TV, and communication equipment (365, 366)",
+          "101": "Dairy products (202)",
+          "591": "Department stores (531)",
+          "350": "Not specified electrical machinery, equipment, and supplies",
+          "910": "Justice, public order, and safety (92)",
+          "120": "Beverage industries (208)",
+          "802": "Miscellaneous entertainment and recreation services (791, 794, 799)",
+          "931": "Economic programs administration(96)",
+          "30": "Forestry (08)",
+          "41": "Coal mining (12)",
+          "850": "Colleges and universities (822)",
+          "612": "Motor vehicle dealers (551, 552)",
+          "860": "Educational services, n.e.c. (829)",
+          "502": "Lumber and construction materials (503)",
+          "622": "Miscellaneous vehicle dealers (555, 556, 557, 559)",
+          "191": "Agrcltural chemicals (287)",
+          "750": "Automotive services, except repair (751, 752, 754)",
+          "881": "Membership organizations (861-865, 869)",
+          "882": "Engineering, architectural, and surveying services (891)",
+          "402": "Taxicab service (412)",
+          "771": "Laundry, cleaning, and garment services (721)",
+          "531": "Scrap and waste materials (5093)",
+          "780": "Barber shops (724)",
+          "540": "Paper and paper products (511)",
+          "670": "Vending machine operators (5962)",
+          "791": "Misc personal services (722, part 729)",
+          "311": "Farm machinery and equipment (352)",
+          "681": "Retail florists (5992)",
+          "320": "Metalworking machinery (354)",
+          "340": "Household appliances (363)",
+          "590": "Mobile home dealers (527)",
+          "351": "Motor vehicles and motor vehicle equipment (371)",
+          "112": "Sugar and confectionery products (206)",
+          "360": "Ship and boat building and repairing (373)",
+          "361": "Railroad locomotives and equipment (374)",
+          "121": "Miscellaneous food preparations and kindred products (207, 209)",
+          "252": "Structural clay products (325)",
+          "132": "Knitting mills (225)",
+          "932": "National security and international affairs (97)",
+          "142": "Yarn, thread, and fabric mills (221-224, 228)",
+          "820": "Dentists offices (802)",
+          "40": "Metal mining (10)",
+          "42": "Crude petroleum and natural gas extraction (13)",
+          "181": "Drugs (283)",
+          "741": "Detective and protective services (7393)",
+          "192": "Industrial and miscellaneous chemicals (281, 286, 289)",
+          "631": "Shoe stores (566)",
+          "890": "Accounting, auditing, and bookkeeping services (893)",
+          "300": "Misc fabricated metal products (341, 343, 347, 349)",
+          "671": "Direct selling establishments (5963)",
+          "551": "Farm-products -  raw materials (515)",
+          "560": "Alcoholic beverages (518)",
+          "440": "Radio and television broadcasting and cable (483)",
+          "322": "Electronic computing equipment (3573)",
+          "691": "Not specified retail trade",
+          "460": "Electric light and power (491)",
+          "100": "Meat products (201)",
+          "342": "Electrical machinery, equipment, and supplies, n.e.c. (361, 362, 364, 367, 369)",
+          "110": "Grain mill products (204)",
+          "800": "Theaters and motion pictures (78, 792)",
+          "921": "Public finance, taxation, and monetary policy (93)",
+          "141": "Carpets and rugs (227)",
+          "391": "Miscellaneous manufacturing industries (39 except 394)",
+          "151": "Apparel and accessories, except knit (231-238)",
+          "152": "Miscellaneous fabricated textile products (239)",
+          "712": "Real estate, including real estate-insurance offices (65, 66)",
+          "282": "Fabricated structural metal products (344)",
+          "841": "Legal services (81)",
+          "610": "Retail bakeries (546)",
+          "611": "Food stores, n.e.c. (542, 543, 544, 549)",
+          "862": "Child day care services (835)",
+          "621": "Gasoline service stations (554)",
+          "871": "Social services, n.e.c. (832, 839)",
+          "632": "Stores, furniture and home furnishings (571)",
+          "760": "Misc repair services (763, 764, 7692, 7699)",
+          "642": "Drug stores (591)",
+          "401": "Bus service and urban transit (41, except 412)",
+          "412": "U.S. Postal Service (43)",
+          "781": "Funeral service and crematories (726)",
+          "422": "Pipe lines, except natural gas (46)",
+          "550": "Groceries and related products (514)",
+          "571": "Not specified wholesale trade",
+          "331": "Machinery, except electrical, n.e.c. (355, 356, 358, 359)",
+          "211": "Other rubber products, and plastics footwear and belting (302-304, 306)",
+          "222": "Leather products, except footwear (315-317, 319)",
+          "352": "Aircraft and parts (372)",
+          "801": "Bowling alleys, billiard and pool parlors (793)",
+          "21": "Horticultural services (078)",
+          "250": "Glass and glass products (321-323)",
+          "812": "Physicians offices (801, 803)",
+          "382": "Not specified professional equipment",
+          "262": "Miscellaneous nonmetallic mineral and stone products (328, 329)",
+          "701": "Savings and loan associations (612)",
+          "702": "Credit agencies, n.e.c. (61, except 612)",
+          "270": "Blast furnaces, steelworks, rolling and finishing mills (331)",
+          "150": "Miscellaneous textile mill products (229)",
+          "711": "Insurance (63, 64)",
+          "50": "Nonmetallic mining and quarrying, except fuel (14)",
+          "160": "Pulp, paper, and paperboard mills (261-263, 266)",
+          "842": "Elementary and secondary schools (821)",
+          "601": "Grocery stores (541)",
+          "722": "Services to dwellings and other buildings (734)",
+          "290": "Screw machine products (345)"
+        }
+      }
+    },
+    "HG_PMSA": {
+      "label": "Geography-PMSA rank",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "00": "Not a PMSA, not identified"
+        },
+        "range": [
+          {
+            "min": "1",
+            "max": "12",
+            "description": "Ranking of PMSA w/in its CMSA (see geographic appendix)"
+          }
+        ]
+      }
+    },
+    "A_WHYLFT": {
+      "label": "Labor Force-reason for leaving",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "3": "Retirement or old age",
+          "-1": "Not in Universe",
+          "1": "Personal, family or school",
+          "6": "Temporary nonseasonal job completed",
+          "2": "Health",
+          "7": "Unsatisfactory work arangements",
+          "8": "Other",
+          "4": "Seasonal job completed",
+          "5": "Slack work or business conditions"
+        }
+      }
+    },
+    "A_ERNLWT": {
+      "label": "Weight-earnings/not in labor force weight",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "is-weight": true,
+      "values": {
+        "range": [
+          {
+            "min": "0.0",
+            "max": "99999.99",
+            "description": "NOT_DEFINED"
+          }
+        ]
+      }
+    },
+    "HXDAYCMP": {
+      "label": "Household-day interview complete (allocation flag)",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "0": "No change",
+          "2": "Blank to value"
+        }
+      }
+    },
+    "A_LINENO": {
+      "label": "Demographic-line number",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "range": [
+          {
+            "min": "1",
+            "max": "39",
+            "description": "Line number"
+          }
+        ]
+      }
+    },
+    "A_JOBABS": {
+      "label": "Labor Force-absence from job",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "1": "Yes",
+          "2": "No",
+          "-1": "Not in Universe"
+        }
+      }
+    },
+    "AXMARITL": {
+      "label": "Demographic-marital status (allocation flag)",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "3": "Value to value",
+          "4": "Allocated",
+          "5": "Value to value - no error",
+          "2": "Blank to value",
+          "0": "No change"
+        }
+      }
+    },
+    "HXCPSCHK": {
+      "label": "Household-interviewer check item (allocation flag)",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "0": "No change",
+          "2": "Blank to value"
+        }
+      }
+    },
+    "AXLKFTPT": {
+      "label": "Labor Force-full-time/part-time (allocation flag)",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "2": "Blank to value",
+          "3": "Value to value",
+          "0": "No change",
+          "1": "Value to blank",
+          "4": "Allocated"
+        }
+      }
+    },
+    "AXSEX": {
+      "label": "Demographic-sex (allocation flag)",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "2": "Blank to value",
+          "4": "Allocated",
+          "3": "Value to value",
+          "0": "No change"
+        }
+      }
+    },
+    "H_NUMFAM": {
+      "label": "Household-number of families",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "00": "Not in universe"
+        },
+        "range": [
+          {
+            "min": "1",
+            "max": "39",
+            "description": "Number of families"
+          }
+        ]
+      }
+    },
+    "A_ENRCHK": {
+      "label": "School Enrollment-interviewer check item",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "2": "All others",
+          "1": "This person is 16-24 years of age"
+        }
+      }
+    },
+    "A_AVAIL": {
+      "label": "Labor Force-available job",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "1": "Yes",
+          "2": "No",
+          "-1": "Not in Universe"
+        }
+      }
+    },
+    "A_NAGPWS": {
+      "label": "Labor Force-non-agricultural private wage & salary workers",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "1": "In universe",
+          "-1": "Not in Universe"
+        }
+      }
+    },
+    "H_PRSCNT": {
+      "label": "Household-number of contacts",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "-1": "Blank"
+        },
+        "range": [
+          {
+            "min": "1",
+            "max": "6",
+            "description": "# of Personal Contacts (6 is 6+)"
+          }
+        ]
+      }
+    },
+    "H_NUMPER": {
+      "label": "Household-number of persons",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "00": "Noninterview household"
+        },
+        "range": [
+          {
+            "min": "1",
+            "max": "39",
+            "description": "Number of persons in HHLD"
+          }
+        ]
+      }
+    },
+    "A_EMPHRS": {
+      "label": "Labor Force-reasons, hours",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "02": "Vacation (With a job, but not at work)",
+          "-1": "Not in Universe",
+          "10": "30-34 hours (At work)",
+          "03": "Bad weather (With a job, but not at work)",
+          "04": "Labor dispute (With a job, but not at work)",
+          "05": "All other (With a job, but not at work)",
+          "08": "15-21 hours (At work)",
+          "01": "Illness (With a job, but not at work)",
+          "07": "5-14 hours (At work)",
+          "15": "49-59 hours (At work)",
+          "09": "22-29 hours (At work)",
+          "11": "35-39 hours (At work)",
+          "12": "40 hours (At work)",
+          "06": "1-4 hours (At work)",
+          "13": "41-47 hours (At work)",
+          "16": "60 hours or more (At work)",
+          "14": "48 hours (At work)"
+        }
+      }
+    },
+    "HXARACE": {
+      "label": "Household-race (allocation flag)",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "4": "Allocated",
+          "1": "Value to blank",
+          "0": "No change"
+        }
+      }
+    },
+    "AXUNCOV": {
+      "label": "Earnings-union/employee assoc. contract (allocation flag)",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "0": "No change",
+          "-1": "Not in Universe",
+          "3": "Value to value",
+          "4": "Allocated",
+          "2": "Blank to value",
+          "1": "Value to blank"
+        }
+      }
+    },
+    "A_NLFROT": {
+      "label": "Labor Force-interviewer check item",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "-1": "Not in Universe",
+          "2": "Outgoing rotations",
+          "1": "Continuing rotations"
+        }
+      }
+    },
+    "H_AREASN": {
+      "label": "Household-reason",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "1": "No one home",
+          "2": "Temporarily absent",
+          "3": "REFUSED",
+          "-1": "Not in Universe",
+          "4": "Other - occ."
+        }
+      }
+    },
+    "A_DTCLWK": {
+      "label": "Indus.&Occ.-detailed class of worker",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "8": "Nonag,ws,govt,state",
+          "10": "Nonag, Self-Employed",
+          "11": "Nonag, Unpaid",
+          "4": "Agri., Unpaid",
+          "6": "Nonag,ws,priv.,other Private",
+          "-1": "Not in Universe",
+          "1": "Agri.,wage & Salary,private",
+          "5": "Nonag,ws,private,private Hhlds",
+          "00": "Old not in universe",
+          "2": "Agri,wage & Salary, Government",
+          "9": "Nonag,ws,govt,local",
+          "3": "Agri., Self-Employed",
+          "7": "Nonag,ws,govt,federal"
+        }
+      }
+    },
+    "H_INDVCC": {
+      "label": "Geography-individual central city identifier",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "0": "Not Identified or NonMetropolitan"
+        },
+        "range": [
+          {
+            "min": "1",
+            "max": "4",
+            "description": "Range"
+          }
+        ]
+      }
+    },
+    "A_FAMTYP": {
+      "label": "Demographic-family type",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "2": "Primary Individual",
+          "3": "Related subfamily",
+          "4": "Unrelated subfamily",
+          "5": "Secondary individual",
+          "1": "Primary family"
+        }
+      }
+    },
+    "H_OCCINT": {
+      "label": "Household-unit occupancy",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "1": "Summers Only",
+          "3": "Other",
+          "2": "Winters Only",
+          "-1": "Not in Universe"
+        }
+      }
+    },
+    "HXFAMINC": {
+      "label": "Household-family income (allocation flag)",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "6": "Refusal to value, allocated, no error",
+          "0": "No change",
+          "2": "Blank to value"
+        }
+      }
+    },
+    "H_HHWGT": {
+      "label": "Household-household weight",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "is-weight": true,
+      "values": {
+        "range": [
+          {
+            "min": "0.0",
+            "max": "999999.99",
+            "description": "Range"
+          }
+        ]
+      }
+    },
+    "A_WERNTF": {
+      "label": "Earnings-weekly earnings top code flag",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "0": "Not top coded",
+          "-1": "Not in Universe",
+          "1": "Top coded"
+        }
+      }
+    },
+    "A_WKSLK": {
+      "label": "Labor Force-# weeks looking for work, laid off",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "-1": "Not in Universe"
+        },
+        "range": [
+          {
+            "min": "0",
+            "max": "99",
+            "description": "Entry"
+          }
+        ]
+      }
+    },
+    "AXWANTJB": {
+      "label": "Labor Force-want regular job (allocation flag)",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "1": "Value to blank",
+          "0": "No change",
+          "2": "Blank to value",
+          "3": "Value to value",
+          "4": "Allocated"
+        }
+      }
+    },
+    "A_FNLWGT": {
+      "label": "Weight-adults final weight",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "is-weight": true,
+      "values": {
+        "range": [
+          {
+            "min": "0.0",
+            "max": "99999.99",
+            "description": "NOT_DEFINED"
+          }
+        ]
+      }
+    },
+    "A_WERNTP": {
+      "label": "Earnings-weekly earnings top code",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "-1": "Not in Universe"
+        },
+        "range": [
+          {
+            "min": "0",
+            "max": "1927",
+            "description": "Weekly earnings value"
+          }
+        ]
+      }
+    },
+    "A_USLHRS": {
+      "label": "Earnings-hrs/week worked",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "-1": "Not in Universe"
+        },
+        "range": [
+          {
+            "min": "0",
+            "max": "99",
+            "description": "Entry"
+          }
+        ]
+      }
+    },
+    "AXOVRTIM": {
+      "label": "Labor Force-overtime worked (allocation flag)",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "2": "Blank to value",
+          "0": "No change",
+          "1": "Value to blank",
+          "3": "Value to value",
+          "4": "Allocated"
+        }
+      }
+    },
+    "AXWHYABS": {
+      "label": "Labor Force-reason for absence (allocation flag)",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "2": "Blank to value",
+          "4": "Allocated",
+          "3": "Value to value",
+          "0": "No change",
+          "1": "Value to blank"
+        }
+      }
+    },
+    "A_VET": {
+      "label": "Demographic-veteran status",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "6": "Non-veteran",
+          "4": "World war I",
+          "3": "World war II",
+          "1": "Vietnam era",
+          "5": "Other service",
+          "2": "Korean war"
+        }
+      }
+    },
+    "A_NLFLJ": {
+      "label": "Labor Force-work for pay",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "1": "Within past 12 months",
+          "2": "1 up to 2 years ago",
+          "6": "5 or more years ago",
+          "5": "4 up to 5 years",
+          "7": "Never worked",
+          "3": "2 up to 3 years ago",
+          "4": "3 up to 4 years ago",
+          "-1": "Not in Universe"
+        }
+      }
+    },
+    "A_FMEWGT": {
+      "label": "Weight-family earnings weight",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "is-weight": true,
+      "values": {
+        "range": [
+          {
+            "min": "0.0",
+            "max": "99999.99",
+            "description": "NOT_DEFINED"
+          }
+        ]
+      }
+    },
+    "H_TELHHD": {
+      "label": "Household-telephone in household",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "2": "No",
+          "-1": "Not in universe (non-interview)",
+          "1": "Yes"
+        }
+      }
+    },
+    "A_PTREA": {
+      "label": "Labor Force-reasons",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "12": "Could only find p/t(usually work p/t)",
+          "08": "Own Illness(usually work f/t)",
+          "09": "On vacation(usually work f/t)",
+          "11": "Slack work(usually work p/t)",
+          "03": "New job started(usually work f/t)",
+          "04": "Job terminated(usually work f/t)",
+          "01": "Slack Work(usually work f/t)",
+          "16": "Other(usually work p/t)",
+          "13": "Own illness(usually work p/t)",
+          "14": "Too busy or did not want f/t(usually work p/t)",
+          "-1": "Not in Universe",
+          "05": "Holiday(usually work f/t)",
+          "02": "Material shortages, plant repair(usually work f/t)",
+          "15": "F/T under 35 hours(usually work p/t)",
+          "10": "All other(usually work f/t)",
+          "06": "Labor dispute(usually work f/t)",
+          "07": "Bad weather(usually work f/t)"
+        }
+      }
+    },
+    "H_ARACE": {
+      "label": "Household-Race for Type A noninterviews",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "3": "Other",
+          "1": "White",
+          "2": "Black",
+          "-1": "Not in Universe"
+        }
+      }
+    },
+    "H_TELCNT": {
+      "label": "Household-number of contacts",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "-1": "Blank"
+        },
+        "range": [
+          {
+            "min": "1",
+            "max": "9",
+            "description": "# of Telephone Contacts (9 is 9+)"
+          }
+        ]
+      }
+    },
+    "A_IOELIG": {
+      "label": "Indus.&Occ.-I&O eligibility",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "1": "I & O eligible",
+          "0": "Not I & O eligible"
+        }
+      }
+    },
+    "AXHRS": {
+      "label": "Labor Force-total hours worked (allocation flag)",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "3": "Value to value",
+          "2": "Blank to value",
+          "0": "No change",
+          "1": "Value to blank",
+          "4": "Allocated"
+        }
+      }
+    },
+    "A_PAYABS": {
+      "label": "Labor Force-paid absences",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "1": "Yes",
+          "3": "Self-employed",
+          "-1": "Not in Universe",
+          "2": "No"
+        }
+      }
+    },
+    "H_HHNUM": {
+      "label": "Household-household number",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "-1": "Blank"
+        },
+        "range": [
+          {
+            "min": "1",
+            "max": "8",
+            "description": "Household numbers"
+          }
+        ]
+      }
+    },
+    "A_WHYABS": {
+      "label": "Labor Force-reason for absence",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "3": "Bad weather",
+          "8": "Other",
+          "-1": "Not in Universe",
+          "4": "Labor dispute",
+          "5": "New job to begin within 30 days",
+          "7": "Indefinite layoff (30 days or more)",
+          "1": "Own illness",
+          "6": "Temporary layoff (under 30 days)",
+          "2": "On vacation"
+        }
+      }
+    },
+    "A_RCOW": {
+      "label": "Labor Force-class of worker recode",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "4": "Local",
+          "6": "Without pay",
+          "3": "State",
+          "-1": "Not in Universe",
+          "7": "Never worked",
+          "1": "Private",
+          "2": "Federal",
+          "5": "Se-Uninc."
+        }
+      }
+    },
+    "A_WHYNL8": {
+      "label": "Labor Force-school/training",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "-1": "Not in Universe",
+          "1": "Entry"
+        }
+      }
+    },
+    "A_WHYNL9": {
+      "label": "Labor Force-ill health",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "1": "Entry",
+          "-1": "Not in Universe"
+        }
+      }
+    },
+    "A_WHYNLB": {
+      "label": "Labor Force-don't know",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "-1": "Not in Universe",
+          "1": "Entry"
+        }
+      }
+    },
+    "AXGRSWK": {
+      "label": "Earnings-weekly earnings (allocation flag)",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "4": "Allocated",
+          "-1": "Not in Universe",
+          "0": "No change",
+          "1": "Value to blank",
+          "2": "Blank to value",
+          "3": "Value to value"
+        }
+      }
+    },
+    "A_WHYNLA": {
+      "label": "Labor Force-other",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "1": "Entry",
+          "-1": "Not in Universe"
+        }
+      }
+    },
+    "A_MJIND": {
+      "label": "Ind.&Occ.-major industry code",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "17": "Medical Services, Exc. Hospitals",
+          "19": "Social Services",
+          "7": "Communications",
+          "1": "Agriculture",
+          "20": "Other Professional Services",
+          "-1": "Not in Universe",
+          "15": "Entertainment And Recreation Services",
+          "10": "Retail Trade",
+          "21": "Forestry And Fisheries",
+          "22": "Public Administration",
+          "23": "Armed Forces",
+          "14": "Personal Services, Exc. Private Hhlds",
+          "5": "Mfg. - Non-Durable Goods",
+          "18": "Educational Services",
+          "3": "Construction",
+          "6": "Transportation",
+          "8": "Utilities And Sanitary Services",
+          "12": "Private Households",
+          "13": "Business, Auto And Repair Services",
+          "4": "Manufacturing - Durable Goods",
+          "11": "Finance, Insurance, And Real Estate",
+          "16": "Hospitals",
+          "2": "Mining",
+          "9": "Wholesale Trade"
+        }
+      }
+    },
+    "A_WHYNL2": {
+      "label": "Labor Force-couldn't find work",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "1": "Entry",
+          "-1": "Not in Universe"
+        }
+      }
+    },
+    "A_WHYNL3": {
+      "label": "Labor Force-lacks schooling",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "1": "Entry",
+          "-1": "Not in Universe"
+        }
+      }
+    },
+    "A_WHYNL1": {
+      "label": "Labor Force-no work available",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "-1": "Not in Universe",
+          "1": "Entry"
+        }
+      }
+    },
+    "A_WHYNL6": {
+      "label": "Labor Force-child care",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "1": "Entry",
+          "-1": "Not in Universe"
+        }
+      }
+    },
+    "A_WHYNL7": {
+      "label": "Labor Force-family responsibilities",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "-1": "Not in Universe",
+          "1": "Entry"
+        }
+      }
+    },
+    "A_WHYNL4": {
+      "label": "Labor Force-age",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "1": "Entry",
+          "-1": "Not in Universe"
+        }
+      }
+    },
+    "A_WHYNL5": {
+      "label": "Labor Force-personal handicap",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "-1": "Not in Universe",
+          "1": "Entry"
+        }
+      }
+    },
+    "A_MAJACT": {
+      "label": "Labor Force-activities last week",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "5": "Going to school",
+          "6": "Unable to work",
+          "3": "Looking for work",
+          "4": "Keeping house",
+          "7": "Retired",
+          "1": "Working",
+          "2": "With job but not at work",
+          "8": "Other"
+        }
+      }
+    },
+    "A_HERNTF": {
+      "label": "Earnings-hourly earnings top code flag",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "0": "Not top coded",
+          "1": "Top coded",
+          "-1": "Not in Universe"
+        }
+      }
+    },
+    "H_MSTIND": {
+      "label": "Household-master segment tape index",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "range": [
+          {
+            "min": "0",
+            "max": "99999",
+            "description": "Range"
+          }
+        ]
+      }
+    },
+    "HXPRSCNT": {
+      "label": "Household-number of contacts (allocation flag)",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "2": "Blank to value",
+          "0": "No change"
+        }
+      }
+    },
+    "AXWHYLFT": {
+      "label": "Labor Force-reason for leaving (allocation flag)",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "0": "No change",
+          "4": "Allocated",
+          "1": "Value to blank",
+          "2": "Blank to value",
+          "3": "Value to value"
+        }
+      }
+    },
+    "AXANYWK": {
+      "label": "Labor Force-work (allocation flag)",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "0": "No change",
+          "1": "Value to blank",
+          "4": "Allocated",
+          "2": "Blank to value",
+          "3": "Value to value"
+        }
+      }
+    },
+    "AXUSLFT": {
+      "label": "Labor Force-hours usually worked/week (allocation flag)",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "4": "Allocated",
+          "0": "No change",
+          "1": "Value to blank",
+          "3": "Value to value",
+          "2": "Blank to value"
+        }
+      }
+    },
+    "AXENRCHK": {
+      "label": "School Enrollment-interviewer check (allocation flag)",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "1": "Value to blank",
+          "2": "Blank to value",
+          "0": "No change",
+          "3": "Value to value",
+          "4": "Allocated"
+        }
+      }
+    },
+    "AXIND": {
+      "label": "Indus.&Occ.-industry (allocation flag)",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "3": "Value to value",
+          "4": "Allocated",
+          "1": "Value to blank",
+          "0": "No change",
+          "2": "Blank to value"
+        }
+      }
+    },
+    "H_YEAR": {
+      "label": "Household-year of survey, last digit",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "range": [
+          {
+            "min": "0",
+            "max": "9",
+            "description": "Last digit of year"
+          }
+        ]
+      }
+    },
+    "A_SPOUSE": {
+      "label": "Demographic-line number",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "00": "None"
+        },
+        "range": [
+          {
+            "min": "1",
+            "max": "39",
+            "description": "Spouse's Line Number"
+          }
+        ]
+      }
+    },
+    "A_LKWK": {
+      "label": "Labor Force-looking for work",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "1": "Yes",
+          "-1": "Not in Universe",
+          "2": "No"
+        }
+      }
+    },
+    "A_DSCWK": {
+      "label": "Labor Force-discouraged worker flag",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "0": "Non-discouraged worker",
+          "1": "Discourage worker"
+        }
+      }
+    },
+    "A_UNMEM": {
+      "label": "Earnings-labor union membership or similar association",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "1": "Yes",
+          "2": "No",
+          "-1": "Not in Universe"
+        }
+      }
+    },
+    "A_HERNTP": {
+      "label": "Earnings-hourly earnings top code",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "-1": "Not in Universe"
+        },
+        "range": [
+          {
+            "min": "0.0",
+            "max": "9.99",
+            "description": "Hourly earnings value"
+          }
+        ]
+      }
+    },
+    "A_PTHRS": {
+      "label": "Labor Force-part-time hours",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "02": "5-14 hours(Usually work f/t, p/t for economic reasons)",
+          "03": "15-29 hours(Usually work f/t, p/t for economic reasons)",
+          "07": "15-29 hours(usually work p/t, economic reasons)",
+          "10": "5-14 hours (usually work p/t, noneconomic reasons)",
+          "01": "1-4 hours(Usually work f/t, p/t for economic reasons)",
+          "-1": "Not in Universe",
+          "00": "Usually f/t, p/t for non-economic reasons",
+          "04": "30-34 hours(Usually work f/t, p/t for economic reasons)",
+          "05": "1-4 hours(usually work p/t, economic reasons)",
+          "08": "30-34 hours(usually work p/t, economic reasons)",
+          "06": "5-14 hours(usually work p/t, economic reasons)",
+          "12": "30-34 hours (usually work p/t, noneconomic reasons)",
+          "09": "1-4 hours (usually work p/t, noneconomic reasons)",
+          "11": "15-29 hours (usually work p/t, noneconomic reasons)"
+        }
+      }
+    },
+    "A_FERNTF": {
+      "label": "Earnings-family earnings top code flag",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "0": "Not top coded",
+          "-1": "Not in Universe",
+          "1": "Top coded"
+        }
+      }
+    },
+    "A_NAGWS": {
+      "label": "Indus.&Occ.-non-agricultural wage and salary workers",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "-1": "Not in Universe",
+          "1": "In universe"
+        }
+      }
+    },
+    "H_HHTYPE": {
+      "label": "Household-type of household",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "2": "Type A Non-Interview",
+          "1": "Interview",
+          "3": "Type B /C non-interview"
+        }
+      }
+    },
+    "H_LIVQRT": {
+      "label": "Household-living quarters",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "01": "House, Apt., Flat",
+          "12": "Other not HU",
+          "03": "HU, Perm. in trans. hotel, motel, etc.",
+          "06": "Mobile home or trailer w/ 1 or more perm. rooms added",
+          "02": "HU in nontransient hotel, etc.",
+          "11": "Student quarters in college dormitory",
+          "05": "Mobile Home or trailer w/ no permanent room added",
+          "08": "Qtrs. not HU in rooming or boarding house",
+          "10": "Tent or trailer site",
+          "09": "Unit not perm. in trans. hotel, motel, etc.",
+          "04": "HU in rooming house",
+          "07": "HU not specified above"
+        }
+      }
+    },
+    "A_PARENT": {
+      "label": "Demographic-line number",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "00": "None"
+        },
+        "range": [
+          {
+            "min": "1",
+            "max": "39",
+            "description": "Parent's Line Number"
+          }
+        ]
+      }
+    },
+    "A_FERNTP": {
+      "label": "Earnings-family earnings top coded",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "-1": "Not in primary family"
+        },
+        "range": [
+          {
+            "min": "0",
+            "max": "9999",
+            "description": "Family earnings value"
+          }
+        ]
+      }
+    },
+    "HXTELHHD": {
+      "label": "Household-telephone in household (allocation flag)",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "1": "Value to blank",
+          "0": "No change",
+          "4": "Allocated"
+        }
+      }
+    },
+    "AXLOSTIM": {
+      "label": "Labor Force-lost time, time off from work (allocation flag)",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "2": "Blank to value",
+          "0": "No change",
+          "1": "Value to blank",
+          "4": "Allocated",
+          "3": "Value to value"
+        }
+      }
+    },
+    "H_TELINT": {
+      "label": "Household-telephone interview acceptable",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "1": "Yes",
+          "-1": "Not in Universe",
+          "2": "No"
+        }
+      }
+    },
+    "HXTELCNT": {
+      "label": "Household-number of contacts (allocation flag)",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "0": "No change",
+          "7": "Blank to NA - no error"
+        }
+      }
+    },
+    "H_RESPNM": {
+      "label": "Household-line no. hhld resp.",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "7": "Non HHLD resp",
+          "-1": "Blank or impossible"
+        },
+        "range": [
+          {
+            "min": "1",
+            "max": "6",
+            "description": "Line #"
+          }
+        ]
+      }
+    },
+    "AXRRP": {
+      "label": "Demographic-relationship to ref person (allocation flag)",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "0": "No change",
+          "5": "Value to value - no error",
+          "2": "Blank to value",
+          "3": "Value to value"
+        }
+      }
+    },
+    "HG_REG": {
+      "label": "Geography-region",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "3": "South",
+          "4": "West",
+          "1": "Northeast",
+          "2": "Midwest"
+        }
+      }
+    },
+    "A_PFHHAG": {
+      "label": "Demographic-age",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "2": "25-44 years old",
+          "1": "< 25 years old",
+          "4": "55-64 years old",
+          "3": "45-54 years old",
+          "0": "Not a family member",
+          "5": "65+ years old"
+        }
+      }
+    },
+    "A_DTIND": {
+      "label": "Indus.&Occ.-detailed industry code",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "13": "Mfg-Motor Vehicles & Equip",
+          "16": "Mfg-Professional & Photo Equip",
+          "1": "Goods Producing-Agricultural Services",
+          "32": "Wholesale trade",
+          "40": "Entertainment & Recreation Services",
+          "49": "National Security & Internal Affairs",
+          "21": "Mfg-Textile Mill Prods",
+          "22": "Mfg-Apparel & Other Finished Textile Pr",
+          "35": "Insurance And Real Estate",
+          "37": "Business Services",
+          "42": "Health Services, Exc. Hospitals",
+          "45": "Other Professional Services",
+          "47": "Justice, Public Order & Safety",
+          "10": "Mfg-Not Specified Metal Industries",
+          "25": "Mfg-Chemicals & Allied Prods",
+          "26": "Mfg-Petroleum & Coal Prods",
+          "28": "Mfg-Leather & Leather Prods",
+          "36": "Private Household Services",
+          "48": "Admin Of Human Resource Programs",
+          "50": "Other Public Administration",
+          "0": "Never worked",
+          "3": "Mining",
+          "5": "Mfg-Lumber & Wood Prods, Ex Furniture",
+          "8": "Mfg-Primary Metals",
+          "44": "Social Services",
+          "19": "Mfg-Food & Kindred Prods",
+          "24": "Mfg-Printing, Publishing & Allied Inds",
+          "41": "Hospitals",
+          "43": "Educational Services",
+          "46": "Forestry & Fisheries",
+          "51": "Armed Forces",
+          "11": "Mfg-Machinery, Ex Electrical",
+          "-1": "In Universe, Met No Conditions To Assign",
+          "29": "Transportation",
+          "30": "Communications",
+          "12": "Mfg-Electrical Machinery,equip & Supplies",
+          "17": "Mfg-Toys,amusement & Sporting Goods",
+          "18": "Mfg-Misc & Nec Mfg Industries",
+          "2": "Goods producing-Other Agricultural",
+          "6": "Mfg-Furniture & Fixtures",
+          "7": "Mfg-Stone, Clay, Concrete, Glass Prods",
+          "9": "Mfg-Fabricated Metals",
+          "23": "Mfg-Paper & Allied Products",
+          "31": "Utilities & sanitary services",
+          "34": "Banking And Other Finance",
+          "39": "Personal Serv Exc Private Households",
+          "14": "Mfg-Other Transportation Equipment",
+          "4": "Construction",
+          "20": "Mfg-Tobacco Prods",
+          "27": "Mfg-Rubber & Misc Plastic Prods",
+          "33": "Retail Trade",
+          "38": "Repair Services"
+        }
+      }
+    },
+    "A_HRLYWK": {
+      "label": "Earnings-hourly wage",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "-1": "Not in Universe",
+          "2": "No",
+          "1": "Yes"
+        }
+      }
+    },
+    "A_VETWGT": {
+      "label": "Weight-veteran's weight",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "is-weight": true,
+      "values": {
+        "range": [
+          {
+            "min": "0.0",
+            "max": "99999.99",
+            "description": "NOT_DEFINED"
+          }
+        ]
+      }
+    },
+    "A_UNCOV": {
+      "label": "Earnings-union/employee association contract covering",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "1": "Yes",
+          "-1": "Not in Universe",
+          "2": "No"
+        }
+      }
+    },
+    "AXUNMEM": {
+      "label": "Earnings-labor union membership (allocation flag)",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "-1": "Not in Universe",
+          "2": "Blank to value",
+          "4": "Allocated",
+          "1": "Value to blank",
+          "3": "Value to value",
+          "0": "No change"
+        }
+      }
+    },
+    "A_FTABS": {
+      "label": "Labor Force-hours worked/week",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "1": "Yes",
+          "-1": "Not in Universe",
+          "2": "No"
+        }
+      }
+    },
+    "A_FAMWGT": {
+      "label": "Weight-family weight",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "is-weight": true,
+      "values": {
+        "range": [
+          {
+            "min": "0.0",
+            "max": "99999.99",
+            "description": "NOT_DEFINED"
+          }
+        ]
+      }
+    },
+    "AXINTEND": {
+      "label": "Labor Force-intend to look for work (allocation flag)",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "2": "Blank to value",
+          "0": "No change",
+          "4": "Allocated",
+          "1": "Value to blank",
+          "3": "Value to value"
+        }
+      }
+    },
+    "HXSTATUS": {
+      "label": "Household-status change, replacement (allocation flag)",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "2": "Blank to value",
+          "1": "Value to blank",
+          "3": "Value to value",
+          "0": "No change",
+          "8": "Blank to NA - Error"
+        }
+      }
+    },
+    "H_INTRV1": {
+      "label": "Household-interviewer code",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "00": "A",
+          "06": "G",
+          "14": "Q",
+          "17": "T",
+          "18": "U",
+          "10": "L",
+          "11": "M",
+          "20": "W",
+          "05": "F",
+          "16": "S",
+          "02": "C",
+          "04": "E",
+          "07": "H",
+          "13": "P",
+          "-1": "Blank",
+          "22": "Y",
+          "01": "B",
+          "09": "K",
+          "21": "X",
+          "23": "Z",
+          "08": "J",
+          "12": "N",
+          "03": "D",
+          "15": "R",
+          "19": "V"
+        }
+      }
+    },
+    "H_INTRV2": {
+      "label": "Household-interviewer code",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "-1": "Blank"
+        },
+        "range": [
+          {
+            "min": "0",
+            "max": "9",
+            "description": "Interviewer code - digit 2"
+          }
+        ]
+      }
+    },
+    "A_WHENLJ": {
+      "label": "Labor Force-last work full-time job lasting 2+ weeks",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "1": "In last 12 months",
+          "2": "1-5 years ago",
+          "3": "More than 5 years ago",
+          "-1": "Not in Universe",
+          "4": "Never worked full time 2 weeks or more",
+          "5": "Never worked at all"
+        }
+      }
+    },
+    "H_INTRV3": {
+      "label": "Household-interviewer code",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "-1": "Blank"
+        },
+        "range": [
+          {
+            "min": "0",
+            "max": "9",
+            "description": "Interviewer code - digit 3"
+          }
+        ]
+      }
+    },
+    "AXFTREAS": {
+      "label": "Labor Force-hours usually worked/week (allocation flag)",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "1": "Value to blank",
+          "2": "Blank to value",
+          "0": "No change",
+          "3": "Value to value",
+          "4": "Allocated"
+        }
+      }
+    },
+    "H_MIS": {
+      "label": "Household-month in sample",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "range": [
+          {
+            "min": "1",
+            "max": "8",
+            "description": "Month in sample"
+          }
+        ]
+      }
+    },
+    "A_NLFREA": {
+      "label": "Labor Force-current activity/reason",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "-1": "Not in Universe",
+          "6": "Employers think too young too old",
+          "11": "Other",
+          "5": "No desire",
+          "9": "Could not find work",
+          "1": "School",
+          "2": "Ill, disabled",
+          "4": "Retired or old age",
+          "7": "Lacks education or training",
+          "10": "Thinks no job available",
+          "3": "Keeping house",
+          "8": "Other personal reason"
+        }
+      }
+    },
+    "A_HGA": {
+      "label": "Demographic-highest dgree, grade completed",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "15": "Third Year of College (C3)",
+          "00": "Never Attended or Less than First grade",
+          "03": "Third Grade (E3)",
+          "17": "Fifth Year of College (C5)",
+          "11": "Eleventh Grade (H3)",
+          "02": "Second Grade (E2)",
+          "06": "Sixth Grade (E6)",
+          "18": "Six or More Years of College (C6)",
+          "08": "Eighth Grade (E8)",
+          "09": "Ninth Grade (H1)",
+          "01": "First Grade (E1)",
+          "13": "One Year of College (C1)",
+          "07": "Seventh Grade (E7)",
+          "05": "Fifth Grade (E5)",
+          "12": "Twelfth Grade (H4)",
+          "14": "Second Year of College (C2)",
+          "04": "Fourth Grade (E4)",
+          "16": "Fourth Year of College (C4)",
+          "10": "Tenth Grade (H2)"
+        }
+      }
+    },
+    "A_HGC": {
+      "label": "Grade Completed?",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "2": "No",
+          "1": "Yes"
+        }
+      }
+    },
+    "H_TYPERP": {
+      "label": "Household-type of reference person",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "1": "Civilian",
+          "3": "GROUP QUARTERS",
+          "2": "Armed forces",
+          "0": "Not In Universe"
+        }
+      }
+    },
+    "AXFTPT": {
+      "label": "School Enrollment-f/t or p/t student (allocation flag)",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "1": "Value to blank",
+          "4": "Allocated",
+          "2": "Blank to value",
+          "0": "No change",
+          "3": "Value to value"
+        }
+      }
+    },
+    "HXSEASON": {
+      "label": "Household-seasonal status (allocation flag)",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "0": "No change",
+          "1": "Value to blank",
+          "4": "Allocated"
+        }
+      }
+    },
+    "H_TYPEBC": {
+      "label": "Household-type B/C",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "12": "C -House or trailer moved",
+          "04": "B -Unfit or to be demolished",
+          "06": "B -Converted to temp. business or storage",
+          "07": "B -Occ. by AF members or persons under 16",
+          "18": "C -Unused line of listing sheet",
+          "09": "B -Permit granted, construction not started",
+          "13": "C -Outside segment",
+          "08": "B -Unocc. tent or trailer site",
+          "16": "C -Condemned",
+          "19": "C -Other",
+          "01": "B -Vacant - regular",
+          "02": "B -Vacant - storage of HHLD furniture",
+          "17": "C -Built after April 1, 1980",
+          "11": "C -Demolished",
+          "03": "B -Temp. occ. by persons with URE",
+          "-1": "Not in Universe",
+          "15": "C -Merged",
+          "14": "C -Converted to perm. business or storage",
+          "05": "B -Under construction, not ready",
+          "10": "B -Other"
+        }
+      }
+    },
+    "H_FARM": {
+      "label": "Household-farm/nonfarm",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "2": "Farm",
+          "1": "Nonfarm"
+        }
+      }
+    },
+    "AXLFSR": {
+      "label": "Labor Force-labor force status recode (allocation flag)",
+      "predicateType": "int",
+      "group": "N/A",
+      "limit": 0,
+      "suggested-weight": "A_FNLWGT",
+      "values": {
+        "item": {
+          "4": "Allocated",
+          "0": "No change"
+        }
+      }
+    }
+  }
+}

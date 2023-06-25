@@ -86,7 +86,7 @@ class FakeHttpxTransport(httpx.AsyncBaseTransport):
             return make_response(self.tags)
         if req.url.path.endswith('variables.json'):
             return make_response(self.variables)
-        if req.url.params.get('get'):
+        if 'for' in req.url.params or 'tabulate' in req.urls.params:
             return make_response(self.query_results)
         else:
             _logger.warning('Unexpected url: %s', req.url)

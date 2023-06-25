@@ -223,7 +223,8 @@ class CensusBulkGeocoder:
     async def async_geocode_rows(self,
                                  rows: Iterable[Iterable[Any]],
                                  *,
-                                 retries: int = 3) -> pd.DataFrame:
+                                 retries: int = 3,
+                                 client: httpx.AsyncClient = None) -> pd.DataFrame:
         """Geocode addresses stored as rows asynchronously.
 
         Arguments:
@@ -238,40 +239,39 @@ class CensusBulkGeocoder:
         Returns: DataFrame with geocoding output with rows keyed by
           the input key.
         """
-        async with httpx.AsyncClient(
-                limits=httpx.Limits(max_connections=self.concurrency),
-        ) as client:
-            reqiter = self._generate_requests(rows, client)
-            reqs = list(reqiter)
-            req_to_chunkno = {req: chunkno for chunkno, req in enumerate(reqs)}
+        client = client or httpx.AsyncClient(
+                limits=httpx.Limits(max_connections=self.concurrency))
+        reqiter = self._generate_requests(rows, client)
+        reqs = list(reqiter)
+        req_to_chunkno = {req: chunkno for chunkno, req in enumerate(reqs)}
 
-            async def handleResp(idx: int,
-                                 r: httpx.Response,
-                                 *,
-                                 retry: int = 0):
-                chunkno = req_to_chunkno.get(r.request, 'N/A')
-                _logger.debug(f'Finished req {idx+1}/{len(reqs)} for ' +
-                              f'chunk {chunkno}: status {r.status_code}')
-                if 200 <= r.status_code < 300:  # success of any sort
-                    rdr = csv.DictReader(
-                        StringIO(r.text),
-                        fieldnames=CENSUS_GEO_COLNAMES)
-                    self.persister.persistTemp(rdr)
-                else:
-                    _logger.warning(f'Failed req {idx+1}/{len(reqs)} for ' +
-                                 f'chunk {chunkno}: ' +
-                                 f'status_code={r.status_code}')
-                    if retry < retries:
-                        _logger.info(f'Retrying... {retry + 1} of {retries}')
-                        asyncio.sleep(3**retry)
-                        await handleResp(idx,
-                                         await client.send(r.request),
-                                         retry=retry + 1)
+        async def handleResp(idx: int,
+                             r: httpx.Response,
+                             *,
+                             retry: int = 0):
+            chunkno = req_to_chunkno.get(r.request, 'N/A')
+            _logger.debug(f'Finished req {idx+1}/{len(reqs)} for ' +
+                          f'chunk {chunkno}: status {r.status_code}')
+            if 200 <= r.status_code < 300:  # success of any sort
+                rdr = csv.DictReader(
+                    StringIO(r.text),
+                    fieldnames=CENSUS_GEO_COLNAMES)
+                self.persister.persistTemp(rdr)
+            else:
+                _logger.warning(f'Failed req {idx+1}/{len(reqs)} for ' +
+                             f'chunk {chunkno}: ' +
+                             f'status_code={r.status_code}')
+                if retry < retries:
+                    _logger.info(f'Retrying... {retry + 1} of {retries}')
+                    asyncio.sleep(3**retry)
+                    await handleResp(idx,
+                                     await client.send(r.request),
+                                     retry=retry + 1)
 
-            _logger.debug(f'Processing {len(reqs)} requests')
-            for idx, resp in enumerate(asyncio.as_completed(
-                    [client.send(req) for req in reqs])):
-                await handleResp(idx, await resp)
+        _logger.debug(f'Processing {len(reqs)} requests')
+        for idx, resp in enumerate(asyncio.as_completed(
+                [client.send(req) for req in reqs])):
+            await handleResp(idx, await resp)
         _logger.debug(f'Processed {idx+1} responses')
         return self.persister.persistFinal()
 
@@ -331,8 +331,8 @@ class CensusBulkGeocoder:
     def geocode_rows(self, rows: Iterable[Iterable[Any]]) -> pd.DataFrame:
         """Geocode addresses stored as rows.
 
-        This function invokes `asyncio.run`, so cannot be used when an
-        event loop is running.
+        This function invokes `asyncio.run_until_complete`, so cannot
+        be used when an event loop is running.
 
         Arguments:
         ---------
@@ -346,7 +346,8 @@ class CensusBulkGeocoder:
         Returns: DataFrame with geocoding output with rows keyed by
           the input key.
         """
-        return asyncio.run(self.async_geocode_rows(rows))
+        return asyncio.get_event_loop().run_until_complete(
+            self.async_geocode_rows(rows))
 
     def geocode_cols(
             self,

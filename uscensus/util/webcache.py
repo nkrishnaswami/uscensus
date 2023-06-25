@@ -14,6 +14,7 @@ def make_client(*,
                 cache,
                 key=None,
                 heuristic=ExpiresAfterHeuristic(days=30),
+                max_connections=10,
                 transport=None) -> CachingClient:
     """Create a caching httpx AsyncClient with the caller-specified
     datastore and optionally caching heuristic.
@@ -25,6 +26,7 @@ def make_client(*,
     client_args = {
         'follow_redirects': True,
         'params': params,
+        'limits': httpx.Limits(max_connections=max_connections),
     }
     caching_client_args = {
         'cacheable_status_codes': (200, 203, 300, 301, 302, 308),
@@ -102,4 +104,6 @@ def fetch(
         *,
         retries: int = 3,
         **kwargs) -> httpx.Response:
-    return asyncio.run(afetch(url, session, retries=retries, **kwargs))
+
+    return asyncio.get_event_loop().run_until_complete(
+        afetch(url, session, retries=retries, **kwargs))

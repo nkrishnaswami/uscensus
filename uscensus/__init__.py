@@ -8,10 +8,9 @@ from uscensus.data import (
 from uscensus.geocode.bulk import CensusBulkGeocoder
 from uscensus.util import (
     CensusError,
-    DBAPIDataStore,
     DBError,
-    NopDataStore,
-    SqlAlchemyDataStore,
+    AsyncNopDataStore,
+    AsyncSqlAlchemyDataStore,
 )
 
 """This module reads the Census's API discovery interface at
