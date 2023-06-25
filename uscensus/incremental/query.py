@@ -5,7 +5,7 @@ import logging
 import re
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Iterable, Type
 
 import pandas as pd
 from dataclasses_json import dataclass_json
@@ -32,17 +32,20 @@ def _base_field(field_name: str) -> str:
     return field_name
 
 
-def _format_predicate_value(value: str | int | float | tuple) -> str:
+PredicateScalarValue = int | float | str | tuple[int, int]
+
+
+def _format_predicate_value(value: PredicateScalarValue) -> str:
     if isinstance(value, tuple):
         return f'{value[0]}:{value[1]}'
     return str(value)
 
 
-def _format_predicate_values(*values: str | int | float | tuple) -> str:
+def _format_predicate_values(values: list[PredicateScalarValue]) -> str:
     return ','.join(_format_predicate_value(value) for value in values)
 
 
-def _all_numeric(values, type):
+def _all_numeric(values: Iterable[PredicateScalarValue], type: Type[int] | Type[float]) -> bool:
     def is_convertible(value):
         try:
             if isinstance(value, tuple):
@@ -58,7 +61,7 @@ def _all_numeric(values, type):
     return all(is_convertible(value) for value in values)
 
 
-def _all_string(values):
+def _all_string(values: Iterable[PredicateScalarValue]) -> bool:
     return all(type(value) in [str, int, float] for value in values)
 
 
@@ -70,7 +73,7 @@ class QueryBuilderBase(ABC):
         self.geo_for_level: str = ''
         self.geo_for_values: list[str] = []
         self.geo_in: dict[str, list[str]] = {}
-        self.predicates: dict[str, int | float | str] = {}
+        self.predicates: dict[str, list[PredicateScalarValue]] = {}
 
     @abstractmethod
     def _make_params(self) -> dict[str, str]:
@@ -108,7 +111,7 @@ class QueryBuilderBase(ABC):
 
     def add_predicate(self,
                       field: str,
-                      *values: str | int | float | tuple) -> QueryBuilderBase:
+                      *values: str | int | float | tuple[int, int]) -> QueryBuilderBase:
         """Set a desired predicate to qualify the query.
 
         The values may be scalar to set discrete predicate values or,
@@ -333,7 +336,7 @@ class RecodeValue:
 
 def _check_valid_recode_value(
         value: str | int | RecodeRange,
-        valid_values: set(int)):
+        valid_values: set[int]) -> bool:
     if isinstance(value, int):
         if value not in valid_values:
             return False
@@ -344,7 +347,7 @@ def _check_valid_recode_value(
         except ValueError:
             return False
     elif isinstance(value, RecodeRange):
-        for val in range(value.mn, value.mx + 1):
+        for val in range(int(value.mn), int(value.mx) + 1):
             if val not in valid_values:
                 return False
     else:
@@ -356,7 +359,7 @@ def _check_valid_recode_value(
 def _check_valid_recode_values(
         base_var: str,
         variable: Variable,
-        category_defs: list[list[str | int | RecodeRange]]) -> bool:
+        category_defs: Iterable[list[str | int | RecodeRange]]) -> bool:
     """Ensure that the values in a category definition satisfy the
     variable definition.
 
@@ -367,9 +370,9 @@ def _check_valid_recode_values(
     if variable.values.item:
         valid_values.update(int(x) for x in variable.values.item)
     if variable.values.range:
-        for range in variable.values.range:
-            valid_values.update(range(int(range.min),
-                                      int(range.max) + 1))
+        for recode_range in variable.values.range:
+            valid_values.update(range(int(recode_range.min),
+                                      int(recode_range.max) + 1))
     for category_def in category_defs:
         for value in category_def:
             if not _check_valid_recode_value(value, valid_values):
@@ -389,8 +392,8 @@ class TabulationQueryBuilder(QueryBuilderBase):
             raise TypeError(
                 'Cannot make tabulation query for non-microdata dataset')
         super().__init__(dataset)
-        self.weight: str = None
-        self.avg: str = None
+        self.weight: str | None = None
+        self.avg: str | None = None
         self.rows: list[str] = []
         self.cols: list[str] = []
         self.recodes: dict[str, RecodeValue] = {}
@@ -461,8 +464,8 @@ class TabulationQueryBuilder(QueryBuilderBase):
     def _make_params(self):
         ret = {}
 
-        missing = set(self.dataset.required_variables) - set(self.predicates) - \
-            set(self.cols) - set(self.rows)
+        missing = set(self.dataset.required_variables or {}) - \
+            set(self.predicates) - set(self.cols) - set(self.rows)
         if missing:
             raise ValueError(f'Failed to set required predicates: {missing}')
 
