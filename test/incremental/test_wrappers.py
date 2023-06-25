@@ -1,8 +1,7 @@
 import logging
 
-import pytest
+from uscensus.incremental import wrappers
 
-from uscensus.incremental import model, wrappers
 
 def test_catalog(catalog, groups, one_group, variables, httpx_client_single):
     cat = wrappers.Catalog.get_catalog(httpx_client_single)
@@ -14,7 +13,7 @@ def test_catalog(catalog, groups, one_group, variables, httpx_client_single):
     assert ds.description == raw['description']
     assert len(ds.variables) == len(variables['variables'])
     for (key1, var), (key2, rawvar) in zip(ds.variables.items(),
-                                          variables['variables'].items()):
+                                           variables['variables'].items()):
         assert key1 == key2
         assert var.label == rawvar['label']
     assert len(ds.groups) == len(groups['groups'])

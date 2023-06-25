@@ -13,7 +13,8 @@ PARAM = Union[Sequence, Mapping]
 XID = TypeVar('XID', bound='Sequence')
 CONN = TypeVar('CONN', bound='DBAPIConnection')
 CONN_co = TypeVar('CONN_co', bound='DBAPIConnection', covariant=True)
-CURSOR_contra = TypeVar('CURSOR_contra', bound='DBAPICursor', contravariant=True)
+CURSOR_contra = TypeVar(
+    'CURSOR_contra', bound='DBAPICursor', contravariant=True)
 
 
 class DBAPIRow(Protocol):

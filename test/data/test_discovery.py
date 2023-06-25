@@ -1,7 +1,5 @@
-import json
 import logging
 
-import httpx
 import pytest
 
 from uscensus.data.discovery import AsyncDiscoveryInterface, DiscoveryInterface

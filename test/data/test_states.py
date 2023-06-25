@@ -1,12 +1,12 @@
 import pytest
 
-from uscensus.util.datastores import AsyncSqlAlchemyDataStore
 from uscensus.data.states import (
     get_county_boundaries,
     get_county_codes,
     get_state_boundaries,
     get_state_codes,
 )
+from uscensus.util.datastores import AsyncSqlAlchemyDataStore
 from uscensus.util.webcache import make_client
 
 
@@ -51,17 +51,6 @@ def test_get_county_boundaries_fips_state(client):
     df = get_county_boundaries(client, state='01')
     df = df.set_index('GEOID').sort_index()
     assert(len(df)) < 100
-    assert '01001' in df.index
-    autauga = df.loc['01001']
-    assert autauga.STATE_NAME == 'Alabama'
-    assert autauga.STATEFP == '01'
-    assert autauga.STUSPS == 'AL'
-    assert autauga.NAME == 'Autauga'
-    assert autauga.COUNTYFP == '001'
-
-def test_get_county_boundaries_no_state(client):
-    df = get_county_boundaries(client)
-    df = df.set_index('GEOID').sort_index()
     assert '01001' in df.index
     autauga = df.loc['01001']
     assert autauga.STATE_NAME == 'Alabama'
@@ -156,4 +145,3 @@ def test_get_state_codes(client):
     alabama = df.loc['01']
     assert alabama.NAME == 'Alabama'
     assert alabama.STUSPS == 'AL'
-

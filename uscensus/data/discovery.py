@@ -118,12 +118,11 @@ class AsyncDiscoveryInterface:
                           f'{dataset.id}')
         except Exception as e:
             _logger.warning('Error processing metadata; skipping dataset ' +
-                         f'{ds["title"]}: {ds_id}', exc_info=e)
+                            f'{ds["title"]}: {ds_id}', exc_info=e)
             return
         complete[0] += 1
         if complete[0] % 100 == 0:
             _logger.info(f'Processed {complete[0]} datasets')
-
 
     def search(self, query):
         """Find a list of dataset objects matching the index query.
@@ -149,7 +148,8 @@ class AsyncDiscoveryInterface:
 
         cols = ['score', 'dataset_id', 'title', 'description']
         return pd.DataFrame(
-            [tuple(row[col] for col in cols) for row in self.index.query(query)],
+            [tuple(row[col] for col in cols)
+             for row in self.index.query(query)],
             columns=cols,
         )
 

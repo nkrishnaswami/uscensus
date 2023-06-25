@@ -5,7 +5,8 @@ from dataclasses import dataclass, field
 from enum import Enum
 
 import dateutil.parser
-from dataclasses_json import dataclass_json, config as json_config, Undefined
+from dataclasses_json import Undefined, dataclass_json
+from dataclasses_json import config as json_config
 from marshmallow import fields as mm_fields
 
 
@@ -65,7 +66,7 @@ class VariableValueRange:
     min: int | float
     max: int | float
     description: str
-    
+
 
 @dataclass_json(undefined=Undefined.RAISE)
 @dataclass(eq=True, frozen=True)
@@ -80,7 +81,7 @@ class VariableDatetime:
     year: bool | None
     month: bool | None
     quarter: bool | None
-    
+
 
 @dataclass_json(undefined=Undefined.RAISE)
 @dataclass(eq=True, frozen=True)
@@ -91,7 +92,8 @@ class Variable:
     group: str = ''
     limit: int = 0
     isWeight: bool | None = _renamed_field('is-weight', default=None)
-    suggestedWeight: str | None = _renamed_field('suggested-weight', default=None)
+    suggestedWeight: str | None = _renamed_field(
+        'suggested-weight', default=None)
     predicateOnly: bool | None = None
     hasGeoCollectionSupport: bool | None = None
     attributes: str = ''

@@ -1,5 +1,4 @@
 from .datastores import (
-    AsyncDataStore,
     AsyncNopDataStore,
     AsyncSqlAlchemyDataStore,
 )

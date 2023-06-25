@@ -10,6 +10,7 @@ from functools import cached_property
 from typing import TYPE_CHECKING, TypeVar
 
 from async_property import async_cached_property
+
 if TYPE_CHECKING:
     import httpx
 
@@ -78,9 +79,9 @@ class Dataset:
             _logger.debug('Fetching geographies: %s', url)
             geography = model.Geography.from_json(fetch(url, self.client).text)
             return Geography(geography,
-                             { level.name: level for level in geography.fips },
+                             {level.name: level for level in geography.fips},
                              has_default=bool(geography.default and
-                                              any(map(lambda x: x.isDefault == 'true', geography.default))))
+                                              any(x.isDefault == 'true' for x in geography.default)))
         return Geography(_model=model.Geography([], []),
                          levels={},
                          has_default=False)
@@ -98,7 +99,7 @@ class Dataset:
             _logger.debug('Fetching geographies: %s', url)
             geography = model.Geography.from_json(await afetch(url, self.client).text)
             return Geography(geography,
-                             { level.name: level for level in geography.fips },
+                             {level.name: level for level in geography.fips},
                              has_default=bool(geography.default and
                                               geography.default[0].isDefault == 'true'))
         return Geography(_model=model.Geography([], []),
@@ -144,9 +145,11 @@ class Dataset:
         if self._model.c_groupsLink:
             url = self._model.c_groupsLink.replace('http:', 'https:')
             _logger.debug('Fetching groups:  %s', url)
+            # The field name "universe" has a trailing space in the census data.
             return {
-                group_dict['name']: 
-                Group(model.Group.from_dict({k.strip(): v for k, v in group_dict.items()}),
+                group_dict['name']:
+                Group(model.Group.from_dict({key.strip(): value
+                                             for key, value in group_dict.items()}),
                       self.client)
                 for group_dict in fetch(url, self.client).json()['groups']
             }
@@ -164,8 +167,9 @@ class Dataset:
             url = self._model.c_groupsLink.replace('http:', 'https:')
             _logger.debug('Fetching groups:  %s', url)
             return {
-                group_dict['name']: 
-                Group(model.Group.from_dict({k.strip(): v for k, v in group_dict.items()}),
+                group_dict['name']:
+                Group(model.Group.from_dict({key.strip(): value
+                                             for key, value in group_dict.items()}),
                       self.client)
                 for group_dict in (await afetch(url, self.client).json())['groups']
             }
@@ -211,7 +215,7 @@ class Dataset:
         """
         for distribution in self._model.distribution:
             if (distribution.format == 'API' and
-                distribution.mediaType == 'application/json'):
+                    distribution.mediaType == 'application/json'):
                 return distribution.accessURL.replace('http:', 'https:')
         return ''
 

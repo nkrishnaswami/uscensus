@@ -1,6 +1,4 @@
-"""Helpers to filter a list of datasets in some convenient ways.
-
-"""
+"""Helpers to filter a list of datasets in some convenient ways."""
 from __future__ import annotations
 
 import re
@@ -8,6 +6,7 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Generator, Iterable
+
     from uscensus.incremental.wrappers import Dataset
 
 

@@ -39,8 +39,10 @@ def test_Index():
     assert dataset_ids(index.query('', title={'$regex': 'one'})) == ['id1']
     assert dataset_ids(index.query('', title={'$regex': 'two'})) == ['id2']
 
-    assert dataset_ids(index.query('', description={'$regex': 'one'})) == ['id1']
-    assert dataset_ids(index.query('', description={'$regex': 'two'})) == ['id2']
+    assert dataset_ids(index.query(
+        '', description={'$regex': 'one'})) == ['id1']
+    assert dataset_ids(index.query(
+        '', description={'$regex': 'two'})) == ['id2']
 
     assert dataset_ids(index.query('', keywords={'$regex': 'key1'})) == ['id1']
     assert dataset_ids(index.query('', keywords={'$regex': 'key2'})) == ['id2']

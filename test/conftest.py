@@ -1,7 +1,6 @@
-from importlib.resources import files
 import json
 import logging
-from pathlib import Path
+from importlib.resources import files
 
 import httpx
 import pytest
@@ -9,46 +8,46 @@ import pytest
 from uscensus.util.datastores import AsyncNopDataStore
 from uscensus.util.webcache import make_client
 
-
 _logger = logging.getLogger(__name__)
 resource_files = files('test.sample_data')
 
-@pytest.fixture
+
+@pytest.fixture()
 def catalog():
     return json.loads(resource_files.joinpath('data.json').read_text())
 
 
-@pytest.fixture
+@pytest.fixture()
 def examples():
     return json.loads(resource_files.joinpath('examples.json').read_text())
 
 
-@pytest.fixture
+@pytest.fixture()
 def geography():
     return json.loads(resource_files.joinpath('geography.json').read_text())
 
 
-@pytest.fixture
+@pytest.fixture()
 def groups():
     return json.loads(resource_files.joinpath('groups.json').read_text())
 
 
-@pytest.fixture
+@pytest.fixture()
 def one_group():
     return json.loads(resource_files.joinpath('group_B17015.json').read_text())
 
 
-@pytest.fixture
+@pytest.fixture()
 def tags():
     return json.loads(resource_files.joinpath('tags.json').read_text())
 
 
-@pytest.fixture
+@pytest.fixture()
 def variables():
     return json.loads(resource_files.joinpath('variables.json').read_text())
 
 
-@pytest.fixture
+@pytest.fixture()
 def query_results():
     return json.loads(resource_files.joinpath('query_results.json').read_text())
 
@@ -61,16 +60,16 @@ def make_response(data):
 
 class FakeHttpxTransport(httpx.AsyncBaseTransport):
     def __init__(self, catalog, examples, geography, one_group, groups,
-                 tags, variables, query_results):
-       self.catalog = catalog
-       self.examples = examples
-       self.geography = geography
-       self.one_group = one_group
-       self.groups = groups
-       self.tags = tags
-       self.variables = variables 
-       self.query_results = query_results
-                       
+                 tags, variables, query_results) -> None:
+        self.catalog = catalog
+        self.examples = examples
+        self.geography = geography
+        self.one_group = one_group
+        self.groups = groups
+        self.tags = tags
+        self.variables = variables
+        self.query_results = query_results
+
     async def handle_async_request(self, req):
         if req.url.path.endswith('data.json'):
             return make_response(self.catalog)
@@ -93,7 +92,7 @@ class FakeHttpxTransport(httpx.AsyncBaseTransport):
             return httpx.Response(404)
 
 
-@pytest.fixture
+@pytest.fixture()
 def httpx_transport_single(
         catalog,
         examples,
@@ -114,7 +113,7 @@ def httpx_transport_single(
                               query_results)
 
 
-@pytest.fixture
+@pytest.fixture()
 def httpx_transport_full(
         catalog,
         examples,
@@ -134,16 +133,16 @@ def httpx_transport_full(
                               query_results)
 
 
-@pytest.fixture
+@pytest.fixture()
 def cache():
     return AsyncNopDataStore()
 
 
-@pytest.fixture
+@pytest.fixture()
 def httpx_client_single(cache, httpx_transport_single):
     return make_client(cache=cache, transport=httpx_transport_single)
 
 
-@pytest.fixture
+@pytest.fixture()
 def httpx_client_full(cache, httpx_transport_full):
     return make_client(cache=cache, transport=httpx_transport_full)

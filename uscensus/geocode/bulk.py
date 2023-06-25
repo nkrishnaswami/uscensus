@@ -240,7 +240,7 @@ class CensusBulkGeocoder:
           the input key.
         """
         client = client or httpx.AsyncClient(
-                limits=httpx.Limits(max_connections=self.concurrency))
+            limits=httpx.Limits(max_connections=self.concurrency))
         reqiter = self._generate_requests(rows, client)
         reqs = list(reqiter)
         req_to_chunkno = {req: chunkno for chunkno, req in enumerate(reqs)}
@@ -259,8 +259,8 @@ class CensusBulkGeocoder:
                 self.persister.persistTemp(rdr)
             else:
                 _logger.warning(f'Failed req {idx+1}/{len(reqs)} for ' +
-                             f'chunk {chunkno}: ' +
-                             f'status_code={r.status_code}')
+                                f'chunk {chunkno}: ' +
+                                f'status_code={r.status_code}')
                 if retry < retries:
                     _logger.info(f'Retrying... {retry + 1} of {retries}')
                     asyncio.sleep(3**retry)
@@ -326,7 +326,6 @@ class CensusBulkGeocoder:
         else:
             raise ValueError('len(columns) is neither 4 or 5')
         return await self.async_geocode_rows(iter)
-
 
     def geocode_rows(self, rows: Iterable[Iterable[Any]]) -> pd.DataFrame:
         """Geocode addresses stored as rows.

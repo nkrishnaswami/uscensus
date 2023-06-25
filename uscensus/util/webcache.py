@@ -22,7 +22,7 @@ def make_client(*,
     """
     params = None
     if key:
-        params = { 'key': key }
+        params = {'key': key}
     client_args = {
         'follow_redirects': True,
         'params': params,
@@ -36,7 +36,6 @@ def make_client(*,
     return CachingClient(
         httpx.AsyncClient(**client_args, transport=transport),
         **caching_client_args)
-
 
 
 async def afetch(
@@ -97,6 +96,7 @@ async def afetch(
 
     r.raise_for_status()
     return r
+
 
 def fetch(
         url: str,

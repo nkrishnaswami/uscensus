@@ -1,20 +1,19 @@
 from __future__ import annotations
 
-from abc import ABC, abstractmethod
-from dataclasses import dataclass
 import json
 import logging
 import re
+from abc import ABC, abstractmethod
+from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
-from dataclasses_json import dataclass_json
 import pandas as pd
+from dataclasses_json import dataclass_json
 
 if TYPE_CHECKING:
-    from uscensus.incremental.wrappers import Dataset
     from uscensus.incremental.model import Variable
-from uscensus.util.webcache import fetch
-
+    from uscensus.incremental.wrappers import Dataset
+from uscensus.util.webcache import afetch, fetch
 
 _logger = logging.getLogger(__name__)
 
@@ -43,30 +42,27 @@ class QueryBuilderBase(ABC):
         if not dataset.api_url:
             raise ValueError('No API URL found')
         self.dataset = dataset
-        self.geo_for_level : str = ''
-        self.geo_for_value : str = ''
-        self.geo_in : dict[str, str] = {}
-        self.predicates : dict[str, int|float|str] = {}
+        self.geo_for_level: str = ''
+        self.geo_for_value: str = ''
+        self.geo_in: dict[str, str] = {}
+        self.predicates: dict[str, int | float | str] = {}
 
-    def set_geo_for(self, geo_for: str, value: str | list[str]) -> QueryBuilderBase:
+    def set_geo_for(self, geo_for: str, *values: str) -> QueryBuilderBase:
         """Set the Census geography for which to retrieve data."""
         geo_level = self.dataset.geography.levels.get(geo_for)
         if not geo_level:
             raise ValueError(f'Invalid "for" geography "{geo_for}"')
 
         self.geo_for_level = geo_for
-        if isinstance(value, list):
-            value = ','.join(value)
-        self.geo_for_value = value
+        self.geo_for_value = ','.join(values)
         return self
-
 
     def set_geo_in(self, geo_in: dict[str, str]) -> QueryBuilderBase:
         """Indicate the Census geographies containing the "for"
         geography, if required.
 
         """
-        #for geo_in_level in geo_in:
+        # for geo_in_level in geo_in:
         #    if not geo_level:
 
         self.geo_in = dict(geo_in)
@@ -75,7 +71,7 @@ class QueryBuilderBase(ABC):
     def set_predicates(self,
                        predicates: dict[str, str | int | float |
                                         list[str | int | float] |
-                                        tuple[int | float, int | float]]
+                                        tuple[int | float, int | float]],
                        ) -> QueryBuilderBase:
         """Set any desired predicates to qualify the query.
 
@@ -88,12 +84,10 @@ class QueryBuilderBase(ABC):
 
         """
         def satisfies_numeric(value, type):
-            return (isinstance(value, type) or
-                    isinstance(value, list) or
-                    isinstance(value, tuple))
+            return isinstance(value, type | list | tuple)
+
         def satisfies_string(value):
-            return (isinstance(value, str) or
-                    isinstance(value, list))
+            return isinstance(value, str | list)
         for field, value in predicates.items():
             if field == 'for' or field == 'in':
                 raise ValueError('Set "for" and "in" using set_geo_* methods.')
@@ -103,13 +97,18 @@ class QueryBuilderBase(ABC):
             if not variable:
                 raise ValueError(f'Unknown predicate "{field}"')
             if variable.predicateType == 'int' and not satisfies_numeric(value, int):
-                raise TypeError(f'Predicate "{field}" requires int value: "{value}"')
-            if variable.predicateType == 'float' and not satisfies_numeric(value, float):
-                raise TypeError(f'Predicate "{field}" requires float value: "{value}"')
+                raise TypeError(
+                    f'Predicate "{field}" requires int value: "{value}"')
+            if variable.predicateType == 'float' and not satisfies_numeric(
+                    value, float):
+                raise TypeError(
+                    f'Predicate "{field}" requires float value: "{value}"')
             if variable.predicateType == 'string' and not satisfies_string(value):
-                raise TypeError(f'Predicate "{field}" requires str value: "{value}"')
+                raise TypeError(
+                    f'Predicate "{field}" requires str value: "{value}"')
             if variable.predicateType == 'ucgid' and not satisfies_string(value):
-                raise TypeError(f'Predicate "{field}" requires UCGID value: "{value}"')
+                raise TypeError(
+                    f'Predicate "{field}" requires UCGID value: "{value}"')
 
         self.predicates = dict(predicates)
         return self
@@ -119,7 +118,6 @@ class QueryBuilderBase(ABC):
         set.
 
         """
-        
         if not self.geo_for_value and not self.dataset.geography.has_default:
             raise ValueError('Geography is required')
         if not self.geo_for_level:
@@ -128,14 +126,16 @@ class QueryBuilderBase(ABC):
         for level_id in geo_level.requires:
             if level_id not in self.geo_in:
                 if (self.geo_for_value == '*' and
-                    geo_level.optionalWithWCFor == level_id):
+                        geo_level.optionalWithWCFor == level_id):
                     continue
-                raise ValueError(f'Missing required "in" geography "{level_id}"')
+                raise ValueError(
+                    f'Missing required "in" geography "{level_id}"')
         for level_id, value in self.geo_in.items():
             if level_id not in geo_level.requires:
                 raise ValueError(f'Unexpected "in" geography "{level_id}"')
             if value == '*' and level_id not in geo_level.wildcard:
-                raise ValueError(f'Unexpected wildcard in "in" geography "{level_id}"')
+                raise ValueError(
+                    f'Unexpected wildcard in "in" geography "{level_id}"')
 
     @abstractmethod
     def _make_params(self) -> dict[str, str]:
@@ -143,7 +143,6 @@ class QueryBuilderBase(ABC):
         request query parameters.
 
         """
-        pass
 
     def _make_common_params(self) -> dict[str, str]:
         """Assemble the QueryBuilderBase contents into request query
@@ -163,10 +162,7 @@ class QueryBuilderBase(ABC):
 
     @abstractmethod
     def _make_dataframe(self, data: dict) -> pd.DataFrame:
-        """Convert the API JSON response into a DataFrame.
-
-        """
-        pass
+        """Convert the API JSON response into a DataFrame."""
 
     def query(self) -> pd.DataFrame:
         """Issue the query represented by the `QueryBuilderBase` and
@@ -196,18 +192,17 @@ class QueryBuilderBase(ABC):
 
 class QueryBuilder(QueryBuilderBase):
     """Builds a data API query as described in
-    https://www.census.gov/content/dam/Census/data/developers/api-user-guide/api-guide.pdf
+    https://www.census.gov/content/dam/Census/data/developers/api-user-guide/api-guide.pdf.
 
     """
-    def __init__(self, dataset: Dataset):
+
+    def __init__(self, dataset: Dataset) -> None:
         super().__init__(dataset)
-        self.fields : list[str] = []
-        self.groups : list[str] = []
+        self.fields: list[str] = []
+        self.groups: list[str] = []
 
     def set_fields(self, fields: list[str]) -> QueryBuilder:
-        """Set the data fields (variables) to request from the API.
-
-        """
+        """Set the data fields (variables) to request from the API."""
         suggestedWeights = set()
         requestedWeights = set()
         for field in fields:
@@ -238,7 +233,6 @@ class QueryBuilder(QueryBuilderBase):
         self.groups = list(groups)
         return self
 
-
     def _make_params(self):
         required = {name for name, variable in self.dataset.variables.items()
                     if variable.required}
@@ -247,7 +241,7 @@ class QueryBuilder(QueryBuilderBase):
             raise ValueError(f'Request missing required variables: {missing}')
         return {
             'get': ','.join(
-                self.fields + [f'group({group})' for group in self.groups])
+                self.fields + [f'group({group})' for group in self.groups]),
         }
 
     def _make_dataframe(self, data: dict) -> pd.DataFrame:
@@ -297,7 +291,8 @@ def _check_valid_recode_value(
             if val not in valid_values:
                 return False
     else:
-        raise ValueError(f'Unexpected recode value type: {type(value).__name__}')
+        raise ValueError(
+            f'Unexpected recode value type: {type(value).__name__}')
     return True
 
 
@@ -318,29 +313,30 @@ def _check_valid_recode_values(
         for range in variable.values.range:
             valid_values.update(range(int(range.min),
                                       int(range.max) + 1))
-    definition_values = set()
     for category_def in category_defs:
         for value in category_def:
             if not _check_valid_recode_value(value, valid_values):
-                raise ValueError(f'Invalid recode value {value} for "{base_var}"')
+                raise ValueError(
+                    f'Invalid recode value {value} for "{base_var}"')
     return True
-
 
 
 class TabulationQueryBuilder(QueryBuilderBase):
     """Builds a microdata tabulation query as described in
-    https://www2.census.gov/data/api-documentation/microdata-api-user-guide.pdf
+    https://www2.census.gov/data/api-documentation/microdata-api-user-guide.pdf.
 
     """
-    def __init__(self, dataset: Dataset):
+
+    def __init__(self, dataset: Dataset) -> None:
         if not dataset.c_isMicrodata:
-            raise TypeError('Cannot make tabulation query for non-microdata dataset')
+            raise TypeError(
+                'Cannot make tabulation query for non-microdata dataset')
         super().__init__(dataset)
         self.weight: str = None
         self.avg: str = None
         self.rows: list[str] = []
         self.cols: list[str] = []
-        self.recodes: dict[str, Recode] = {}
+        self.recodes: dict[str, RecodeValue] = {}
 
     def set_weight(self, weight: str) -> TabulationQueryBuilder:
         """Select the weight variable to use for the tabulation.
@@ -354,7 +350,8 @@ class TabulationQueryBuilder(QueryBuilderBase):
         if not variable:
             raise ValueError(f'Unknown field "{weight}"')
         if not variable.isWeight:
-            raise ValueError(f'Requested weight {weight} is not a weight variable')
+            raise ValueError(
+                f'Requested weight {weight} is not a weight variable')
         self.weight = weight
         return self
 
@@ -367,14 +364,13 @@ class TabulationQueryBuilder(QueryBuilderBase):
         if not variable:
             raise ValueError(f'Unknown field "{avg}"')
         if variable.values and not variable.values.range:
-            raise ValueError(f'Cannot request average of categorical field {avg}')
+            raise ValueError(
+                f'Cannot request average of categorical field {avg}')
         self.avg = avg
         return self
 
     def set_rows(self, rows: str | list[str]):
-        """Set the rows for the custom tabulation.
-
-        """
+        """Set the rows for the custom tabulation."""
         if isinstance(rows, str):
             rows = [rows]
         for row in rows:
@@ -386,9 +382,7 @@ class TabulationQueryBuilder(QueryBuilderBase):
         return self
 
     def set_cols(self, cols: str | list[str]):
-        """Set the columns for the custom tabulation.
-
-        """
+        """Set the columns for the custom tabulation."""
         if isinstance(cols, str):
             cols = [cols]
         for col in cols:
@@ -402,9 +396,7 @@ class TabulationQueryBuilder(QueryBuilderBase):
 
     def add_recode(self, new_var: str, base_var: str,
                    *category_defs: list[str | int | RecodeRange]):
-        """Specify how to recode an existing variable with a new name.
-
-        """
+        """Specify how to recode an existing variable with a new name."""
         variable = self.dataset.variables.get(base_var)
         if not variable:
             raise ValueError(f'Unknown field "{base_var}"')
@@ -418,7 +410,8 @@ class TabulationQueryBuilder(QueryBuilderBase):
 
         required = {name for name, variable in self.dataset.variables.items()
                     if variable.required}
-        missing = required - set(self.predicates) - set(self.cols) - set(self.rows)
+        missing = required - set(self.predicates) - \
+            set(self.cols) - set(self.rows)
         if missing:
             raise ValueError(f'Failed to set required predicates: {missing}')
 
@@ -432,7 +425,8 @@ class TabulationQueryBuilder(QueryBuilderBase):
         if not self.cols and not self.rows:
             raise ValueError('At least one of col or row must be specified')
         if 'for' in self.cols or 'for' in self.rows and not self.geo_for_value:
-            raise ValueError('Disaggregation by geography requested without specifying geography')
+            raise ValueError(
+                'Disaggregation by geography requested without specifying geography')
         for row in self.rows:
             ret[f'row+{row}'] = ''
         for col in self.cols:
@@ -471,6 +465,6 @@ class TabulationQueryBuilder(QueryBuilderBase):
             if self.avg:
                 req_cols.append(self.avg)
             for header in col_headers:
-                col_tuples.append((tuple(header[col] for col in req_cols)))
+                col_tuples.append(tuple(header[col] for col in req_cols))
             ret.columns = pd.MultiIndex.from_tuples(col_tuples, names=req_cols)
         return ret
