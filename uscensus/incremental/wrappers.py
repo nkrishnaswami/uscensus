@@ -50,7 +50,7 @@ class Group:
         if self._model.variables:
             url = self._model.variables.replace('http:', 'https:')
             return model.Variables.from_json(
-                await afetch(url, self.client).text).variables
+                ((await afetch(url, self.client))).text).variables
         return {}
 
 
@@ -97,7 +97,7 @@ class Dataset:
         if self._model.c_geographyLink:
             url = self._model.c_geographyLink.replace('http:', 'https:')
             _logger.debug('Fetching geographies: %s', url)
-            geography = model.Geography.from_json(await afetch(url, self.client).text)
+            geography = model.Geography.from_json((await afetch(url, self.client)).text)
             return Geography(geography,
                              {level.name: level for level in geography.fips},
                              has_default=bool(geography.default and
@@ -131,7 +131,7 @@ class Dataset:
         if self._model.c_tagsLink:
             url = self._model.c_tagsLink.replace('http:', 'https:')
             _logger.debug('Fetching tags:  %s', url)
-            return model.Tags.from_json(await afetch(url, self.client).text).tags
+            return model.Tags.from_json((await afetch(url, self.client)).text).tags
         return []
 
     @cached_property
@@ -171,7 +171,7 @@ class Dataset:
                 Group(model.Group.from_dict({key.strip(): value
                                              for key, value in group_dict.items()}),
                       self.client)
-                for group_dict in (await afetch(url, self.client).json())['groups']
+                for group_dict in ((await afetch(url, self.client)).json())['groups']
             }
         return {}
 
@@ -202,7 +202,7 @@ class Dataset:
             url = self._model.c_variablesLink.replace('http:', 'https:')
             _logger.debug('Fetching variables:  %s', url)
             return model.Variables.from_json(
-                await afetch(url, self.client).text).variables
+                (await afetch(url, self.client)).text).variables
         return {}
 
     @cached_property
@@ -285,6 +285,30 @@ class Catalog:
             url = f'https://api.census.gov/data/{catalog_subpath}.json'
         _logger.debug('Fetching catalog:  %s', url)
         return cls(model.Catalog.from_json(fetch(url, client).text), client)
+
+    @classmethod
+    async def aget_catalog(cls: type[CAT],
+                           client: httpx.AsyncClient,
+                           *,
+                           catalog_subpath: str = '') -> Catalog:
+        """Retrieve and process the root or subpath data catalog
+        document from the Census API server.
+
+        Arguments:
+        ---------
+          * client: an httpx.AsyncClient instance, such as one
+                returned by uscensus.util.webcache.make_client.
+
+        Returns:
+        -------
+          The new Catalog wrapper instance.
+        """
+        if not catalog_subpath:
+            url = 'https://api.census.gov/data.json'
+        else:
+            url = f'https://api.census.gov/data/{catalog_subpath}.json'
+        _logger.debug('Fetching catalog:  %s', url)
+        return cls(model.Catalog.from_json((await afetch(url, client)).text), client)
 
     def __init__(self, model: model.Catalog, client: httpx.AsyncClient) -> None:
         self._model = model
