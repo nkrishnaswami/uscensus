@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import logging
 import zlib
 
@@ -20,7 +22,7 @@ class AsyncSqlAlchemyDataStore(AsyncDataStore):
     table: sqlalchemy.Table
     engine: AsyncEngine
 
-    def __init__(self, connstr: str, table: str = 'urlcache') -> None:
+    def __init__(self, connstr: str, table_name: str = 'urlcache') -> None:
         """Arguments:
         ---------
           * connstr: sqlalchemy connection string.
@@ -28,46 +30,46 @@ class AsyncSqlAlchemyDataStore(AsyncDataStore):
         """
         _logger.debug(f'create: Instantiating async connection to {connstr}')
         self.connstr = connstr
-        self.table = table
         self.engine = create_async_engine(self.connstr, logging_name=__name__)
-        self.initialized = False
+        self.md = sqlalchemy.MetaData()
+        self.table = sqlalchemy.Table(
+            table_name,
+            self.md,
+            sqlalchemy.Column('key',
+                              sqlalchemy.String,
+                              primary_key=True),
+            sqlalchemy.Column('data',
+                              sqlalchemy.BLOB,
+                              nullable=False),
+        )
+        self._initialized = False
 
     async def _finish_init(self):
-        if not self.initialized:
-            md = sqlalchemy.MetaData()
-            self.table = sqlalchemy.Table(
-                self.table,
-                md,
-                sqlalchemy.Column('key',
-                                  sqlalchemy.String,
-                                  primary_key=True),
-                sqlalchemy.Column('data',
-                                  sqlalchemy.BLOB,
-                                  nullable=False),
-            )
+        if not self._initialized:
             async with self.engine.connect() as conn:
-                await conn.run_sync(md.create_all)
-            self.initialized = True
+                await conn.run_sync(self.md.create_all)
+                self._initialized = True
+
+    @classmethod
+    async def create(cls, connstr: str, table_name: str = 'urlcache') -> AsyncSqlAlchemyDataStore:
+        cache = cls(connstr, table_name)
+        await cache._finish_init()
+        return cache
 
     async def aget(self, key: str) -> tuple[Response | None,
                                             dict | None]:
         _logger.debug(f'aget: key={key}')
         await self._finish_init()
         async with self.engine.connect() as conn:
-            cur = await conn.execute(
-                sqlalchemy.select(
-                    [self.table.c.data],
-                    from_obj=self.table,
-                ).where(
-                    self.table.c.key == key,
-                ),
-            )
-            row = cur.fetchone()
+            result = await conn.execute(
+                sqlalchemy.select(self.table.c.data).where(
+                    self.table.c.key == key))
+            row = result.fetchone()
             if row:
                 ret = ResponseSerializer().loads(
-                    zlib.decompress(row[self.table.c.data]))
+                    zlib.decompress(row.data))
                 _logger.debug('Hit')
-                cur.close()
+                result.close()
                 return ret
             _logger.debug('Miss')
         return None, None
@@ -77,10 +79,10 @@ class AsyncSqlAlchemyDataStore(AsyncDataStore):
         await self._finish_init()
         async with self.engine.connect() as conn:
             await conn.execute(
-                self.table.delete().where(
-                    self.table.c.key == key,
-                ),
+                sqlalchemy.delete(self.table).where(
+                    self.table.c.key == key),
             )
+            await conn.commit()
 
     async def aset(self, key: str, response: Response,
                    vary_header_data: dict,
@@ -89,11 +91,10 @@ class AsyncSqlAlchemyDataStore(AsyncDataStore):
         await self._finish_init()
         async with self.engine.begin() as conn:
             await conn.execute(
-                self.table.delete().where(
-                    self.table.c.key == key),
-            )
+                sqlalchemy.delete(self.table).where(
+                    self.table.c.key == key))
             await conn.execute(
-                self.table.insert().values(
+                sqlalchemy.insert(self.table).values(
                     {
                         self.table.c.key: key,
                         self.table.c.data: zlib.compress(
@@ -102,6 +103,7 @@ class AsyncSqlAlchemyDataStore(AsyncDataStore):
                                 vary_header_data,
                                 response_body)),
                     }))
+            await conn.commit()
 
     async def aclose(self):
         pass
