@@ -23,18 +23,43 @@ def _base_field(field_name: str) -> str:
         field_name = field_name[:-1]
     if field_name[-1] == 'M':
         field_name = field_name[:-1] + 'E'
-    if match := re.match(r'(.*?)_\d{4}to(\d{4})_(\d+)SS', field_name):
-        table, year, variable = match.groups()
-        field_name = f'{table}_{year}_{variable}E'
+    try:
+        if match := re.fullmatch(r'(.*?)_\d{4}to(\d{4})_(\d+)SS', field_name):
+            table, year, variable = match.groups()
+            field_name = f'{table}_{year}_{variable}E'
+    except TypeError as e:
+        raise ValueError(f'Invalid value {field_name}') from e
     return field_name
 
 
-def _format_predicate_values(values: str | int | float | tuple | list) -> str:
-    if isinstance(values, list):
-        return ','.join(values)
-    if isinstance(values, tuple):
-        return f'{values[0]}:{values[1]}'
-    return str(values)
+def _format_predicate_value(value: str | int | float | tuple) -> str:
+    if isinstance(value, tuple):
+        return f'{value[0]}:{value[1]}'
+    return str(value)
+
+
+def _format_predicate_values(*values: str | int | float | tuple) -> str:
+    return ','.join(_format_predicate_value(value) for value in values)
+
+
+def _all_numeric(values, type):
+    def is_convertible(value):
+        try:
+            if isinstance(value, tuple):
+                type(value[0])
+                type(value[1])
+                return True
+            type(value)
+            return True
+        except Exception:
+            _logger.error('unable to convert %s to %s',
+                          value, type.__name__, exc_info=True)
+            return False
+    return all(is_convertible(value) for value in values)
+
+
+def _all_string(values):
+    return all(type(value) in [str, int, float] for value in values)
 
 
 class QueryBuilderBase(ABC):
@@ -43,99 +68,9 @@ class QueryBuilderBase(ABC):
             raise ValueError('No API URL found')
         self.dataset = dataset
         self.geo_for_level: str = ''
-        self.geo_for_value: str = ''
-        self.geo_in: dict[str, str] = {}
+        self.geo_for_values: list[str] = []
+        self.geo_in: dict[str, list[str]] = {}
         self.predicates: dict[str, int | float | str] = {}
-
-    def set_geo_for(self, geo_for: str, *values: str) -> QueryBuilderBase:
-        """Set the Census geography for which to retrieve data."""
-        geo_level = self.dataset.geography.levels.get(geo_for)
-        if not geo_level:
-            raise ValueError(f'Invalid "for" geography "{geo_for}"')
-
-        self.geo_for_level = geo_for
-        self.geo_for_value = ','.join(values)
-        return self
-
-    def set_geo_in(self, geo_in: dict[str, str]) -> QueryBuilderBase:
-        """Indicate the Census geographies containing the "for"
-        geography, if required.
-
-        """
-        # for geo_in_level in geo_in:
-        #    if not geo_level:
-
-        self.geo_in = dict(geo_in)
-        return self
-
-    def set_predicates(self,
-                       predicates: dict[str, str | int | float |
-                                        list[str | int | float] |
-                                        tuple[int | float, int | float]],
-                       ) -> QueryBuilderBase:
-        """Set any desired predicates to qualify the query.
-
-        The values of the `predicates` dictionary may be scalar,
-        lists to set individual or multiple predicate values, or a 2-tuple
-        to set a range for a numerical typed variable.
-
-        NOTE: "for" and "in" predicates should be set using the special-purpose
-        `set_geo_for` and `set_geo_in` methods.
-
-        """
-        def satisfies_numeric(value, type):
-            return isinstance(value, type | list | tuple)
-
-        def satisfies_string(value):
-            return isinstance(value, str | list)
-        for field, value in predicates.items():
-            if field == 'for' or field == 'in':
-                raise ValueError('Set "for" and "in" using set_geo_* methods.')
-            if (base_field := _base_field(field)) not in self.dataset.variables:
-                base_field = field
-            variable = self.dataset.variables.get(base_field)
-            if not variable:
-                raise ValueError(f'Unknown predicate "{field}"')
-            if variable.predicateType == 'int' and not satisfies_numeric(value, int):
-                raise TypeError(
-                    f'Predicate "{field}" requires int value: "{value}"')
-            if variable.predicateType == 'float' and not satisfies_numeric(
-                    value, float):
-                raise TypeError(
-                    f'Predicate "{field}" requires float value: "{value}"')
-            if variable.predicateType == 'string' and not satisfies_string(value):
-                raise TypeError(
-                    f'Predicate "{field}" requires str value: "{value}"')
-            if variable.predicateType == 'ucgid' and not satisfies_string(value):
-                raise TypeError(
-                    f'Predicate "{field}" requires UCGID value: "{value}"')
-
-        self.predicates = dict(predicates)
-        return self
-
-    def _validate_geo(self) -> None:
-        """Ensure that all required geographic information has been
-        set.
-
-        """
-        if not self.geo_for_value and not self.dataset.geography.has_default:
-            raise ValueError('Geography is required')
-        if not self.geo_for_level:
-            return
-        geo_level = self.dataset.geography.levels[self.geo_for_level]
-        for level_id in geo_level.requires:
-            if level_id not in self.geo_in:
-                if (self.geo_for_value == '*' and
-                        geo_level.optionalWithWCFor == level_id):
-                    continue
-                raise ValueError(
-                    f'Missing required "in" geography "{level_id}"')
-        for level_id, value in self.geo_in.items():
-            if level_id not in geo_level.requires:
-                raise ValueError(f'Unexpected "in" geography "{level_id}"')
-            if value == '*' and level_id not in geo_level.wildcard:
-                raise ValueError(
-                    f'Unexpected wildcard in "in" geography "{level_id}"')
 
     @abstractmethod
     def _make_params(self) -> dict[str, str]:
@@ -143,6 +78,129 @@ class QueryBuilderBase(ABC):
         request query parameters.
 
         """
+    @abstractmethod
+    def _make_dataframe(self, data: dict) -> pd.DataFrame:
+        """Convert the API JSON response into a DataFrame."""
+
+    def set_geo_for(self, geo_for: str, *values: str) -> QueryBuilderBase:
+        """Set the Census geographies for which to retrieve data."""
+        geo_level = self.dataset.geography.levels.get(geo_for)
+        if not geo_level:
+            raise ValueError(f'Invalid "for" geography "{geo_for}"')
+        if '*' in values and len(values) > 1:
+            raise ValueError(
+                'Cannot specify wildcard "for" geography with other values')
+
+        self.geo_for_level = geo_for
+        self.geo_for_values = list(values)
+        return self
+
+    def add_geo_in(self, geo_in: str, *values: str) -> QueryBuilderBase:
+        """Indicate the Census geographies containing the "for"
+        geography, if required.
+
+        """
+        if '*' in values and len(values) > 1:
+            raise ValueError(
+                'Cannot specify wildcard "in" predicate with other values')
+        self.geo_in[geo_in] = list(values)
+        return self
+
+    def add_predicate(self,
+                      field: str,
+                      *values: str | int | float | tuple) -> QueryBuilderBase:
+        """Set a desired predicate to qualify the query.
+
+        The values may be scalar to set discrete predicate values or,
+        for a numerical typed variable, a 2-tuple to set a range.
+
+        NOTE: "for" and "in" predicates should be set using the special-purpose
+        `set_geo_for` and `set_geo_in` methods.
+
+        """
+        if field == 'for' or field == 'in':
+            raise ValueError('Set "for" and "in" using set_geo_* methods.')
+        if (base_field := _base_field(field)) not in self.dataset.variables:
+            base_field = field
+        variable = self.dataset.variables.get(base_field)
+        _logger.info('Values: %s', values)
+        if not variable:
+            raise ValueError(f'Unknown predicate "{field}"')
+        if variable.predicateType == 'int' and not _all_numeric(values, int):
+            raise TypeError(
+                f'Predicate "{field}" requires int values: "{values}"')
+        if variable.predicateType == 'float' and not _all_numeric(
+                values, float):
+            raise TypeError(
+                f'Predicate "{field}" requires float values: "{values}"')
+        if variable.predicateType == 'string' and not _all_string(values):
+            raise TypeError(
+                f'Predicate "{field}" requires str values: "{values}"')
+        if variable.predicateType == 'ucgid' and not _all_string(values):
+            raise TypeError(
+                f'Predicate "{field}" requires UCGID values: "{values}"')
+
+        self.predicates[field] = list(values)
+        return self
+
+    def _validate_geo(self) -> None:
+        """Ensure that all required geographic information has been
+        set and is consistent.
+
+        """
+        # Is `for` required but missing?
+        if not self.geo_for_values and not self.dataset.geography.has_default:
+            raise ValueError('Geography is required')
+        # Is `for` using a default?
+        if not self.geo_for_level:
+            return
+
+        # Find this `for` geography's level descriptor
+        geo_level = self.dataset.geography.levels[self.geo_for_level]
+        # Does it have any required `in` geographies?
+        for level_id in geo_level.requires:
+            # Are they missing?
+            if level_id not in self.geo_in:
+                # Are they optional when `for` is a wildcard?
+                if ('*' in self.geo_for_values and
+                        geo_level.optionalWithWCFor == level_id):
+                    continue
+                raise ValueError(
+                    f'Missing required "in" geography "{level_id}"')
+
+        # Check invariants for values for `in` constraints that don't
+        # depend on order.
+        for level_id, values in self.geo_in.items():
+            if level_id not in geo_level.requires:
+                raise ValueError(f'Unexpected "in" geography "{level_id}"')
+            if '*' in values and level_id not in geo_level.wildcard:
+                raise ValueError(
+                    f'Unexpected wildcard in "in" geography "{level_id}"')
+            if len(values) > 1 and self.geo_for_values != ['*']:
+                raise ValueError(
+                    'Multiple "in" geographies with non-wildcard "for"')
+
+        # Validate that multi-valued `in` items don't violate
+        # constraints implied by geo level ordering. Note that we
+        # can't determine this until both `in` and `for` are set.
+        if len(geo_level.requires) > 1:
+            # Get the in constraints in required geo order
+            ordered_values = [self.geo_in[level_id]
+                              for level_id in geo_level.requires
+                              if level_id in self.geo_in]
+            for idx, cur_level_values in enumerate(ordered_values):
+                following_level_values = ordered_values[idx+1:]
+                if following_level_values:
+                    if (len(cur_level_values) > 1 and
+                            not all(x == ['*'] for x in following_level_values)):
+                        raise ValueError(
+                            'Cannot specify non-wildcard "in" constraint '
+                            'below multi-valued level')
+                    if ('*' in cur_level_values and
+                            not all(x == ['*'] for x in following_level_values)):
+                        raise ValueError(
+                            'Cannot specify non-wildcard "in" constraint below '
+                            'level with wildcard')
 
     def _make_common_params(self) -> dict[str, str]:
         """Assemble the QueryBuilderBase contents into request query
@@ -151,7 +209,7 @@ class QueryBuilderBase(ABC):
         """
         self._validate_geo()
         params = {
-            'for': f'{self.geo_for_level}:{self.geo_for_value}',
+            'for': f'{self.geo_for_level}:{",".join(self.geo_for_values)}',
         }
         if self.geo_in:
             params['in'] = ' '.join((f'{level}:{value}'
@@ -160,19 +218,19 @@ class QueryBuilderBase(ABC):
             params[predicate] = _format_predicate_values(value)
         return params
 
-    @abstractmethod
-    def _make_dataframe(self, data: dict) -> pd.DataFrame:
-        """Convert the API JSON response into a DataFrame."""
+    def _prepare_fetch_args(self) -> dict:
+        return {
+            'url': self.dataset.api_url,
+            'session':  self.dataset.client,
+            'params': self._make_common_params() | self._make_params(),
+        }
 
     def query(self) -> pd.DataFrame:
         """Issue the query represented by the `QueryBuilderBase` and
         return the results as a pandas DataFrame.
 
         """
-        resp = fetch(
-            self.dataset.api_url,
-            self.dataset.client,
-            params=self._make_common_params() | self._make_params())
+        resp = fetch(**self._prepare_fetch_args())
         resp.raise_for_status()
         return self._make_dataframe(resp.json())
 
@@ -182,10 +240,7 @@ class QueryBuilderBase(ABC):
 
         """
         self._validate_geo()
-        resp = await afetch(
-            self.dataset.api_url,
-            self.dataset.client,
-            params=self._make_common_params() | self._make_params())
+        resp = await afetch(**self._prepare_fetch_args())
         resp.raise_for_status()
         return self._make_dataframe(resp.json())
 
@@ -201,12 +256,14 @@ class QueryBuilder(QueryBuilderBase):
         self.fields: list[str] = []
         self.groups: list[str] = []
 
-    def set_fields(self, fields: list[str]) -> QueryBuilder:
+    def set_fields(self, *fields: str) -> QueryBuilder:
         """Set the data fields (variables) to request from the API."""
         suggestedWeights = set()
         requestedWeights = set()
         for field in fields:
             base_field = _base_field(field)
+            if (base_field := _base_field(field)) not in self.dataset.variables:
+                base_field = field
             variable = self.dataset.variables.get(base_field)
             if not variable:
                 raise ValueError(f'Unknown field "{field}"')
@@ -224,7 +281,7 @@ class QueryBuilder(QueryBuilderBase):
         self.fields = list(fields)
         return self
 
-    def set_groups(self, groups: list[str]) -> QueryBuilder:
+    def set_groups(self, *groups: str) -> QueryBuilder:
         """Set the data groups (tables) to request from the API."""
         for group in groups:
             if group not in self.dataset.groups:
@@ -369,29 +426,25 @@ class TabulationQueryBuilder(QueryBuilderBase):
         self.avg = avg
         return self
 
-    def set_rows(self, rows: str | list[str]):
+    def set_rows(self, *rows: str):
         """Set the rows for the custom tabulation."""
-        if isinstance(rows, str):
-            rows = [rows]
         for row in rows:
             if row not in self.recodes:
                 variable = self.dataset.variables.get(row)
                 if not variable:
                     raise ValueError(f'Unknown field "{row}"')
-        self.rows = rows
+        self.rows = list(rows)
         return self
 
-    def set_cols(self, cols: str | list[str]):
+    def set_cols(self, *cols: str):
         """Set the columns for the custom tabulation."""
-        if isinstance(cols, str):
-            cols = [cols]
         for col in cols:
             if col not in self.recodes:
                 variable = self.dataset.variables.get(col)
                 if not variable:
                     raise ValueError(f'Unknown field "{col}"')
 
-        self.cols = cols
+        self.cols = list(cols)
         return self
 
     def add_recode(self, new_var: str, base_var: str,
@@ -408,9 +461,7 @@ class TabulationQueryBuilder(QueryBuilderBase):
     def _make_params(self):
         ret = {}
 
-        required = {name for name, variable in self.dataset.variables.items()
-                    if variable.required}
-        missing = required - set(self.predicates) - \
+        missing = set(self.dataset.required_variables) - set(self.predicates) - \
             set(self.cols) - set(self.rows)
         if missing:
             raise ValueError(f'Failed to set required predicates: {missing}')
@@ -424,7 +475,7 @@ class TabulationQueryBuilder(QueryBuilderBase):
 
         if not self.cols and not self.rows:
             raise ValueError('At least one of col or row must be specified')
-        if 'for' in self.cols or 'for' in self.rows and not self.geo_for_value:
+        if 'for' in self.cols or 'for' in self.rows and not self.geo_for_level:
             raise ValueError(
                 'Disaggregation by geography requested without specifying geography')
         for row in self.rows:

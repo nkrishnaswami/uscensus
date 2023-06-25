@@ -1,4 +1,3 @@
-
 import pytest
 
 from uscensus.incremental import filters, model, query, wrappers
@@ -28,12 +27,12 @@ def test_query_builder(httpx_client_full):
     df = query.QueryBuilder(
         ds,
     ).set_fields(
-        ['pct_US_Cit_Nat_ACSMOE_16_20'],
+        'pct_US_Cit_Nat_ACSMOE_16_20',
     ).set_geo_for(
         'tract', '*',
-    ).set_geo_in({
-        'state': 36,
-    }).query()
+    ).add_geo_in(
+        'state', 36,
+    ).query()
 
     assert df.shape == (5411, 4)
     assert all(df.columns == [
@@ -52,7 +51,7 @@ def test_query_builder_unknown_field_raises(httpx_client_full):
         query.QueryBuilder(
             ds,
         ).set_fields(
-            ['INVALID_FIELD'],
+            'INVALID_FIELD',
         )
     assert 'Unknown field' in str(exc_info.value)
 
@@ -69,7 +68,7 @@ def test_query_builder_pred_only_field_raises(httpx_client_full):
         query.QueryBuilder(
             ds,
         ).set_fields(
-            ['ucgid'],
+            'ucgid',
         )
     assert 'predicate-only' in str(exc_info.value)
 
@@ -86,7 +85,7 @@ def test_query_builder_no_weight_raises(udata_httpx_client):
         query.QueryBuilder(
             ds,
         ).set_fields(
-            ['A_AGE'],
+            'A_AGE',
         )
     assert 'weights not requested for microdata' in str(exc_info.value)
 
@@ -103,7 +102,7 @@ def test_query_builder_invalid_group_raises(httpx_client_full):
         query.QueryBuilder(
             ds,
         ).set_groups(
-            ['INVALID_GROUP'],
+            'INVALID_GROUP',
         )
     assert 'Unknown group' in str(exc_info.value)
 
@@ -119,7 +118,7 @@ def test_query_builder_invalid_predicate_raises(httpx_client_full):
     with pytest.raises(ValueError) as exc_info:
         query.QueryBuilder(
             ds,
-        ).set_predicates({'INVALID': '*'})
+        ).add_predicate('INVALID', '*')
     assert 'Unknown predicate' in str(exc_info.value)
 
 
@@ -131,10 +130,13 @@ def test_query_builder_bad_string_predicate_raises(httpx_client_full):
         title='Planning')
     ds = datasets[1]
 
+    class BadType:
+        pass
+
     with pytest.raises(TypeError) as exc_info:
         query.QueryBuilder(
             ds,
-        ).set_predicates({'Med_HHD_Inc_ACS_16_20': 1})
+        ).add_predicate('Med_HHD_Inc_ACS_16_20', BadType())
     assert 'requires str value' in str(exc_info.value)
 
 
@@ -149,7 +151,7 @@ def test_query_builder_bad_int_predicate_raises(httpx_client_full):
     with pytest.raises(TypeError) as exc_info:
         query.QueryBuilder(
             ds,
-        ).set_predicates({'Tot_Occp_Units_ACSMOE_16_20': 'INVALID'})
+        ).add_predicate('Tot_Occp_Units_ACSMOE_16_20', 'INVALID')
     assert 'requires int value' in str(exc_info.value)
 
 
@@ -164,7 +166,7 @@ def test_query_builder_non_geo_for_raises(httpx_client_full):
     with pytest.raises(ValueError) as exc_info:
         query.QueryBuilder(
             ds,
-        ).set_predicates({'for': '*'})
+        ).add_predicate('for', '*')
     assert 'using set_geo_* methods' in str(exc_info.value)
 
 
@@ -179,7 +181,7 @@ def test_query_builder_non_geo_in_raises(httpx_client_full):
     with pytest.raises(ValueError) as exc_info:
         query.QueryBuilder(
             ds,
-        ).set_predicates({'in': '*'})
+        ).add_predicate('in', '*')
     assert 'using set_geo_* methods' in str(exc_info.value)
 
 
@@ -249,9 +251,9 @@ def test_udata_query_builder_weighted(udata_httpx_client):
         'A_MARITL',
     ).set_cols(
         'A_LFSR',
-    ).set_predicates({
-        'A_HGA': 12,
-    })
+    ).add_predicate(
+        'A_HGA', 12,
+    )
     df = tqb.query()
 
     assert df.columns.names == tqb.cols
@@ -271,9 +273,9 @@ def test_udata_query_builder_unweighted(udata_httpx_client):
         'A_MARITL',
     ).set_cols(
         'A_LFSR',
-    ).set_predicates({
-        'A_HGA': 12,
-    })
+    ).add_predicate(
+        'A_HGA', 12,
+    )
     df = tqb.query()
 
     assert df.columns.names == tqb.cols
@@ -297,9 +299,9 @@ def test_udata_query_builder_weighted_avg(udata_httpx_client):
         'A_MARITL',
     ).set_cols(
         'A_LFSR',
-    ).set_predicates({
-        'A_HGA': 12,
-    })
+    ).add_predicate(
+        'A_HGA', 12,
+    )
     df = tqb.query()
 
     assert df.columns.names == [*tqb.cols, 'A_AGE']
@@ -321,9 +323,9 @@ def test_udata_query_builder_unweighted_avg(udata_httpx_client):
         'A_MARITL',
     ).set_cols(
         'A_LFSR',
-    ).set_predicates({
-        'A_HGA': 12,
-    })
+    ).add_predicate(
+        'A_HGA', 12,
+    )
     df = tqb.query()
 
     assert df.columns.names == [*tqb.cols, 'A_AGE']
@@ -342,10 +344,10 @@ def test_udata_query_builder_weighted_nocols(udata_httpx_client):
     ).set_weight(
         'A_FNLWGT',
     ).set_rows(
-        ['A_MARITL', 'A_LFSR'],
-    ).set_predicates({
-        'A_HGA': 12,
-    })
+        'A_MARITL', 'A_LFSR',
+    ).add_predicate(
+        'A_HGA', 12,
+    )
     df = tqb.query()
 
     assert df.columns.names == [None]
@@ -364,10 +366,10 @@ def test_udata_query_builder_weighted_norow(udata_httpx_client):
     ).set_weight(
         'A_FNLWGT',
     ).set_cols(
-        ['A_MARITL', 'A_LFSR'],
-    ).set_predicates({
-        'A_HGA': 12,
-    })
+        'A_MARITL', 'A_LFSR',
+    ).add_predicate(
+        'A_HGA', 12,
+    )
     df = tqb.query()
 
     assert df.columns.names == tqb.cols
