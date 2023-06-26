@@ -6,14 +6,14 @@ from uscensus.data.states import (
     get_state_boundaries,
     get_state_codes,
 )
-from uscensus.util.datastores import AsyncSqlAlchemyDataStore
+from uscensus.util.datastores import SyncSqlAlchemyDataStore
 from uscensus.util.webcache import make_client
 
 
 @pytest.fixture()
 def client():
-    return make_client(cache=AsyncSqlAlchemyDataStore(
-        'sqlite+aiosqlite:///testing.db'))
+    return make_client(cache=SyncSqlAlchemyDataStore(
+        'sqlite:///testing.db'), sync=True)
 
 
 def test_get_county_boundaries_no_state_bad_res(client):

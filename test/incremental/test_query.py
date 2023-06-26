@@ -3,8 +3,8 @@ import pytest
 from uscensus.incremental import filters, model, query, wrappers
 
 
-def test_tab_query_builder_on_non_microdata_raises(httpx_client_full):
-    catalog = wrappers.Catalog.get_catalog(httpx_client_full)
+def test_tab_query_builder_on_non_microdata_raises(httpx_client_full_sync):
+    catalog = wrappers.Catalog.get_catalog(httpx_client_full_sync)
     datasets = filters.filter_datasets(
         catalog.dataset,
         vintages=[2022],
@@ -16,8 +16,8 @@ def test_tab_query_builder_on_non_microdata_raises(httpx_client_full):
     assert 'non-microdata' in str(exc_info.value)
 
 
-def test_query_builder(httpx_client_full):
-    catalog = wrappers.Catalog.get_catalog(httpx_client_full)
+def test_query_builder(httpx_client_full_sync):
+    catalog = wrappers.Catalog.get_catalog(httpx_client_full_sync)
     datasets = filters.filter_datasets(
         catalog.dataset,
         vintages=[2022],
@@ -39,8 +39,8 @@ def test_query_builder(httpx_client_full):
                'pct_US_Cit_Nat_ACSMOE_16_20', 'state', 'county', 'tract'])
 
 
-def test_query_builder_unknown_field_raises(httpx_client_full):
-    catalog = wrappers.Catalog.get_catalog(httpx_client_full)
+def test_query_builder_unknown_field_raises(httpx_client_full_sync):
+    catalog = wrappers.Catalog.get_catalog(httpx_client_full_sync)
     datasets = filters.filter_datasets(
         catalog.dataset,
         vintages=[2022],
@@ -56,8 +56,8 @@ def test_query_builder_unknown_field_raises(httpx_client_full):
     assert 'Unknown field' in str(exc_info.value)
 
 
-def test_query_builder_pred_only_field_raises(httpx_client_full):
-    catalog = wrappers.Catalog.get_catalog(httpx_client_full)
+def test_query_builder_pred_only_field_raises(httpx_client_full_sync):
+    catalog = wrappers.Catalog.get_catalog(httpx_client_full_sync)
     datasets = filters.filter_datasets(
         catalog.dataset,
         vintages=[2022],
@@ -73,11 +73,11 @@ def test_query_builder_pred_only_field_raises(httpx_client_full):
     assert 'predicate-only' in str(exc_info.value)
 
 
-@pytest.mark.parametrize('udata_httpx_client',
+@pytest.mark.parametrize('udata_httpx_client_sync',
                          ('query-results-tabulated-weighted',),
                          indirect=True)
-def test_query_builder_no_weight_raises(udata_httpx_client):
-    catalog = wrappers.Catalog.get_catalog(udata_httpx_client,
+def test_query_builder_no_weight_raises(udata_httpx_client_sync):
+    catalog = wrappers.Catalog.get_catalog(udata_httpx_client_sync,
                                            catalog_subpath='data/1989/cps/basic/apr')
     ds = catalog.dataset[0]
 
@@ -90,8 +90,8 @@ def test_query_builder_no_weight_raises(udata_httpx_client):
     assert 'weights not requested for microdata' in str(exc_info.value)
 
 
-def test_query_builder_invalid_group_raises(httpx_client_full):
-    catalog = wrappers.Catalog.get_catalog(httpx_client_full)
+def test_query_builder_invalid_group_raises(httpx_client_full_sync):
+    catalog = wrappers.Catalog.get_catalog(httpx_client_full_sync)
     datasets = filters.filter_datasets(
         catalog.dataset,
         vintages=[2022],
@@ -107,8 +107,8 @@ def test_query_builder_invalid_group_raises(httpx_client_full):
     assert 'Unknown group' in str(exc_info.value)
 
 
-def test_query_builder_invalid_predicate_raises(httpx_client_full):
-    catalog = wrappers.Catalog.get_catalog(httpx_client_full)
+def test_query_builder_invalid_predicate_raises(httpx_client_full_sync):
+    catalog = wrappers.Catalog.get_catalog(httpx_client_full_sync)
     datasets = filters.filter_datasets(
         catalog.dataset,
         vintages=[2022],
@@ -122,8 +122,8 @@ def test_query_builder_invalid_predicate_raises(httpx_client_full):
     assert 'Unknown predicate' in str(exc_info.value)
 
 
-def test_query_builder_bad_string_predicate_raises(httpx_client_full):
-    catalog = wrappers.Catalog.get_catalog(httpx_client_full)
+def test_query_builder_bad_string_predicate_raises(httpx_client_full_sync):
+    catalog = wrappers.Catalog.get_catalog(httpx_client_full_sync)
     datasets = filters.filter_datasets(
         catalog.dataset,
         vintages=[2022],
@@ -140,8 +140,8 @@ def test_query_builder_bad_string_predicate_raises(httpx_client_full):
     assert 'requires str value' in str(exc_info.value)
 
 
-def test_query_builder_bad_int_predicate_raises(httpx_client_full):
-    catalog = wrappers.Catalog.get_catalog(httpx_client_full)
+def test_query_builder_bad_int_predicate_raises(httpx_client_full_sync):
+    catalog = wrappers.Catalog.get_catalog(httpx_client_full_sync)
     datasets = filters.filter_datasets(
         catalog.dataset,
         vintages=[2022],
@@ -155,8 +155,8 @@ def test_query_builder_bad_int_predicate_raises(httpx_client_full):
     assert 'requires int value' in str(exc_info.value)
 
 
-def test_query_builder_non_geo_for_raises(httpx_client_full):
-    catalog = wrappers.Catalog.get_catalog(httpx_client_full)
+def test_query_builder_non_geo_for_raises(httpx_client_full_sync):
+    catalog = wrappers.Catalog.get_catalog(httpx_client_full_sync)
     datasets = filters.filter_datasets(
         catalog.dataset,
         vintages=[2022],
@@ -170,8 +170,8 @@ def test_query_builder_non_geo_for_raises(httpx_client_full):
     assert 'using set_geo_* methods' in str(exc_info.value)
 
 
-def test_query_builder_non_geo_in_raises(httpx_client_full):
-    catalog = wrappers.Catalog.get_catalog(httpx_client_full)
+def test_query_builder_non_geo_in_raises(httpx_client_full_sync):
+    catalog = wrappers.Catalog.get_catalog(httpx_client_full_sync)
     datasets = filters.filter_datasets(
         catalog.dataset,
         vintages=[2022],
@@ -185,8 +185,8 @@ def test_query_builder_non_geo_in_raises(httpx_client_full):
     assert 'using set_geo_* methods' in str(exc_info.value)
 
 
-def test_query_builder_missing_geo_for_raises(httpx_client_full):
-    catalog = wrappers.Catalog.get_catalog(httpx_client_full)
+def test_query_builder_missing_geo_for_raises(httpx_client_full_sync):
+    catalog = wrappers.Catalog.get_catalog(httpx_client_full_sync)
     datasets = filters.filter_datasets(
         catalog.dataset,
         vintages=[2022],
@@ -200,8 +200,8 @@ def test_query_builder_missing_geo_for_raises(httpx_client_full):
     assert 'Geography is required' in str(exc_info.value)
 
 
-def test_query_builder_bad_geo_for_raises(httpx_client_full):
-    catalog = wrappers.Catalog.get_catalog(httpx_client_full)
+def test_query_builder_bad_geo_for_raises(httpx_client_full_sync):
+    catalog = wrappers.Catalog.get_catalog(httpx_client_full_sync)
     datasets = filters.filter_datasets(
         catalog.dataset,
         vintages=[2022],
@@ -217,8 +217,8 @@ def test_query_builder_bad_geo_for_raises(httpx_client_full):
     assert 'Invalid "for" geography' in str(exc_info.value)
 
 
-def test_query_builder_missing_required_raises(httpx_client_full):
-    catalog = wrappers.Catalog.get_catalog(httpx_client_full)
+def test_query_builder_missing_required_raises(httpx_client_full_sync):
+    catalog = wrappers.Catalog.get_catalog(httpx_client_full_sync)
     datasets = filters.filter_datasets(
         catalog.dataset,
         vintages=[2022],
@@ -236,11 +236,11 @@ def test_query_builder_missing_required_raises(httpx_client_full):
     assert 'Missing required' in str(exc_info.value)
 
 
-@pytest.mark.parametrize('udata_httpx_client',
+@pytest.mark.parametrize('udata_httpx_client_sync',
                          ('query-results-tabulated-weighted',),
                          indirect=True)
-def test_udata_query_builder_weighted(udata_httpx_client):
-    catalog = wrappers.Catalog.get_catalog(udata_httpx_client,
+def test_udata_query_builder_weighted(udata_httpx_client_sync):
+    catalog = wrappers.Catalog.get_catalog(udata_httpx_client_sync,
                                            catalog_subpath='data/1989/cps/basic/apr')
     ds = catalog.dataset[0]
     tqb = query.TabulationQueryBuilder(
@@ -260,11 +260,11 @@ def test_udata_query_builder_weighted(udata_httpx_client):
     assert df.index.names == tqb.rows
 
 
-@pytest.mark.parametrize('udata_httpx_client',
+@pytest.mark.parametrize('udata_httpx_client_sync',
                          ('query-results-tabulated-unweighted',),
                          indirect=True)
-def test_udata_query_builder_unweighted(udata_httpx_client):
-    catalog = wrappers.Catalog.get_catalog(udata_httpx_client,
+def test_udata_query_builder_unweighted(udata_httpx_client_sync):
+    catalog = wrappers.Catalog.get_catalog(udata_httpx_client_sync,
                                            catalog_subpath='data/1989/cps/basic/apr')
     ds = catalog.dataset[0]
     tqb = query.TabulationQueryBuilder(
@@ -282,11 +282,11 @@ def test_udata_query_builder_unweighted(udata_httpx_client):
     assert df.index.names == tqb.rows
 
 
-@pytest.mark.parametrize('udata_httpx_client',
+@pytest.mark.parametrize('udata_httpx_client_sync',
                          ('query-results-tabulated-weighted-avg',),
                          indirect=True)
-def test_udata_query_builder_weighted_avg(udata_httpx_client):
-    catalog = wrappers.Catalog.get_catalog(udata_httpx_client,
+def test_udata_query_builder_weighted_avg(udata_httpx_client_sync):
+    catalog = wrappers.Catalog.get_catalog(udata_httpx_client_sync,
                                            catalog_subpath='data/1989/cps/basic/apr')
     ds = catalog.dataset[0]
     tqb = query.TabulationQueryBuilder(
@@ -308,11 +308,11 @@ def test_udata_query_builder_weighted_avg(udata_httpx_client):
     assert df.index.names == tqb.rows
 
 
-@pytest.mark.parametrize('udata_httpx_client',
+@pytest.mark.parametrize('udata_httpx_client_sync',
                          ('query-results-tabulated-unweighted-avg',),
                          indirect=True)
-def test_udata_query_builder_unweighted_avg(udata_httpx_client):
-    catalog = wrappers.Catalog.get_catalog(udata_httpx_client,
+def test_udata_query_builder_unweighted_avg(udata_httpx_client_sync):
+    catalog = wrappers.Catalog.get_catalog(udata_httpx_client_sync,
                                            catalog_subpath='data/1989/cps/basic/apr')
     ds = catalog.dataset[0]
     tqb = query.TabulationQueryBuilder(
@@ -332,11 +332,11 @@ def test_udata_query_builder_unweighted_avg(udata_httpx_client):
     assert df.index.names == tqb.rows
 
 
-@pytest.mark.parametrize('udata_httpx_client',
+@pytest.mark.parametrize('udata_httpx_client_sync',
                          ('query-results-tabulated-weighted-nocols',),
                          indirect=True)
-def test_udata_query_builder_weighted_nocols(udata_httpx_client):
-    catalog = wrappers.Catalog.get_catalog(udata_httpx_client,
+def test_udata_query_builder_weighted_nocols(udata_httpx_client_sync):
+    catalog = wrappers.Catalog.get_catalog(udata_httpx_client_sync,
                                            catalog_subpath='data/1989/cps/basic/apr')
     ds = catalog.dataset[0]
     tqb = query.TabulationQueryBuilder(
@@ -354,11 +354,11 @@ def test_udata_query_builder_weighted_nocols(udata_httpx_client):
     assert df.index.names == tqb.rows
 
 
-@pytest.mark.parametrize('udata_httpx_client',
+@pytest.mark.parametrize('udata_httpx_client_sync',
                          ('query-results-tabulated-weighted-norows',),
                          indirect=True)
-def test_udata_query_builder_weighted_norow(udata_httpx_client):
-    catalog = wrappers.Catalog.get_catalog(udata_httpx_client,
+def test_udata_query_builder_weighted_norow(udata_httpx_client_sync):
+    catalog = wrappers.Catalog.get_catalog(udata_httpx_client_sync,
                                            catalog_subpath='data/1989/cps/basic/apr')
     ds = catalog.dataset[0]
     tqb = query.TabulationQueryBuilder(
@@ -376,11 +376,11 @@ def test_udata_query_builder_weighted_norow(udata_httpx_client):
     assert df.index.names == [None]
 
 
-@pytest.mark.parametrize('udata_httpx_client',
+@pytest.mark.parametrize('udata_httpx_client_sync',
                          ('query-results-tabulated-weighted',),
                          indirect=True)
-def test_udata_query_builder_raises_unknown_weight(udata_httpx_client):
-    catalog = wrappers.Catalog.get_catalog(udata_httpx_client,
+def test_udata_query_builder_raises_unknown_weight(udata_httpx_client_sync):
+    catalog = wrappers.Catalog.get_catalog(udata_httpx_client_sync,
                                            catalog_subpath='data/1989/cps/basic/apr')
     ds = catalog.dataset[0]
     with pytest.raises(ValueError) as exc_info:
@@ -392,11 +392,11 @@ def test_udata_query_builder_raises_unknown_weight(udata_httpx_client):
     assert 'Unknown field' in str(exc_info.value)
 
 
-@pytest.mark.parametrize('udata_httpx_client',
+@pytest.mark.parametrize('udata_httpx_client_sync',
                          ('query-results-tabulated-weighted',),
                          indirect=True)
-def test_udata_query_builder_raises_bad_weight(udata_httpx_client):
-    catalog = wrappers.Catalog.get_catalog(udata_httpx_client,
+def test_udata_query_builder_raises_bad_weight(udata_httpx_client_sync):
+    catalog = wrappers.Catalog.get_catalog(udata_httpx_client_sync,
                                            catalog_subpath='data/1989/cps/basic/apr')
     ds = catalog.dataset[0]
     with pytest.raises(ValueError) as exc_info:
@@ -408,11 +408,11 @@ def test_udata_query_builder_raises_bad_weight(udata_httpx_client):
     assert 'not a weight variable' in str(exc_info.value)
 
 
-@pytest.mark.parametrize('udata_httpx_client',
+@pytest.mark.parametrize('udata_httpx_client_sync',
                          ('query-results-tabulated-weighted',),
                          indirect=True)
-def test_udata_query_builder_raises_unknown_avg(udata_httpx_client):
-    catalog = wrappers.Catalog.get_catalog(udata_httpx_client,
+def test_udata_query_builder_raises_unknown_avg(udata_httpx_client_sync):
+    catalog = wrappers.Catalog.get_catalog(udata_httpx_client_sync,
                                            catalog_subpath='data/1989/cps/basic/apr')
     ds = catalog.dataset[0]
     with pytest.raises(ValueError) as exc_info:
@@ -424,11 +424,11 @@ def test_udata_query_builder_raises_unknown_avg(udata_httpx_client):
     assert 'Unknown field' in str(exc_info.value)
 
 
-@pytest.mark.parametrize('udata_httpx_client',
+@pytest.mark.parametrize('udata_httpx_client_sync',
                          ('query-results-tabulated-weighted',),
                          indirect=True)
-def test_udata_query_builder_raises_categorical_avg(udata_httpx_client):
-    catalog = wrappers.Catalog.get_catalog(udata_httpx_client,
+def test_udata_query_builder_raises_categorical_avg(udata_httpx_client_sync):
+    catalog = wrappers.Catalog.get_catalog(udata_httpx_client_sync,
                                            catalog_subpath='data/1989/cps/basic/apr')
     ds = catalog.dataset[0]
     with pytest.raises(ValueError) as exc_info:
@@ -440,11 +440,11 @@ def test_udata_query_builder_raises_categorical_avg(udata_httpx_client):
     assert 'average of categorical' in str(exc_info.value)
 
 
-@pytest.mark.parametrize('udata_httpx_client',
+@pytest.mark.parametrize('udata_httpx_client_sync',
                          ('query-results-tabulated-weighted',),
                          indirect=True)
-def test_udata_query_builder_raises_bad_row(udata_httpx_client):
-    catalog = wrappers.Catalog.get_catalog(udata_httpx_client,
+def test_udata_query_builder_raises_bad_row(udata_httpx_client_sync):
+    catalog = wrappers.Catalog.get_catalog(udata_httpx_client_sync,
                                            catalog_subpath='data/1989/cps/basic/apr')
     ds = catalog.dataset[0]
     with pytest.raises(ValueError) as exc_info:
@@ -456,11 +456,11 @@ def test_udata_query_builder_raises_bad_row(udata_httpx_client):
     assert 'Unknown field' in str(exc_info.value)
 
 
-@pytest.mark.parametrize('udata_httpx_client',
+@pytest.mark.parametrize('udata_httpx_client_sync',
                          ('query-results-tabulated-weighted',),
                          indirect=True)
-def test_udata_query_builder_raises_bad_col(udata_httpx_client):
-    catalog = wrappers.Catalog.get_catalog(udata_httpx_client,
+def test_udata_query_builder_raises_bad_col(udata_httpx_client_sync):
+    catalog = wrappers.Catalog.get_catalog(udata_httpx_client_sync,
                                            catalog_subpath='data/1989/cps/basic/apr')
     ds = catalog.dataset[0]
     with pytest.raises(ValueError) as exc_info:
@@ -472,11 +472,11 @@ def test_udata_query_builder_raises_bad_col(udata_httpx_client):
     assert 'Unknown field' in str(exc_info.value)
 
 
-@pytest.mark.parametrize('udata_httpx_client',
+@pytest.mark.parametrize('udata_httpx_client_sync',
                          ('query-results-tabulated-weighted',),
                          indirect=True)
-def test_udata_query_builder_raises_bad_recode_base(udata_httpx_client):
-    catalog = wrappers.Catalog.get_catalog(udata_httpx_client,
+def test_udata_query_builder_raises_bad_recode_base(udata_httpx_client_sync):
+    catalog = wrappers.Catalog.get_catalog(udata_httpx_client_sync,
                                            catalog_subpath='data/1989/cps/basic/apr')
     ds = catalog.dataset[0]
     with pytest.raises(ValueError) as exc_info:
@@ -488,11 +488,11 @@ def test_udata_query_builder_raises_bad_recode_base(udata_httpx_client):
     assert 'Unknown field' in str(exc_info.value)
 
 
-@pytest.mark.parametrize('udata_httpx_client',
+@pytest.mark.parametrize('udata_httpx_client_sync',
                          ('query-results-tabulated-weighted',),
                          indirect=True)
-def test_udata_query_builder_raises_bad_recode_value(udata_httpx_client):
-    catalog = wrappers.Catalog.get_catalog(udata_httpx_client,
+def test_udata_query_builder_raises_bad_recode_value(udata_httpx_client_sync):
+    catalog = wrappers.Catalog.get_catalog(udata_httpx_client_sync,
                                            catalog_subpath='data/1989/cps/basic/apr')
     ds = catalog.dataset[0]
     with pytest.raises(ValueError) as exc_info:
@@ -504,11 +504,11 @@ def test_udata_query_builder_raises_bad_recode_value(udata_httpx_client):
     assert 'Invalid recode value' in str(exc_info.value)
 
 
-@pytest.mark.parametrize('udata_httpx_client',
+@pytest.mark.parametrize('udata_httpx_client_sync',
                          ('query-results-tabulated-weighted',),
                          indirect=True)
-def test_udata_query_builder_recode_range_ok(udata_httpx_client):
-    catalog = wrappers.Catalog.get_catalog(udata_httpx_client,
+def test_udata_query_builder_recode_range_ok(udata_httpx_client_sync):
+    catalog = wrappers.Catalog.get_catalog(udata_httpx_client_sync,
                                            catalog_subpath='data/1989/cps/basic/apr')
     recode_range = query.RecodeRange(1, 5)
     ds = catalog.dataset[0]
@@ -521,11 +521,11 @@ def test_udata_query_builder_recode_range_ok(udata_httpx_client):
     assert tqb.recodes['RECODED_VAR'].d == [[recode_range]]
 
 
-@pytest.mark.parametrize('udata_httpx_client',
+@pytest.mark.parametrize('udata_httpx_client_sync',
                          ('query-results-tabulated-weighted',),
                          indirect=True)
-def test_udata_query_builder_recode_col_ok(udata_httpx_client):
-    catalog = wrappers.Catalog.get_catalog(udata_httpx_client,
+def test_udata_query_builder_recode_col_ok(udata_httpx_client_sync):
+    catalog = wrappers.Catalog.get_catalog(udata_httpx_client_sync,
                                            catalog_subpath='data/1989/cps/basic/apr')
     recode_range = query.RecodeRange(1, 5)
     ds = catalog.dataset[0]

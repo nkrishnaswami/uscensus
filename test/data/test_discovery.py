@@ -8,8 +8,8 @@ _logger = logging.getLogger(__name__)
 
 
 @pytest.mark.asyncio()
-async def test_AsyncDiscoveryInterface(catalog, cache, tags, httpx_client_single):
-    cl = await AsyncDiscoveryInterface.create('', httpx_client_single)
+async def test_AsyncDiscoveryInterface(catalog, tags, httpx_client_single_async):
+    cl = await AsyncDiscoveryInterface.create('', httpx_client_single_async)
     _logger.info(f'APIs are {cl.datasets}')
     assert len(cl.datasets) == 1
     k, v = next(iter(cl.datasets.items()))
@@ -19,8 +19,8 @@ async def test_AsyncDiscoveryInterface(catalog, cache, tags, httpx_client_single
     assert v.tags == tags['tags']
 
 
-def test_DiscoveryInterface(catalog, cache, tags, httpx_client_single):
-    cl = DiscoveryInterface('', httpx_client_single)
+def test_DiscoveryInterface(catalog, tags, httpx_client_single_async):
+    cl = DiscoveryInterface('', httpx_client_single_async)
     _logger.info(f'APIs are {cl.datasets}')
     assert len(cl.datasets) == 1
     k, v = next(iter(cl.datasets.items()))

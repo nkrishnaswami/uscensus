@@ -1,9 +1,12 @@
-from .datastore import AsyncDataStore
-from .nop import AsyncNopDataStore
-from .sqlalchemy import AsyncSqlAlchemyDataStore
+from .datastore import AsyncDataStore, SyncDataStore
+from .nop import AsyncNopDataStore, SyncNopDataStore
+from .sqlalchemy import AsyncSqlAlchemyDataStore, SyncSqlAlchemyDataStore
 
 __all__ = [
     'AsyncDataStore',
     'AsyncNopDataStore',
     'AsyncSqlAlchemyDataStore',
+    'SyncDataStore',
+    'SyncNopDataStore',
+    'SyncSqlAlchemyDataStore',
 ]

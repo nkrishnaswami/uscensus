@@ -5,7 +5,7 @@ from importlib.resources import files
 import httpx
 import pytest
 
-from uscensus.util.datastores import AsyncNopDataStore
+from uscensus.util.datastores import AsyncNopDataStore, SyncNopDataStore
 from uscensus.util.webcache import make_client
 
 _logger = logging.getLogger(__name__)
@@ -58,7 +58,7 @@ def make_response(data):
                           content=json.dumps(data))
 
 
-class FakeHttpxTransport(httpx.AsyncBaseTransport):
+class FakeHttpxTransport:
     def __init__(self, catalog, examples, geography, one_group, groups,
                  tags, variables, query_results) -> None:
         self.catalog = catalog
@@ -70,7 +70,7 @@ class FakeHttpxTransport(httpx.AsyncBaseTransport):
         self.variables = variables
         self.query_results = query_results
 
-    async def handle_async_request(self, req):
+    def handle_request(self, req):
         if req.url.path.endswith('data.json'):
             return make_response(self.catalog)
         if req.url.path.endswith('examples.json'):
@@ -91,58 +91,77 @@ class FakeHttpxTransport(httpx.AsyncBaseTransport):
             _logger.warning('Unexpected url: %s', req.url)
             return httpx.Response(404)
 
+    async def handle_async_request(self, req):
+        return self.handle_request(req)
+
+
+class FakeHttpxTransportSync(FakeHttpxTransport, httpx.BaseTransport):
+    pass
+
+
+class FakeHttpxTransportAsync(FakeHttpxTransport, httpx.AsyncBaseTransport):
+    pass
+
 
 @pytest.fixture()
-def httpx_transport_single(
-        catalog,
-        examples,
-        geography,
-        one_group,
-        groups,
-        tags,
-        variables,
-        query_results):
+def httpx_transport_single_sync(catalog, examples, geography,
+                                one_group, groups, tags, variables, query_results):
     catalog['dataset'] = [catalog['dataset'][0]]
-    return FakeHttpxTransport(catalog,
-                              examples,
-                              geography,
-                              one_group,
-                              groups,
-                              tags,
-                              variables,
-                              query_results)
+    return FakeHttpxTransportSync(catalog, examples, geography,
+                                  one_group, groups, tags, variables,
+                                  query_results)
 
 
 @pytest.fixture()
-def httpx_transport_full(
-        catalog,
-        examples,
-        geography,
-        one_group,
-        groups,
-        tags,
-        variables,
-        query_results):
-    return FakeHttpxTransport(catalog,
-                              examples,
-                              geography,
-                              one_group,
-                              groups,
-                              tags,
-                              variables,
-                              query_results)
+def httpx_transport_full_sync(catalog, examples, geography,
+                              one_group, groups, tags, variables, query_results):
+    return FakeHttpxTransportSync(catalog, examples, geography,
+                                  one_group, groups, tags, variables,
+                                  query_results)
 
 
 @pytest.fixture()
-def cache():
+def httpx_transport_single_async(catalog, examples, geography,
+                                 one_group, groups, tags, variables, query_results):
+    catalog['dataset'] = [catalog['dataset'][0]]
+    return FakeHttpxTransportAsync(catalog, examples, geography,
+                                   one_group, groups, tags, variables,
+                                   query_results)
+
+
+@pytest.fixture()
+def httpx_transport_full_async(catalog, examples, geography,
+                               one_group, groups, tags, variables, query_results):
+    return FakeHttpxTransportAsync(catalog, examples, geography,
+                                   one_group, groups, tags, variables,
+                                   query_results)
+
+
+@pytest.fixture()
+def async_cache():
     return AsyncNopDataStore()
 
 
 @pytest.fixture()
-def httpx_client_single(cache, httpx_transport_single):
-    return make_client(cache=cache, transport=httpx_transport_single)
+def sync_cache():
+    return SyncNopDataStore()
 
 
 @pytest.fixture()
-def httpx_client_full(cache, httpx_transport_full):
-    return make_client(cache=cache, transport=httpx_transport_full)
+def httpx_client_single_sync(sync_cache, httpx_transport_single_sync):
+    return make_client(cache=sync_cache, transport=httpx_transport_single_sync, sync=True)
+
+
+@pytest.fixture()
+def httpx_client_full_sync(sync_cache, httpx_transport_full_sync):
+    return make_client(cache=sync_cache, transport=httpx_transport_full_sync, sync=True)
+
+
+@pytest.fixture()
+def httpx_client_single_async(async_cache, httpx_transport_single_async):
+    return make_client(cache=async_cache, transport=httpx_transport_single_async, sync=False)
+
+
+@pytest.fixture()
+def httpx_client_full_async(async_cache, httpx_transport_full_async):
+    return make_client(cache=async_cache, transport=httpx_transport_full_async, sync=False)

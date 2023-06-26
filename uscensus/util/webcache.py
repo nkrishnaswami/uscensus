@@ -1,11 +1,13 @@
 import asyncio
 import logging
+import time
 
 import httpx
-from httpx_caching import AsyncCachingTransport, CachingClient
+from httpx_caching import AsyncCachingTransport, SyncCachingTransport, CachingClient
 from httpx_caching._heuristics import ExpiresAfterHeuristic
 
 from uscensus.util.errors import CensusError
+from uscensus.util.datastores.datastore import AsyncDataStore, SyncDataStore
 
 _logger = logging.getLogger(__name__)
 
@@ -15,7 +17,9 @@ def make_client(*,
                 key=None,
                 heuristic=ExpiresAfterHeuristic(days=30),
                 max_connections=10,
-                transport=None) -> CachingClient:
+                sync=False,
+                transport: httpx.AsyncBaseTransport | httpx.BaseTransport | None = None
+                ) -> httpx.AsyncClient | httpx.Client:
     """Create a caching httpx AsyncClient with the caller-specified
     datastore and optionally caching heuristic.
 
@@ -33,9 +37,20 @@ def make_client(*,
         'heuristic': heuristic,
         'cache': cache,
     }
-    return CachingClient(
-        httpx.AsyncClient(**client_args, transport=transport),
-        **caching_client_args)
+    if sync:
+        assert isinstance(cache, SyncDataStore)
+        if transport:
+            assert isinstance(transport, httpx.BaseTransport)
+        return CachingClient(
+            httpx.Client(**client_args, transport=transport),
+            **caching_client_args)
+    else:
+        assert isinstance(cache, AsyncDataStore)
+        if transport:
+            assert isinstance(transport, httpx.AsyncBaseTransport)
+        return CachingClient(
+            httpx.AsyncClient(**client_args, transport=transport),
+            **caching_client_args)
 
 
 async def afetch(
@@ -63,11 +78,14 @@ async def afetch(
       * ValueError on JSON parse failure.
 
     """
+    _logger.debug(f'Fetching: {url}')
+    if isinstance(session._transport, SyncCachingTransport):
+        raise CensusError('Async fetch with sync httpx client')
     if not isinstance(session._transport, AsyncCachingTransport):
         raise CensusError('Caching not enabled in httpx client')
 
     req = httpx.Request('GET', url, **kwargs)
-
+    r = None
     # Requests fail transiently sometimes. We retry with backoff to
     # handle this.
     for retry in range(retries):
@@ -100,10 +118,44 @@ async def afetch(
 
 def fetch(
         url: str,
-        session: httpx.AsyncClient,
+        session: httpx.Client,
         *,
         retries: int = 3,
         **kwargs) -> httpx.Response:
+    """See `afetch` for description of arguments and behavior."""
+    _logger.debug(f'Fetching: {url}')
+    if isinstance(session._transport, AsyncCachingTransport):
+        raise CensusError('Sync fetch with async httpx client')
+    if not isinstance(session._transport, SyncCachingTransport):
+        raise CensusError('Caching not enabled in httpx client')
 
-    return asyncio.get_event_loop().run_until_complete(
-        afetch(url, session, retries=retries, **kwargs))
+    req = httpx.Request('GET', url, **kwargs)
+    r = None
+    # Requests fail transiently sometimes. We retry with backoff to
+    # handle this.
+    for retry in range(retries):
+        _logger.debug(f'Trying: attempt {retry + 1}/{retries}: {req.url}')
+        r = None
+        try:
+            r = session.send(req)
+        except httpx.HTTPError as e:
+            if retry < retries - 1:
+                # Log and drop the exception if we will retry the
+                # request.
+                _logger.exception(e)
+            else:
+                # Otherwise let it percolate.
+                raise
+        if r and r.status_code < 400:
+            break
+        time.sleep(3**retry)
+
+    # If we get here, r is not None.
+    assert r is not None
+    if r.extensions.get('from_cache'):
+        _logger.debug(f'Cache hit for {url}')
+    else:
+        _logger.debug(f'Cache miss for {url}')
+
+    r.raise_for_status()
+    return r
