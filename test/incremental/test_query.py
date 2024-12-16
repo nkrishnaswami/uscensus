@@ -31,7 +31,7 @@ def test_query_builder(httpx_client_full_sync):
     ).set_geo_for(
         'tract', '*',
     ).add_geo_in(
-        'state', 36,
+        'state', '36',
     ).query()
 
     assert df.shape == (5411, 4)
@@ -101,7 +101,7 @@ def test_query_builder_invalid_group_raises(httpx_client_full_sync):
     with pytest.raises(ValueError) as exc_info:
         query.QueryBuilder(
             ds,
-        ).set_groups(
+        ).set_group(
             'INVALID_GROUP',
         )
     assert 'Unknown group' in str(exc_info.value)
@@ -225,15 +225,18 @@ def test_query_builder_missing_required_raises(httpx_client_full_sync):
         title='Planning')
     ds = datasets[1]
 
-    ds.variables['required'] = model.Variable(label='required', required=True)
+    ds.variables['required'] = model.Variable(label='required', required='required')
 
-    with pytest.raises(ValueError) as exc_info:
+    with pytest.raises(ExceptionGroup) as exc_info:
         query.QueryBuilder(
             ds,
         ).set_geo_for(
             'tract', '*',
         ).query()
-    assert 'Missing required' in str(exc_info.value)
+    assert 'No matching geo level' in exc_info.value.message
+    assert len(exc_info.value.exceptions) == 1
+    assert isinstance(exc_info.value.exceptions[0], ValueError)
+    assert 'Missing required' in str(exc_info.value.exceptions[0])
 
 
 @pytest.mark.parametrize('udata_httpx_client_sync',
@@ -499,7 +502,7 @@ def test_udata_query_builder_raises_bad_recode_value(udata_httpx_client_sync):
         query.TabulationQueryBuilder(
             ds,
         ).add_recode(
-            'RECODED_VAR', 'HG_FIPS', [query.RecodeRange(25, 100)],
+            'RECODED_VAR', 'HG_FIPS', [query.RecodeRange(mn=25, mx=100)],
         )
     assert 'Invalid recode value' in str(exc_info.value)
 
@@ -510,7 +513,7 @@ def test_udata_query_builder_raises_bad_recode_value(udata_httpx_client_sync):
 def test_udata_query_builder_recode_range_ok(udata_httpx_client_sync):
     catalog = wrappers.Catalog.get_catalog(udata_httpx_client_sync,
                                            catalog_subpath='data/1989/cps/basic/apr')
-    recode_range = query.RecodeRange(1, 5)
+    recode_range = query.RecodeRange(mn=1, mx=5)
     ds = catalog.dataset[0]
     tqb = query.TabulationQueryBuilder(
         ds,
@@ -527,7 +530,7 @@ def test_udata_query_builder_recode_range_ok(udata_httpx_client_sync):
 def test_udata_query_builder_recode_col_ok(udata_httpx_client_sync):
     catalog = wrappers.Catalog.get_catalog(udata_httpx_client_sync,
                                            catalog_subpath='data/1989/cps/basic/apr')
-    recode_range = query.RecodeRange(1, 5)
+    recode_range = query.RecodeRange(mn=1, mx=5)
     ds = catalog.dataset[0]
     tqb = query.TabulationQueryBuilder(
         ds,
