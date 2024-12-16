@@ -5,11 +5,10 @@ from typing import (
     Generic,
     Protocol,
     TypeVar,
-    Union,
 )
 
 T = TypeVar('T')
-PARAM = Union[Sequence, Mapping]
+PARAM = Sequence | Mapping
 XID = TypeVar('XID', bound='Sequence')
 CONN = TypeVar('CONN', bound='DBAPIConnection')
 CONN_co = TypeVar('CONN_co', bound='DBAPIConnection', covariant=True)
