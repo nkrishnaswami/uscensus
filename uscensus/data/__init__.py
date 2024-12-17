@@ -8,10 +8,10 @@ from .states import (
 )
 
 __all__ = [
-    'AsyncDiscoveryInterface',
     'AsyncCensusDataEndpoint',
-    'DiscoveryInterface',
+    'AsyncDiscoveryInterface',
     'CensusDataEndpoint',
+    'DiscoveryInterface',
     'get_county_boundaries',
     'get_county_codes',
     'get_state_boundaries',

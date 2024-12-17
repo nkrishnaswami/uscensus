@@ -6,8 +6,8 @@ from uscensus.incremental.wrappers import Catalog
 
 __all__ = [
     'Catalog',
-    'filter_datasets',
     'QueryBuilder',
-    'TabulationQueryBuilder',
     'RecodeRange',
+    'TabulationQueryBuilder',
+    'filter_datasets',
 ]

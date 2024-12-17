@@ -2,10 +2,13 @@ import pytest
 import sqlalchemy
 from httpx_caching._models import Headers, Response
 
-from uscensus.util.datastores.sqlalchemy import AsyncSqlAlchemyDataStore, SyncSqlAlchemyDataStore
+from uscensus.util.datastores.sqlalchemy import (
+    AsyncSqlAlchemyDataStore,
+    SyncSqlAlchemyDataStore,
+)
 
 
-@pytest.mark.asyncio()
+@pytest.mark.asyncio
 async def test_AsyncSqlAlchemyCache():
     cache = await AsyncSqlAlchemyDataStore.create(
         'sqlite+aiosqlite://', table_name='test',

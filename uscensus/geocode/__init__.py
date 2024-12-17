@@ -7,9 +7,9 @@ from .bulk import (
 )
 
 __all__ = [
+    'CensusBulkGeocoder',
     'FilePersister',
     'SqlAlchemyPersister',
-    'CensusBulkGeocoder',
     'parse_lonlat',
     'to_geodataframe',
 ]

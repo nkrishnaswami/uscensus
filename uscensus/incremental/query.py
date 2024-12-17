@@ -4,8 +4,8 @@ import json
 import logging
 import re
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING
 from collections.abc import Iterable
+from typing import TYPE_CHECKING
 
 import pandas as pd
 
@@ -46,7 +46,7 @@ def _format_predicate_values(values: list[PredicateScalarValue]) -> str:
     return ','.join(_format_predicate_value(value) for value in values)
 
 
-def _all_numeric(values: Iterable[PredicateScalarValue], type: type[int] | type[float]) -> bool:
+def _all_numeric(values: Iterable[PredicateScalarValue], type: type[int | float]) -> bool:
     def is_convertible(value):
         try:
             if isinstance(value, tuple):
@@ -208,7 +208,7 @@ class QueryBuilderBase(ABC):
             except ValueError as e:
                 errors.append(e)
         raise ExceptionGroup('No matching geo level', errors)
-        
+
 
     def _validate_geo_level(self, geo_level: GeographyLevel) -> None:
         # Does it have any required `in` geographies?
@@ -319,7 +319,7 @@ class QueryBuilder(QueryBuilderBase):
         #     raise ValueError(f'Request missing required variables: {missing}')
         group = [f'group({self.group})'] if self.group else []
         return {
-            'get': ','.join(self.fields + group)
+            'get': ','.join(self.fields + group),
         }
 
     def _make_dataframe(self, data: dict) -> pd.DataFrame:
@@ -493,7 +493,7 @@ class TabulationQueryBuilder(QueryBuilderBase):
 
         if not self.cols and not self.rows:
             raise ValueError('At least one of col or row must be specified')
-        if 'for' in self.cols or 'for' in self.rows and not self.geo_for_level:
+        if 'for' in self.cols or ('for' in self.rows and not self.geo_for_level):
             raise ValueError(
                 'Disaggregation by geography requested without specifying geography')
         for row in self.rows:

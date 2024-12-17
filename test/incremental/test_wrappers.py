@@ -15,7 +15,7 @@ def test_catalog(catalog, groups, one_group, variables, httpx_client_single_sync
     assert ds.description == raw['description']
     assert len(ds.variables) == len(variables['variables'])
     for (key1, var), (key2, rawvar) in zip(ds.variables.items(),
-                                           variables['variables'].items()):
+                                           variables['variables'].items(), strict=False):
         assert key1 == key2
         assert var.label == rawvar['label']
     assert len(ds.groups) == len(groups['groups'])
@@ -39,7 +39,7 @@ async def test_catalog_async(catalog, groups, one_group, variables, httpx_client
     wrapped_variables = await ds.avariables
     assert len(wrapped_variables) == len(variables['variables'])
     for (key1, var), (key2, rawvar) in zip(wrapped_variables.items(),
-                                           variables['variables'].items()):
+                                           variables['variables'].items(), strict=False):
         assert key1 == key2
         assert var.label == rawvar['label']
     wrapped_groups = await ds.agroups

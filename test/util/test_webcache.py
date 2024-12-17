@@ -1,8 +1,8 @@
 import json
 
 import httpx
-from httpx_caching import CachingClient
 import pytest
+from httpx_caching import CachingClient
 
 from uscensus.util.webcache import afetch, fetch
 

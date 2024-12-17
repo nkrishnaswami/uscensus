@@ -26,7 +26,7 @@ class AsyncNopDataStore(AsyncDataStore):
 
 
 class SyncNopDataStore(SyncDataStore):
-    """ data store implementation for webcache that does not store data."""
+    """data store implementation for webcache that does not store data."""
 
     def get(self, key: str) -> tuple[Response | None,
                                      dict | None]:

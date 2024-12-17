@@ -26,6 +26,7 @@ class MongoIndex(TextIndex):
         * client: Client connected to MongoDB
         * db: name of the MongoDB DB to use.
         * dflt_query_field: the default field to query.
+
         """
         client[db].drop_collection(name)
         self.coll = client[db][name]
@@ -54,6 +55,7 @@ class MongoIndex(TextIndex):
           * iteratble: iterator over tuples of field metadata, viz.
             dataset_id, title, description, variables, geographies, concepts,
             keywords, tags, and vintage.
+
         """
         if documents:
             self.coll.insert_many([doc._asdict() for doc in documents])

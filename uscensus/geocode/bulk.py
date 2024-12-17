@@ -3,6 +3,7 @@
 Attributes
 ----------
     CENSUS_GEO_COLNAMES: column names in output from geocoding API.
+
 """
 import asyncio
 import csv
@@ -238,6 +239,7 @@ class CensusBulkGeocoder:
 
         Returns: DataFrame with geocoding output with rows keyed by
           the input key.
+
         """
         client = client or httpx.AsyncClient(
             limits=httpx.Limits(max_connections=self.concurrency))
@@ -295,9 +297,10 @@ class CensusBulkGeocoder:
 
         Returns: DataFrame with geocoding output with rows keyed by
           the input key.
+
         """
         return await self.async_geocode_rows(
-            zip(key, street, city, state, zip5))
+            zip(key, street, city, state, zip5, strict=False))
 
     async def async_geocode_df(self, df: pd.DataFrame, columns: Sized) -> pd.DataFrame:
         """Geocode from a dataframe.
@@ -318,6 +321,7 @@ class CensusBulkGeocoder:
         Raises:
         ------
           ValueError: `columns` has the wrong number of elements.
+
         """
         if len(columns) == 4:
             iter = df.loc[:, columns].itertuples()
@@ -344,6 +348,7 @@ class CensusBulkGeocoder:
 
         Returns: DataFrame with geocoding output with rows keyed by
           the input key.
+
         """
         return asyncio.get_event_loop().run_until_complete(
             self.async_geocode_rows(rows))
@@ -368,9 +373,10 @@ class CensusBulkGeocoder:
 
         Returns: DataFrame with geocoding output with rows keyed by
           the input key.
+
         """
         return self.geocode_rows(
-            zip(key, street, city, state, zip5))
+            zip(key, street, city, state, zip5, strict=False))
 
     def geocode_df(self, df: pd.DataFrame, columns: Sized) -> pd.DataFrame:
         """Geocode from a dataframe.
@@ -391,6 +397,7 @@ class CensusBulkGeocoder:
         Raises:
         ------
           ValueError: `columns` has the wrong number of elements.
+
         """
         if len(columns) == 4:
             iter = df.loc[:, columns].itertuples()

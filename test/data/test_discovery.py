@@ -7,7 +7,7 @@ from uscensus.data.discovery import AsyncDiscoveryInterface, DiscoveryInterface
 _logger = logging.getLogger(__name__)
 
 
-@pytest.mark.asyncio()
+@pytest.mark.asyncio
 async def test_AsyncDiscoveryInterface(catalog, tags, httpx_client_single_async):
     cl = await AsyncDiscoveryInterface.create('', httpx_client_single_async)
     _logger.info(f'APIs are {cl.datasets}')

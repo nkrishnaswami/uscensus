@@ -32,14 +32,14 @@ def test_FilePersister():
     assert os.path.split(pers.temp.format('0001')) == os.path.split(files[1])
     with open(files[0]) as f:
         rdr = csv.reader(f)
-        assert ['11', '12'] == next(rdr)
+        assert next(rdr) == ['11', '12']
     with open(files[1]) as f:
         rdr = csv.reader(f)
-        assert ['21', '22'] == next(rdr)
+        assert next(rdr) == ['21', '22']
     df = pers.persistFinal()
     assert df.shape[0] == 2
-    assert ['11', '12'] == df.iloc[0].values.tolist()
-    assert ['21', '22'] == df.iloc[1].values.tolist()
+    assert df.iloc[0].values.tolist() == ['11', '12']
+    assert df.iloc[1].values.tolist() == ['21', '22']
 
 
 def test_SqlAlchemyPersister():
@@ -53,8 +53,8 @@ def test_SqlAlchemyPersister():
     pers.persistTemp(rows2)
     df = pers.persistFinal()
     assert df.shape[0] == 2
-    assert ['11', '12'] == df.iloc[0].values.tolist()
-    assert ['21', '22'] == df.iloc[1].values.tolist()
+    assert df.iloc[0].values.tolist() == ['11', '12']
+    assert df.iloc[1].values.tolist() == ['21', '22']
 
 
 def test_CensusBulkGeocoder_df():

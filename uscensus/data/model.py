@@ -49,6 +49,7 @@ class AsyncCensusDataEndpoint:
           * cache: cache in which to look up/store metadata.
           * session: httpx.AsyncClient to use for retrieving data.
           * variableindex: the Index in which to store variable data
+
         """
         self = AsyncCensusDataEndpoint()
         self.key = key                         # API key
@@ -165,6 +166,7 @@ class AsyncCensusDataEndpoint:
             `{'county': '*'}`
           * cache: cache in which to store results. Not cached by default.
           * groups: variable groups to retrieve
+
         """
         params = {
             'get': ','.join(fields + [f'group({group})'
@@ -224,6 +226,7 @@ class CensusDataEndpoint:
             `{'county': '*'}`
           * cache: cache in which to store results. Not cached by default.
           * groups: variable groups to retrieve
+
         """
         return asyncio.get_event_loop().run_until_complete(
             self._impl(fields, geo_for, geo_in=geo_in,

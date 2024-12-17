@@ -10,7 +10,7 @@ from uscensus.util.datastores import SyncSqlAlchemyDataStore
 from uscensus.util.webcache import make_client
 
 
-@pytest.fixture()
+@pytest.fixture
 def client():
     return make_client(cache=SyncSqlAlchemyDataStore(
         'sqlite:///testing.db'), sync=True)

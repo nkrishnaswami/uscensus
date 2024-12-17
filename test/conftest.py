@@ -12,42 +12,42 @@ _logger = logging.getLogger(__name__)
 resource_files = files('test.sample_data')
 
 
-@pytest.fixture()
+@pytest.fixture
 def catalog():
     return json.loads(resource_files.joinpath('data.json').read_text())
 
 
-@pytest.fixture()
+@pytest.fixture
 def examples():
     return json.loads(resource_files.joinpath('examples.json').read_text())
 
 
-@pytest.fixture()
+@pytest.fixture
 def geography():
     return json.loads(resource_files.joinpath('geography.json').read_text())
 
 
-@pytest.fixture()
+@pytest.fixture
 def groups():
     return json.loads(resource_files.joinpath('groups.json').read_text())
 
 
-@pytest.fixture()
+@pytest.fixture
 def one_group():
     return json.loads(resource_files.joinpath('group_B17015.json').read_text())
 
 
-@pytest.fixture()
+@pytest.fixture
 def tags():
     return json.loads(resource_files.joinpath('tags.json').read_text())
 
 
-@pytest.fixture()
+@pytest.fixture
 def variables():
     return json.loads(resource_files.joinpath('variables.json').read_text())
 
 
-@pytest.fixture()
+@pytest.fixture
 def query_results():
     return json.loads(resource_files.joinpath('query_results.json').read_text())
 
@@ -87,9 +87,8 @@ class FakeHttpxTransport:
             return make_response(self.variables)
         if 'for' in req.url.params or 'tabulate' in req.urls.params:
             return make_response(self.query_results)
-        else:
-            _logger.warning('Unexpected url: %s', req.url)
-            return httpx.Response(404)
+        _logger.warning('Unexpected url: %s', req.url)
+        return httpx.Response(404)
 
     async def handle_async_request(self, req):
         return self.handle_request(req)
@@ -103,7 +102,7 @@ class FakeHttpxTransportAsync(FakeHttpxTransport, httpx.AsyncBaseTransport):
     pass
 
 
-@pytest.fixture()
+@pytest.fixture
 def httpx_transport_single_sync(catalog, examples, geography,
                                 one_group, groups, tags, variables, query_results):
     catalog['dataset'] = [catalog['dataset'][0]]
@@ -112,7 +111,7 @@ def httpx_transport_single_sync(catalog, examples, geography,
                                   query_results)
 
 
-@pytest.fixture()
+@pytest.fixture
 def httpx_transport_full_sync(catalog, examples, geography,
                               one_group, groups, tags, variables, query_results):
     return FakeHttpxTransportSync(catalog, examples, geography,
@@ -120,7 +119,7 @@ def httpx_transport_full_sync(catalog, examples, geography,
                                   query_results)
 
 
-@pytest.fixture()
+@pytest.fixture
 def httpx_transport_single_async(catalog, examples, geography,
                                  one_group, groups, tags, variables, query_results):
     catalog['dataset'] = [catalog['dataset'][0]]
@@ -129,7 +128,7 @@ def httpx_transport_single_async(catalog, examples, geography,
                                    query_results)
 
 
-@pytest.fixture()
+@pytest.fixture
 def httpx_transport_full_async(catalog, examples, geography,
                                one_group, groups, tags, variables, query_results):
     return FakeHttpxTransportAsync(catalog, examples, geography,
@@ -137,31 +136,31 @@ def httpx_transport_full_async(catalog, examples, geography,
                                    query_results)
 
 
-@pytest.fixture()
+@pytest.fixture
 def async_cache():
     return AsyncNopDataStore()
 
 
-@pytest.fixture()
+@pytest.fixture
 def sync_cache():
     return SyncNopDataStore()
 
 
-@pytest.fixture()
+@pytest.fixture
 def httpx_client_single_sync(sync_cache, httpx_transport_single_sync):
     return make_client(cache=sync_cache, transport=httpx_transport_single_sync, sync=True)
 
 
-@pytest.fixture()
+@pytest.fixture
 def httpx_client_full_sync(sync_cache, httpx_transport_full_sync):
     return make_client(cache=sync_cache, transport=httpx_transport_full_sync, sync=True)
 
 
-@pytest.fixture()
+@pytest.fixture
 def httpx_client_single_async(async_cache, httpx_transport_single_async):
     return make_client(cache=async_cache, transport=httpx_transport_single_async, sync=False)
 
 
-@pytest.fixture()
+@pytest.fixture
 def httpx_client_full_async(async_cache, httpx_transport_full_async):
     return make_client(cache=async_cache, transport=httpx_transport_full_async, sync=False)

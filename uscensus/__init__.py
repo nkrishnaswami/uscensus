@@ -46,12 +46,12 @@ DataFrame.
 
 __all__ = [
     'CensusBulkGeocoder',
-    'DiscoveryInterface',
-    'DBAPIDataStore',
-    'SqlAlchemyDataStore',
-    'NopDataStore',
     'CensusError',
+    'DBAPIDataStore',
     'DBError',
+    'DiscoveryInterface',
+    'NopDataStore',
+    'SqlAlchemyDataStore',
     'get_county_boundaries',
     'get_county_codes',
     'get_state_boundaries',

@@ -42,6 +42,7 @@ class AsyncDiscoveryInterface:
           * vintage: discovery only data sets for this vintage, if present.
           * fts_class: utility class to use for full-text indices. If omitted,
                 SqliteFts5Index will be used.
+
         """
         self = AsyncDiscoveryInterface()
         self.datasets = {}
@@ -159,6 +160,7 @@ class AsyncDiscoveryInterface:
         ---------
           * dataset_id: the part of its endpoint name without the shared
                 census dataset URL prefix.
+
         """
         return self.datasets.get(dataset_id)
 
@@ -191,6 +193,7 @@ class DiscoveryInterface:
           * vintage: discovery only data sets for this vintage, if present.
           * fts_class: utility class to use for full-text indices. If omitted,
                 SqliteFts5Index will be used.
+
         """
         _logger.debug('Fetching root metadata')
         self._impl = asyncio.get_event_loop().run_until_complete(
@@ -207,6 +210,7 @@ class DiscoveryInterface:
         ---------
           * dataset_id: the part of its endpoint name without the shared
                 census dataset URL prefix.
+
         """
         return self.datasets.get(dataset_id)
 

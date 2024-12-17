@@ -58,7 +58,7 @@ class FakeHttpxTransportAsync(FakeHttpxTransport, httpx.AsyncBaseTransport):
     pass
 
 
-@pytest.fixture()
+@pytest.fixture
 def udata_httpx_client_sync(request, sync_cache):
     transport = FakeHttpxTransportSync(read_file('apr'),
                                        read_file('examples'),
@@ -69,7 +69,7 @@ def udata_httpx_client_sync(request, sync_cache):
     return make_client(cache=sync_cache, transport=transport, sync=True)
 
 
-@pytest.fixture()
+@pytest.fixture
 def udata_httpx_client_async(request, async_cache):
     transport = FakeHttpxTransportAsync(read_file('apr'),
                                         read_file('examples'),

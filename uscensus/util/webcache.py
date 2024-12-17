@@ -3,11 +3,11 @@ import logging
 import time
 
 import httpx
-from httpx_caching import AsyncCachingTransport, SyncCachingTransport, CachingClient
+from httpx_caching import AsyncCachingTransport, CachingClient, SyncCachingTransport
 from httpx_caching._heuristics import ExpiresAfterHeuristic
 
-from uscensus.util.errors import CensusError
 from uscensus.util.datastores.datastore import AsyncDataStore, SyncDataStore
+from uscensus.util.errors import CensusError
 
 _logger = logging.getLogger(__name__)
 
@@ -18,7 +18,7 @@ def make_client(*,
                 heuristic=ExpiresAfterHeuristic(days=30),
                 max_connections=10,
                 sync=False,
-                transport: httpx.AsyncBaseTransport | httpx.BaseTransport | None = None
+                transport: httpx.AsyncBaseTransport | httpx.BaseTransport | None = None,
                 ) -> httpx.AsyncClient | httpx.Client:
     """Create a caching httpx AsyncClient with the caller-specified
     datastore and optionally caching heuristic.
@@ -44,13 +44,12 @@ def make_client(*,
         return CachingClient(
             httpx.Client(**client_args, transport=transport),
             **caching_client_args)
-    else:
-        assert isinstance(cache, AsyncDataStore)
-        if transport:
-            assert isinstance(transport, httpx.AsyncBaseTransport)
-        return CachingClient(
-            httpx.AsyncClient(**client_args, transport=transport),
-            **caching_client_args)
+    assert isinstance(cache, AsyncDataStore)
+    if transport:
+        assert isinstance(transport, httpx.AsyncBaseTransport)
+    return CachingClient(
+        httpx.AsyncClient(**client_args, transport=transport),
+        **caching_client_args)
 
 
 async def afetch(

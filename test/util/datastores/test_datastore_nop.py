@@ -3,7 +3,7 @@ import pytest
 from uscensus.util.datastores.nop import AsyncNopDataStore, SyncNopDataStore
 
 
-@pytest.mark.asyncio()
+@pytest.mark.asyncio
 async def test_AsyncNopDatastore():
     nc = AsyncNopDataStore()
     doc, vary = await nc.aget('test')

@@ -79,6 +79,7 @@ class Dataset:
         Returns
         -------
           The wrapped model instance.
+
         """
         if self._model.c_geographyLink:
             url = self._model.c_geographyLink.replace('http:', 'https:')
@@ -104,6 +105,7 @@ class Dataset:
         Returns
         -------
           The wrapped model instance.
+
         """
         if self._model.c_geographyLink:
             url = self._model.c_geographyLink.replace('http:', 'https:')
@@ -124,6 +126,7 @@ class Dataset:
         Returns
         -------
           The tag values as a list.
+
         """
         if self._model.c_tagsLink:
             url = self._model.c_tagsLink.replace('http:', 'https:')
@@ -138,6 +141,7 @@ class Dataset:
         Returns
         -------
           The tag values as a list.
+
         """
         if self._model.c_tagsLink:
             url = self._model.c_tagsLink.replace('http:', 'https:')
@@ -152,6 +156,7 @@ class Dataset:
         Returns
         -------
           Wrappers for each variable group as a dict keyed by group ID.
+
         """
         if self._model.c_groupsLink:
             url = self._model.c_groupsLink.replace('http:', 'https:')
@@ -173,6 +178,7 @@ class Dataset:
         Returns
         -------
           Wrappers for each variable group as a dict keyed by group ID.
+
         """
         if self._model.c_groupsLink:
             url = self._model.c_groupsLink.replace('http:', 'https:')
@@ -193,6 +199,7 @@ class Dataset:
         Returns
         -------
           The variables in a dict keyed by ID.
+
         """
         if self._model.c_variablesLink:
             url = self._model.c_variablesLink.replace('http:', 'https:')
@@ -208,6 +215,7 @@ class Dataset:
         Returns
         -------
           The variables in a dict keyed by ID.
+
         """
         if self._model.c_variablesLink:
             url = self._model.c_variablesLink.replace('http:', 'https:')
@@ -223,6 +231,7 @@ class Dataset:
         Returns
         -------
           The URL if present, otherwise the empty string.
+
         """
         for distribution in self._model.distribution:
             if (distribution.format == 'API' and
@@ -289,6 +298,7 @@ class Catalog:
         Returns:
         -------
           The new Catalog wrapper instance.
+
         """
         if not catalog_subpath:
             url = 'https://api.census.gov/data.json'
@@ -314,6 +324,7 @@ class Catalog:
         Returns:
         -------
           The new Catalog wrapper instance.
+
         """
         if not catalog_subpath:
             url = 'https://api.census.gov/data.json'

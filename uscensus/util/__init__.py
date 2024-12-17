@@ -11,11 +11,11 @@ __all__ = [
 
     'AsyncNopDataStore',
     'AsyncSqlAlchemyDataStore',
-    'DBAPIQueryHelper',
-    'ensuretext',
     'CensusError',
+    'DBAPIQueryHelper',
     'DBError',
     'afetch',
+    'ensuretext',
     'fetch',
     'make_client',
 ]

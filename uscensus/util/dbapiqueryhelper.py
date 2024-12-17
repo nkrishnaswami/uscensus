@@ -31,6 +31,7 @@ class DBAPIQueryHelper:
 
         Exceptions:
           * DBEror: if dbapi.paramstyle is not expected
+
         """
         self.dbapi = dbapi
         self.conn = conn
@@ -58,11 +59,10 @@ class DBAPIQueryHelper:
         names = sorted(list(kwargs),
                        key=lambda x: template.find('{'+x+'}'))
         querystr = template.format(
-            **dict(zip(names, self.fmt_args(names))))
+            **dict(zip(names, self.fmt_args(names), strict=False)))
         if self.positional:
             vals = [val for _, val in sorted(
                 kwargs.items(),
                 key=lambda kv: template.find('{'+kv[0]+'}'))]
             return self.conn.execute(querystr, vals)
-        else:
-            return self.conn.execute(querystr, kwargs)
+        return self.conn.execute(querystr, kwargs)
