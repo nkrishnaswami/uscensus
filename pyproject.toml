@@ -1,0 +1,45 @@
+[tool.ruff]
+target-version = "py311"
+[tool.ruff.lint.flake8-quotes]
+docstring-quotes = "double"
+inline-quotes = "single"
+multiline-quotes = "double"
+
+
+[tool.poetry]
+name = "uscensus"
+version = "0.3.0"
+description = "This module fetches metadata for the Census Data API to make it easier to find relevant data sets and variables to query, and returns data as a Pandas dataframe."
+authors = ["Natarajan Krishnaswami <nkrish@acm.org>"]
+license = "Apache Software License 2.0"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+aiosqlite = "^0.20.0"
+geopandas = "^1.0.1"
+httpx = "^0.28.1"
+httpx-caching = "^0.1a4"
+pandas = "^2.2.3"
+shapely = "^2.0.6"
+sqlalchemy = {extras = ["asyncio"], version = "^2.0.36"}
+pymongo = {version = "^4.10.1", optional = true}
+whoosh = {version = "^2.7.4", optional = true}
+pydantic = "^2.10.3"
+async-property = "^0.2.2"
+
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.4"
+pytest-asyncio = "^0.25.0"
+respx = "^0.21.1"
+docutils = ">=0.3"
+ruff = "^0.8.3"
+
+[tool.poetry.extras]
+whoosh = ["whoosh"]
+pymongo = ["pymongo"]
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
