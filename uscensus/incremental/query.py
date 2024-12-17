@@ -159,18 +159,7 @@ class QueryBuilderBase(ABC):
         if not self.geo_for_level:
             return
 
-        # Find this `for` geography's level descriptor
-        geo_level = self.dataset.geography.levels[self.geo_for_level]
-        # Does it have any required `in` geographies?
-        for level_id in geo_level.requires:
-            # Are they missing?
-            if level_id not in self.geo_in:
-                # Are they optional when `for` is a wildcard?
-                if ('*' in self.geo_for_values and
-                        geo_level.optionalWithWCFor == level_id):
-                    continue
-                raise ValueError(
-                    f'Missing required "in" geography "{level_id}"')
+        geo_level = self._determine_geo_level()
 
         # Check invariants for values for `in` constraints that don't
         # depend on order.
@@ -206,6 +195,34 @@ class QueryBuilderBase(ABC):
                             'Cannot specify non-wildcard "in" constraint below '
                             'level with wildcard')
 
+    def _determine_geo_level(self) -> GeographyLevel:
+        # Find this `for` geography's level descriptor
+        errors: list[ValueError] = []
+        geo_levels = self.dataset.geography.levels.get(self.geo_for_level)
+        if not geo_levels:
+            raise ValueError(f'No levels found for geography {self.geo_for_level}')
+        for geo_level in geo_levels:
+            try:
+                self._validate_geo_level(geo_level)
+                return geo_level
+            except ValueError as e:
+                errors.append(e)
+        raise ExceptionGroup('No matching geo level', errors)
+        
+
+    def _validate_geo_level(self, geo_level: GeographyLevel) -> None:
+        # Does it have any required `in` geographies?
+        for level_id in geo_level.requires:
+            # Are they missing?
+            if level_id not in self.geo_in:
+                # Are they optional when `for` is a wildcard?
+                if ('*' in self.geo_for_values and
+                    geo_level.optionalWithWCFor == level_id):
+                    continue
+                raise ValueError(
+                    f'Missing required "in" geography "{level_id}" for '
+                    f'level {geo_level}')
+
     def _make_common_params(self) -> dict[str, str]:
         """Assemble the QueryBuilderBase contents into request query
         parameters.
@@ -216,8 +233,8 @@ class QueryBuilderBase(ABC):
             'for': f'{self.geo_for_level}:{",".join(self.geo_for_values)}',
         }
         if self.geo_in:
-            params['in'] = ' '.join((f'{level}:{value}'
-                                     for level, value in self.geo_in.items()))
+            params['in'] = ' '.join((f'{level}:{",".join(values)}'
+                                     for level, values in self.geo_in.items()))
         for predicate, value in self.predicates.items():
             params[predicate] = _format_predicate_values(value)
         return params
@@ -235,7 +252,6 @@ class QueryBuilderBase(ABC):
 
         """
         resp = fetch(**self._prepare_fetch_args())
-        resp.raise_for_status()
         return self._make_dataframe(resp.json())
 
     async def aquery(self) -> pd.DataFrame:
@@ -266,7 +282,7 @@ class QueryBuilder(QueryBuilderBase):
         requestedWeights = set()
         for field in fields:
             base_field = _base_field(field)
-            if (base_field := _base_field(field)) not in self.dataset.variables:
+            if base_field not in self.dataset.variables:
                 base_field = field
             variable = self.dataset.variables.get(base_field)
             if not variable:
@@ -285,24 +301,24 @@ class QueryBuilder(QueryBuilderBase):
         self.fields = list(fields)
         return self
 
-    def set_groups(self, *groups: str) -> QueryBuilder:
-        """Set the data groups (tables) to request from the API."""
-        for group in groups:
-            if group not in self.dataset.groups:
-                raise ValueError(f'Unknown group {group}')
+    def set_group(self, group: str) -> QueryBuilder:
+        """Set the data group (table) to request from the API."""
+        if group not in self.dataset.groups:
+            raise ValueError(f'Unknown group {group}')
 
-        self.groups = list(groups)
+        self.group = group
         return self
 
     def _make_params(self):
-        required = {name for name, variable in self.dataset.variables.items()
-                    if variable.required}
-        missing = required - set(self.predicates) - set(self.fields)
-        if missing:
-            raise ValueError(f'Request missing required variables: {missing}')
+        # required = self.dataset.required_variables
+        # _logger.info(f'required variables: {required}')
+        # missing = set(required) - set(self.predicates) \
+        #     - set(self.fields)
+        # if missing:
+        #     raise ValueError(f'Request missing required variables: {missing}')
+        group = [f'group({self.group})'] if self.group else []
         return {
-            'get': ','.join(
-                self.fields + [f'group({group})' for group in self.groups]),
+            'get': ','.join(self.fields + group)
         }
 
     def _make_dataframe(self, data: dict) -> pd.DataFrame:
@@ -310,14 +326,15 @@ class QueryBuilder(QueryBuilderBase):
 
         # Fix up data types
         fields = list(self.fields)
-        for group_id in self.groups:
-            group = self.dataset.groups[group_id]
+        if self.group:
+            group = self.dataset.groups[self.group]
             fields += list(group.variables.keys())
         for field in fields:
             base_field = _base_field(field)
-            predicate_type = self.dataset.variables[base_field].predicateType
-            if predicate_type in ('int', 'float'):
-                ret[field] = pd.to_numeric(ret[field])
+            if variable := self.dataset.variables.get(base_field):
+                predicate_type = variable.predicateType
+                if predicate_type in ('int', 'float'):
+                    ret[field] = pd.to_numeric(ret[field], errors='coerce')
         return ret
 
 

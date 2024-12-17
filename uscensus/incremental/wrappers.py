@@ -23,7 +23,7 @@ _logger = logging.getLogger(__name__)
 @dataclass(eq=True, frozen=True)
 class Geography:
     _model: model.Geography
-    levels: dict[str, model.GeographyLevel]
+    levels: dict[str, list[model.GeographyLevel]]
     has_default: bool = False
 
 
@@ -77,9 +77,14 @@ class Dataset:
         if self._model.c_geographyLink:
             url = self._model.c_geographyLink.replace('http:', 'https:')
             _logger.debug('Fetching geographies: %s', url)
-            geography = model.Geography.from_json(fetch(url, self.client).text)
-            return Geography(geography,
-                             {level.name: level for level in geography.fips},
+            geography = model.Geography.model_validate_json(fetch(url, self.client).content)
+            levels = {}
+            for level in geography.fips:
+                if level.name not in levels:
+                    levels[level.name] = []
+                levels[level.name].append(level)
+            return Geography(_model=geography,
+                             levels=levels,
                              has_default=bool(geography.default and
                                               any(x.isDefault == 'true' for x in geography.default)))
         return Geography(_model=model.Geography([], []),
