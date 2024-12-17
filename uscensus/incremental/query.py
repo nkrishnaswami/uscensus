@@ -5,15 +5,16 @@ import logging
 import re
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Iterable, Type
+from typing import TYPE_CHECKING
+from collections.abc import Iterable
 
 import pandas as pd
 from dataclasses_json import dataclass_json
+from uscensus.util.webcache import afetch, fetch
 
 if TYPE_CHECKING:
-    from uscensus.incremental.model import Variable
+    from uscensus.incremental.model import GeographyLevel, Variable
     from uscensus.incremental.wrappers import Dataset
-from uscensus.util.webcache import afetch, fetch
 
 _logger = logging.getLogger(__name__)
 
@@ -45,7 +46,7 @@ def _format_predicate_values(values: list[PredicateScalarValue]) -> str:
     return ','.join(_format_predicate_value(value) for value in values)
 
 
-def _all_numeric(values: Iterable[PredicateScalarValue], type: Type[int] | Type[float]) -> bool:
+def _all_numeric(values: Iterable[PredicateScalarValue], type: type[int] | type[float]) -> bool:
     def is_convertible(value):
         try:
             if isinstance(value, tuple):
@@ -195,12 +196,12 @@ class QueryBuilderBase(ABC):
                 following_level_values = ordered_values[idx+1:]
                 if following_level_values:
                     if (len(cur_level_values) > 1 and
-                            not all(x == ['*'] for x in following_level_values)):
+                        not all(x == ['*'] for x in following_level_values)):
                         raise ValueError(
                             'Cannot specify non-wildcard "in" constraint '
                             'below multi-valued level')
                     if ('*' in cur_level_values and
-                            not all(x == ['*'] for x in following_level_values)):
+                        not all(x == ['*'] for x in following_level_values)):
                         raise ValueError(
                             'Cannot specify non-wildcard "in" constraint below '
                             'level with wildcard')
@@ -257,7 +258,7 @@ class QueryBuilder(QueryBuilderBase):
     def __init__(self, dataset: Dataset) -> None:
         super().__init__(dataset)
         self.fields: list[str] = []
-        self.groups: list[str] = []
+        self.group: str | None = None
 
     def set_fields(self, *fields: str) -> QueryBuilder:
         """Set the data fields (variables) to request from the API."""
