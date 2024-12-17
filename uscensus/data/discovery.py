@@ -1,7 +1,6 @@
 import asyncio
 import logging
 
-import aiotools
 import httpx
 import pandas as pd
 
@@ -61,7 +60,7 @@ class AsyncDiscoveryInterface:
         self.index = fts_class(FieldSet.DATASET, 'datasets')
         self.variableindex = fts_class(FieldSet.VARIABLE, 'variables')
         with self.index, self.variableindex:
-            async with aiotools.TaskGroup(name='discovery') as tg:
+            async with asyncio.TaskGroup() as tg:
                 complete = [0]
                 for ds in datasets:
                     tg.create_task(
