@@ -138,6 +138,8 @@ def fetch(
         r = None
         try:
             r = session.send(req)
+            if not r.is_success:
+                _logger.error('HTTP request failed with status code %d: %s', r.status_code, r.text)
         except httpx.HTTPError as e:
             if retry < retries - 1:
                 # Log and drop the exception if we will retry the

@@ -5,7 +5,6 @@ the dataclasses in the `model` module.
 from __future__ import annotations
 
 import logging
-from dataclasses import dataclass
 from functools import cached_property
 from typing import TYPE_CHECKING, TypeVar
 
@@ -20,8 +19,7 @@ from uscensus.util.webcache import afetch, fetch
 _logger = logging.getLogger(__name__)
 
 
-@dataclass(eq=True, frozen=True)
-class Geography:
+class Geography(model.USCensusBaseModel):
     _model: model.Geography
     levels: dict[str, list[model.GeographyLevel]]
     has_default: bool = False
@@ -35,22 +33,25 @@ class Group:
         self.client = client
 
     def __getattr__(self, attr: str):
+        cls = type(self)
+        if hasattr(cls, attr) and hasattr((descriptor := getattr(cls, attr)), '__get__'):
+            return descriptor.__get__(self, self)
         return getattr(self._model, attr)
 
     @cached_property
     def variables(self) -> dict[str, model.Variable]:
         if self._model.variables:
             url = self._model.variables.replace('http:', 'https:')
-            return model.Variables.from_json(
-                fetch(url, self.client).text).variables
+            return model.Variables.model_validate_json(
+                fetch(url, self.client).content).variables
         return {}
 
     @async_cached_property
     async def avariables(self) -> dict[str, model.Variable]:
         if self._model.variables:
             url = self._model.variables.replace('http:', 'https:')
-            return model.Variables.from_json(
-                ((await afetch(url, self.client))).text).variables
+            return model.Variables.model_validate_json(
+                (await afetch(url, self.client)).content).variables
         return {}
 
 
@@ -64,7 +65,12 @@ class Dataset:
 
     def __getattr__(self, attr: str):
         """Delegate attribute access to model.Catalog."""
-        return getattr(self._model, attr)
+        cls = type(self)
+        if hasattr(cls, attr) and hasattr((descriptor := getattr(cls, attr)), '__get__'):
+            return descriptor.__get__(self, self)
+        if attr in self._model.model_fields:
+            return getattr(self._model, attr)
+        raise AttributeError(f'Dataset model has no attribute {attr}')
 
     @cached_property
     def geography(self) -> Geography:
@@ -102,7 +108,7 @@ class Dataset:
         if self._model.c_geographyLink:
             url = self._model.c_geographyLink.replace('http:', 'https:')
             _logger.debug('Fetching geographies: %s', url)
-            geography = model.Geography.from_json((await afetch(url, self.client)).text)
+            geography = model.Geography.model_validate_json((await afetch(url, self.client)).content)
             return Geography(geography,
                              {level.name: level for level in geography.fips},
                              has_default=bool(geography.default and
@@ -122,7 +128,7 @@ class Dataset:
         if self._model.c_tagsLink:
             url = self._model.c_tagsLink.replace('http:', 'https:')
             _logger.debug('Fetching tags:  %s', url)
-            return model.Tags.from_json(fetch(url, self.client).text).tags
+            return model.Tags.model_validate_json((fetch(url, self.client)).content).tags
         return []
 
     @async_cached_property
@@ -136,7 +142,7 @@ class Dataset:
         if self._model.c_tagsLink:
             url = self._model.c_tagsLink.replace('http:', 'https:')
             _logger.debug('Fetching tags:  %s', url)
-            return model.Tags.from_json((await afetch(url, self.client)).text).tags
+            return model.Tags.model_validate_json((await afetch(url, self.client)).content).tags
         return []
 
     @cached_property
@@ -153,8 +159,8 @@ class Dataset:
             # The field name "universe" has a trailing space in the census data.
             return {
                 group_dict['name']:
-                Group(model.Group.from_dict({key.strip(): value
-                                             for key, value in group_dict.items()}),
+                Group(model.Group.model_validate({key.strip(): value
+                                                  for key, value in group_dict.items()}),
                       self.client)
                 for group_dict in fetch(url, self.client).json()['groups']
             }
@@ -173,10 +179,10 @@ class Dataset:
             _logger.debug('Fetching groups:  %s', url)
             return {
                 group_dict['name']:
-                Group(model.Group.from_dict({key.strip(): value
-                                             for key, value in group_dict.items()}),
+                Group(model.Group.model_validate({key.strip(): value
+                                                  for key, value in group_dict.items()}),
                       self.client)
-                for group_dict in ((await afetch(url, self.client)).json())['groups']
+                for group_dict in (await afetch(url, self.client)).json()['groups']
             }
         return {}
 
@@ -191,8 +197,8 @@ class Dataset:
         if self._model.c_variablesLink:
             url = self._model.c_variablesLink.replace('http:', 'https:')
             _logger.debug('Fetching variables:  %s', url)
-            return model.Variables.from_json(
-                fetch(url, self.client).text).variables
+            return model.Variables.model_validate_json(
+                fetch(url, self.client).content).variables
         return {}
 
     @async_cached_property
@@ -206,8 +212,8 @@ class Dataset:
         if self._model.c_variablesLink:
             url = self._model.c_variablesLink.replace('http:', 'https:')
             _logger.debug('Fetching variables:  %s', url)
-            return model.Variables.from_json(
-                (await afetch(url, self.client)).text).variables
+            return model.Variables.model_validate_json(
+                (await afetch(url, self.client)).content).variables
         return {}
 
     @cached_property
@@ -289,7 +295,8 @@ class Catalog:
         else:
             url = f'https://api.census.gov/data/{catalog_subpath}.json'
         _logger.debug('Fetching catalog:  %s', url)
-        return cls(model.Catalog.from_json(fetch(url, client).text), client)
+        return cls(model=model.Catalog.model_validate_json(fetch(url, client).content),
+                   client=client)
 
     @classmethod
     async def aget_catalog(cls: type[CAT],
@@ -313,7 +320,8 @@ class Catalog:
         else:
             url = f'https://api.census.gov/data/{catalog_subpath}.json'
         _logger.debug('Fetching catalog:  %s', url)
-        return cls(model.Catalog.from_json((await afetch(url, client)).text), client)
+        return cls(model=model.Catalog.model_validate_json((await afetch(url, client)).content),
+                   client=client)
 
     def __init__(self, model: model.Catalog, client: httpx.AsyncClient) -> None:
         self._model = model
@@ -321,6 +329,9 @@ class Catalog:
 
     def __getattr__(self, attr: str):
         """Delegate attribute access to model.Catalog."""
+        cls = type(self)
+        if hasattr(cls, attr) and hasattr((descriptor := getattr(cls, attr)), '__get__'):
+            return descriptor.__get__(self, self)
         return getattr(self._model, attr)
 
     @cached_property

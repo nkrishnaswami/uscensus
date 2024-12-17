@@ -4,12 +4,12 @@ import json
 import logging
 import re
 from abc import ABC, abstractmethod
-from dataclasses import dataclass
 from typing import TYPE_CHECKING
 from collections.abc import Iterable
 
 import pandas as pd
-from dataclasses_json import dataclass_json
+
+from uscensus.incremental.model import USCensusBaseModel
 from uscensus.util.webcache import afetch, fetch
 
 if TYPE_CHECKING:
@@ -262,7 +262,8 @@ class QueryBuilderBase(ABC):
         self._validate_geo()
         resp = await afetch(**self._prepare_fetch_args())
         resp.raise_for_status()
-        return self._make_dataframe(resp.json())
+        return self._make_dataframe(resp.model_dump_json())
+
 
 
 class QueryBuilder(QueryBuilderBase):
@@ -338,16 +339,12 @@ class QueryBuilder(QueryBuilderBase):
         return ret
 
 
-@dataclass_json
-@dataclass(eq=True, frozen=True)
-class RecodeRange:
+class RecodeRange(USCensusBaseModel):
     mn: int | float
     mx: int | float
 
 
-@dataclass_json
-@dataclass(eq=True, frozen=True)
-class RecodeValue:
+class RecodeValue(USCensusBaseModel):
     b: str
     d: list[list[str | int | RecodeRange]]
 
