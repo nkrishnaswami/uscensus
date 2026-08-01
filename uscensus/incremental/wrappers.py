@@ -4,9 +4,10 @@ the dataclasses in the `model` module.
 """
 from __future__ import annotations
 
+import json
 import logging
 from functools import cached_property
-from typing import TYPE_CHECKING, TypeVar, cast
+from typing import Callable, TYPE_CHECKING, TypeVar, cast
 
 import httpx
 from async_property import async_cached_property
@@ -17,43 +18,106 @@ from uscensus.util.webcache import afetch, fetch
 _logger = logging.getLogger(__name__)
 
 
+# ---------------------------------------------------------------------------
+# Shared helpers
+# ---------------------------------------------------------------------------
+
+class _ModelDelegate:
+    """Mixin providing attribute delegation to `self._model`.
+
+    Any attribute not found on the wrapper class itself (including
+    cached_property/async_cached_property descriptors) falls through to
+    the wrapped pydantic model instance.
+    """
+
+    _model: object
+
+    def __getattr__(self, attr: str):
+        cls = type(self)
+        descriptor = getattr(cls, attr, None)
+        if descriptor is not None and hasattr(descriptor, '__get__'):
+            return descriptor.__get__(self, cls)
+        return getattr(self._model, attr)
+
+
+async def _fetch_bytes(url: str, client: httpx.AsyncClient | httpx.Client) -> bytes:
+    """Fetch a URL's body, dispatching to sync or async I/O based on the
+    client type. When `client` is a plain httpx.Client this never
+    actually suspends, so it's safe to call from a coroutine driven
+    purely for its side of a synchronous cached_property.
+    """
+    if isinstance(client, httpx.AsyncClient):
+        return (await afetch(url, client)).content
+    return fetch(url, cast(httpx.Client, client)).content
+
+
+def _filter_variables(
+    variables: dict[str, model.Variable],
+    predicate: Callable[[model.Variable], bool],
+) -> dict[str, model.Variable]:
+    return {name: v for name, v in variables.items() if predicate(v)}
+
+
 class Geography(model.USCensusBaseModel):
     _model: model.Geography
     levels: dict[str, list[model.GeographyLevel]]
     has_default: bool = False
 
 
-class Group:
+_EMPTY_GEOGRAPHY = Geography(
+    _model=model.Geography(fips=[], default=[]),
+    levels={},
+    has_default=False,
+)
+
+
+def _parse_geography(content: bytes) -> Geography:
+    geography = model.Geography.model_validate_json(content)
+    levels: dict[str, list[model.GeographyLevel]] = {}
+    for level in geography.fips:
+        levels.setdefault(level.name, []).append(level)
+    # NOTE: the previous sync/async implementations disagreed here
+    # (any(...) vs. only checking default[0]); any(...) is the correct
+    # semantics -- a dataset can list multiple default flags.
+    has_default = bool(
+        geography.default and any(x.isDefault == 'true' for x in geography.default)
+    )
+    return Geography(_model=geography, levels=levels, has_default=has_default)
+
+
+# ---------------------------------------------------------------------------
+# Group
+# ---------------------------------------------------------------------------
+
+class Group(_ModelDelegate):
     """A group of related variables on the same topic."""
 
     def __init__(self, model: model.Group, client: httpx.AsyncClient | httpx.Client) -> None:
         self._model = model
         self.client = client
 
-    def __getattr__(self, attr: str):
-        cls = type(self)
-        if hasattr(cls, attr) and hasattr((descriptor := getattr(cls, attr)), '__get__'):
-            return descriptor.__get__(self, self)
-        return getattr(self._model, attr)
-
     @cached_property
     def variables(self) -> dict[str, model.Variable]:
-        if self._model.variables:
-            url = self._model.variables.replace('http:', 'https:')
-            return model.Variables.model_validate_json(
-                fetch(url, cast(httpx.Client, self.client)).content).variables
-        return {}
+        if not self._model.variables:
+            return {}
+        url = self._model.variables.replace('http:', 'https:')
+        content = fetch(url, cast(httpx.Client, self.client)).content
+        return model.Variables.model_validate_json(content).variables
 
     @async_cached_property
     async def avariables(self) -> dict[str, model.Variable]:
-        if self._model.variables:
-            url = self._model.variables.replace('http:', 'https:')
-            return model.Variables.model_validate_json(
-                (await afetch(url, cast(httpx.AsyncClient,self.client))).content).variables
-        return {}
+        if not self._model.variables:
+            return {}
+        url = self._model.variables.replace('http:', 'https:')
+        content = await _fetch_bytes(url, self.client)
+        return model.Variables.model_validate_json(content).variables
 
 
-class Dataset:
+# ---------------------------------------------------------------------------
+# Dataset
+# ---------------------------------------------------------------------------
+
+class Dataset(_ModelDelegate):
     def __init__(self, model: model.Dataset, client: httpx.AsyncClient | httpx.Client) -> None:
         self._model = model
         self.client = client
@@ -61,181 +125,112 @@ class Dataset:
     def __repr__(self) -> str:
         return f'<{self._model.title}:{self._model.c_vintage}:{self._model.c_dataset}>'
 
-    def __getattr__(self, attr: str):
-        """Delegate attribute access to model.Catalog."""
-        cls = type(self)
-        if hasattr(cls, attr) and hasattr((descriptor := getattr(cls, attr)), '__get__'):
-            return descriptor.__get__(self, self)
-        if attr in self._model.model_fields:
-            return getattr(self._model, attr)
-        raise AttributeError(f'Dataset model has no attribute {attr}')
+    # -- geography -----------------------------------------------------
 
     @cached_property
     def geography(self) -> Geography:
-        """Retrieve and process the geography link, if any.
-
-        Returns
-        -------
-          The wrapped model instance.
-
-        """
-        if self._model.c_geographyLink:
-            url = self._model.c_geographyLink.replace('http:', 'https:')
-            _logger.debug('Fetching geographies: %s', url)
-            geography = model.Geography.model_validate_json(fetch(url, cast(httpx.Client, self.client)).content)
-            levels: dict[str, list[model.GeographyLevel]] = {}
-            for level in geography.fips:
-                if level.name not in levels:
-                    levels[level.name] = []
-                levels[level.name].append(level)
-            return Geography(_model=geography,
-                             levels=levels,
-                             has_default=bool(geography.default and
-                                              any(x.isDefault == 'true' for x in geography.default)))
-        return Geography(_model=model.Geography(fips=[], default=[]),
-                         levels={},
-                         has_default=False)
+        """Retrieve and process the geography link, if any."""
+        if not self._model.c_geographyLink:
+            return _EMPTY_GEOGRAPHY
+        url = self._model.c_geographyLink.replace('http:', 'https:')
+        _logger.debug('Fetching geographies: %s', url)
+        content = fetch(url, cast(httpx.Client, self.client)).content
+        return _parse_geography(content)
 
     @async_cached_property
     async def ageography(self) -> Geography:
-        """Retrieve and process the geography link, if any.
+        """Retrieve and process the geography link, if any."""
+        if not self._model.c_geographyLink:
+            return _EMPTY_GEOGRAPHY
+        url = self._model.c_geographyLink.replace('http:', 'https:')
+        _logger.debug('Fetching geographies: %s', url)
+        content = await _fetch_bytes(url, self.client)
+        return _parse_geography(content)
 
-        Returns
-        -------
-          The wrapped model instance.
-
-        """
-        if self._model.c_geographyLink:
-            url = self._model.c_geographyLink.replace('http:', 'https:')
-            _logger.debug('Fetching geographies: %s', url)
-            geography = model.Geography.model_validate_json((await afetch(url, cast(httpx.AsyncClient, self.client))).content)
-            levels: dict[str, list[model.GeographyLevel]] = {}
-            for level in geography.fips:
-                if level.name not in levels:
-                    levels[level.name] = []
-                levels[level.name].append(level)
-            return Geography(_model=geography,
-                             levels=levels,
-                             has_default=bool(geography.default and
-                                              geography.default[0].isDefault == 'true'))
-        return Geography(_model=model.Geography(fips=[], default=[]),
-                         levels={},
-                         has_default=False)
+    # -- tags ------------------------------------------------------------
 
     @cached_property
     def tags(self) -> list[str]:
-        """Retrieve and process the tags link, if any.
-
-        Returns
-        -------
-          The tag values as a list.
-
-        """
-        if self._model.c_tagsLink:
-            url = self._model.c_tagsLink.replace('http:', 'https:')
-            _logger.debug('Fetching tags:  %s', url)
-            return model.Tags.model_validate_json((fetch(url, cast(httpx.Client, self.client))).content).tags
-        return []
+        """Retrieve and process the tags link, if any."""
+        if not self._model.c_tagsLink:
+            return []
+        url = self._model.c_tagsLink.replace('http:', 'https:')
+        _logger.debug('Fetching tags: %s', url)
+        content = fetch(url, cast(httpx.Client, self.client)).content
+        return model.Tags.model_validate_json(content).tags
 
     @async_cached_property
     async def atags(self) -> list[str]:
-        """Retrieve and process the tags link, if any.
+        """Retrieve and process the tags link, if any."""
+        if not self._model.c_tagsLink:
+            return []
+        url = self._model.c_tagsLink.replace('http:', 'https:')
+        _logger.debug('Fetching tags: %s', url)
+        content = await _fetch_bytes(url, self.client)
+        return model.Tags.model_validate_json(content).tags
 
-        Returns
-        -------
-          The tag values as a list.
+    # -- groups ------------------------------------------------------------
 
-        """
-        if self._model.c_tagsLink:
-            url = self._model.c_tagsLink.replace('http:', 'https:')
-            _logger.debug('Fetching tags:  %s', url)
-            return model.Tags.model_validate_json((await afetch(url, cast(httpx.AsyncClient, self.client))).content).tags
-        return []
+    @staticmethod
+    def _parse_groups(content: bytes, client: httpx.AsyncClient | httpx.Client) -> dict[str, Group]:
+        # The field name "universe" has a trailing space in the census data.
+        return {
+            group_dict['name']: Group(
+                model.Group.model_validate(
+                    {key.strip(): value for key, value in group_dict.items()}
+                ),
+                client,
+            )
+            for group_dict in json.loads(content)['groups']
+        }
 
     @cached_property
     def groups(self) -> dict[str, Group]:
-        """Retrieve and process the variable groups link, if any.
-
-        Returns
-        -------
-          Wrappers for each variable group as a dict keyed by group ID.
-
-        """
-        if self._model.c_groupsLink:
-            url = self._model.c_groupsLink.replace('http:', 'https:')
-            _logger.debug('Fetching groups:  %s', url)
-            # The field name "universe" has a trailing space in the census data.
-            return {
-                group_dict['name']:
-                Group(model.Group.model_validate({key.strip(): value
-                                                  for key, value in group_dict.items()}),
-                      self.client)
-                for group_dict in fetch(url, cast(httpx.Client, self.client)).json()['groups']
-            }
-        return {}
+        """Retrieve and process the variable groups link, if any."""
+        if not self._model.c_groupsLink:
+            return {}
+        url = self._model.c_groupsLink.replace('http:', 'https:')
+        _logger.debug('Fetching groups: %s', url)
+        content = fetch(url, cast(httpx.Client, self.client)).content
+        return self._parse_groups(content, self.client)
 
     @async_cached_property
     async def agroups(self) -> dict[str, Group]:
-        """Retrieve and process the variable groups link, if any.
+        """Retrieve and process the variable groups link, if any."""
+        if not self._model.c_groupsLink:
+            return {}
+        url = self._model.c_groupsLink.replace('http:', 'https:')
+        _logger.debug('Fetching groups: %s', url)
+        content = await _fetch_bytes(url, self.client)
+        return self._parse_groups(content, self.client)
 
-        Returns
-        -------
-          Wrappers for each variable group as a dict keyed by group ID.
-
-        """
-        if self._model.c_groupsLink:
-            url = self._model.c_groupsLink.replace('http:', 'https:')
-            _logger.debug('Fetching groups:  %s', url)
-            return {
-                group_dict['name']:
-                Group(model.Group.model_validate({key.strip(): value
-                                                  for key, value in group_dict.items()}),
-                      self.client)
-                for group_dict in (await afetch(url, cast(httpx.AsyncClient, self.client))).json()['groups']
-            }
-        return {}
+    # -- variables -----------------------------------------------------
 
     @cached_property
     def variables(self) -> dict[str, model.Variable]:
-        """Retrieve and process the variables link, if any.
-
-        Returns
-        -------
-          The variables in a dict keyed by ID.
-
-        """
-        if self._model.c_variablesLink:
-            url = self._model.c_variablesLink.replace('http:', 'https:')
-            _logger.debug('Fetching variables:  %s', url)
-            return model.Variables.model_validate_json(
-                fetch(url, cast(httpx.Client, self.client)).content).variables
-        return {}
+        """Retrieve and process the variables link, if any."""
+        if not self._model.c_variablesLink:
+            return {}
+        url = self._model.c_variablesLink.replace('http:', 'https:')
+        _logger.debug('Fetching variables: %s', url)
+        content = fetch(url, cast(httpx.Client, self.client)).content
+        return model.Variables.model_validate_json(content).variables
 
     @async_cached_property
     async def avariables(self) -> dict[str, model.Variable]:
-        """Retrieve and process the variables link, if any.
+        """Retrieve and process the variables link, if any."""
+        if not self._model.c_variablesLink:
+            return {}
+        url = self._model.c_variablesLink.replace('http:', 'https:')
+        _logger.debug('Fetching variables: %s', url)
+        content = await _fetch_bytes(url, self.client)
+        return model.Variables.model_validate_json(content).variables
 
-        Returns
-        -------
-          The variables in a dict keyed by ID.
-
-        """
-        if self._model.c_variablesLink:
-            url = self._model.c_variablesLink.replace('http:', 'https:')
-            _logger.debug('Fetching variables:  %s', url)
-            return model.Variables.model_validate_json(
-                (await afetch(url, cast(httpx.AsyncClient, self.client))).content).variables
-        return {}
+    # -- derived, non-fetching properties -------------------------------
 
     @cached_property
     def api_url(self) -> str:
-        """Find the distribution link for the JSON API, if any.
-
-        Returns
-        -------
-          The URL if present, otherwise the empty string.
-
-        """
+        """Find the distribution link for the JSON API, if any."""
         for distribution in self._model.distribution:
             if (distribution.format == 'API' and
                     distribution.mediaType == 'application/json'):
@@ -246,112 +241,74 @@ class Dataset:
     def weight_variables(self) -> dict[str, model.Variable] | None:
         if not self._model.c_isMicrodata:
             return None
-        ret = {}
-        for name, variable in self.variables.items():
-            if variable.isWeight:
-                ret[name] = variable
-        return ret
+        return _filter_variables(self.variables, lambda v: v.isWeight)
 
     @cached_property
-    def required_variables(self) -> dict[str, model.Variable] | None:
-        ret = {}
-        for name, variable in self.variables.items():
-            if variable.required:
-                ret[name] = variable
-        return ret
+    def required_variables(self) -> dict[str, model.Variable]:
+        return _filter_variables(self.variables, lambda v: v.required)
 
     @async_cached_property
     async def weight_avariables(self) -> dict[str, model.Variable] | None:
         if not self._model.c_isMicrodata:
             return None
-        variables = await self.avariables
-        ret = {}
-        for name, variable in variables.items():
-            if variable.isWeight:
-                ret[name] = variable
-        return ret
+        return _filter_variables(await self.avariables, lambda v: v.isWeight)
 
     @async_cached_property
-    async def required_avariables(self) -> dict[str, model.Variable] | None:
-        variables = await self.avariables
-        ret = {}
-        for name, variable in variables.items():
-            if variable.required:
-                ret[name] = variable
-        return ret
+    async def required_avariables(self) -> dict[str, model.Variable]:
+        return _filter_variables(await self.avariables, lambda v: v.required)
 
+
+# ---------------------------------------------------------------------------
+# Catalog
+# ---------------------------------------------------------------------------
 
 CAT = TypeVar('CAT', bound='Catalog')
 
 
-class Catalog:
-    @classmethod
-    def get_catalog(cls: type[CAT],
-                    client: httpx.Client,
-                    *,
-                    catalog_subpath: str = '') -> Catalog:
-        """Retrieve and process the root or subpath data catalog
-        document from the Census API server.
-
-        Arguments:
-        ---------
-          * client: an httpx.AsyncClient | httpx.Client instance, such as one
-                returned by uscensus.util.webcache.make_client.
-
-        Returns:
-        -------
-          The new Catalog wrapper instance.
-
-        """
+class Catalog(_ModelDelegate):
+    @staticmethod
+    def _catalog_url(catalog_subpath: str) -> str:
         if not catalog_subpath:
-            url = 'https://api.census.gov/data.json'
-        else:
-            url = f'https://api.census.gov/data/{catalog_subpath}.json'
-        _logger.debug('Fetching catalog:  %s', url)
-        return cls(model=model.Catalog.model_validate_json(fetch(url, client).content),
-                   client=client)
+            return 'https://api.census.gov/data.json'
+        return f'https://api.census.gov/data/{catalog_subpath}.json'
 
     @classmethod
-    async def aget_catalog(cls: type[CAT],
-                           client: httpx.AsyncClient,
-                           *,
-                           catalog_subpath: str = '') -> Catalog:
+    def get_catalog(
+        cls: type[CAT],
+        client: httpx.Client,
+        *,
+        catalog_subpath: str = '',
+    ) -> Catalog:
         """Retrieve and process the root or subpath data catalog
         document from the Census API server.
-
-        Arguments:
-        ---------
-          * client: an httpx.AsyncClient | httpx.Client instance, such as one
-                returned by uscensus.util.webcache.make_client.
-
-        Returns:
-        -------
-          The new Catalog wrapper instance.
-
         """
-        if not catalog_subpath:
-            url = 'https://api.census.gov/data.json'
-        else:
-            url = f'https://api.census.gov/data/{catalog_subpath}.json'
-        _logger.debug('Fetching catalog:  %s', url)
-        return cls(model=model.Catalog.model_validate_json((await afetch(url, client)).content),
-                   client=client)
+        url = cls._catalog_url(catalog_subpath)
+        _logger.debug('Fetching catalog: %s', url)
+        content = fetch(url, client).content
+        return cls(model=model.Catalog.model_validate_json(content), client=client)
+
+    @classmethod
+    async def aget_catalog(
+        cls: type[CAT],
+        client: httpx.AsyncClient,
+        *,
+        catalog_subpath: str = '',
+    ) -> Catalog:
+        """Retrieve and process the root or subpath data catalog
+        document from the Census API server.
+        """
+        url = cls._catalog_url(catalog_subpath)
+        _logger.debug('Fetching catalog: %s', url)
+        content = (await afetch(url, client)).content
+        return cls(model=model.Catalog.model_validate_json(content), client=client)
 
     def __init__(self, model: model.Catalog, client: httpx.AsyncClient | httpx.Client) -> None:
         self._model = model
         self.client = client
-
-    def __getattr__(self, attr: str):
-        """Delegate attribute access to model.Catalog."""
-        cls = type(self)
-        if hasattr(cls, attr) and hasattr((descriptor := getattr(cls, attr)), '__get__'):
-            return descriptor.__get__(self, self)
-        return getattr(self._model, attr)
 
     @cached_property
     def dataset(self) -> list[Dataset]:
         """Return wrapped Dataset instances for each dataset in the
         catalog.
         """
-        return [Dataset(dataset, self.client)
-                for dataset in self._model.dataset]
+        return [Dataset(dataset, self.client) for dataset in self._model.dataset]
