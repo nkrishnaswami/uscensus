@@ -35,19 +35,12 @@ target-version = "py311"
 
 [dependency-groups]
 dev = [
-    "pytest>=8.3.4,<9",
-    "pytest-asyncio>=0.25.0,<0.26",
-    "respx>=0.21.1,<0.22",
+    "pytest~=9.0",
+    "pytest-asyncio~=1.4",
+    "respx~=0.21",
     "docutils>=0.3",
-    "ruff>=0.8.3,<0.9",
-    "mypy>=1.13.0,<2",
-    "pandas-stubs>=2.2.3.241126,<3",
-    "types-openpyxl>=3.1.5.20241126,<4",
-    "types-python-dateutil>=2.9.0.20241206,<3",
-    "types-pygments>=2.18.0.20240506,<3",
-    "types-colorama>=0.4.15.20240311,<0.5",
-    "types-pyopenssl>=24.1.0.20240722,<25",
-    "types-requests>=2.32.0.20241016,<3",
+    "ruff>=0.8.3",
+    "mypy>=1.13.0",
 ]
 
 [tool.uv]
