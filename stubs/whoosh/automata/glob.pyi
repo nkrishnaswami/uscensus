@@ -1,0 +1,6 @@
+from _typeshed import Incomplete
+from collections.abc import Generator
+from whoosh.automata.fsa import ANY as ANY, EPSILON as EPSILON, NFA as NFA
+
+def parse_glob(pattern, _glob_multi: str = '*', _glob_single: str = '?', _glob_range1: str = '[', _glob_range2: str = ']') -> Generator[Incomplete]: ...
+def glob_automaton(pattern): ...

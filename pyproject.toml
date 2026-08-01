@@ -29,9 +29,17 @@ dependencies = [
 [project.optional-dependencies]
 whoosh = ["whoosh>=2.7.4,<3"]
 pymongo = ["pymongo>=4.10.1,<5"]
+arcgis = ["arcgis"]
 
 [tool.ruff]
 target-version = "py311"
+
+[tool.mypy]
+mypy_path = "stubs"
+
+[[tool.mypy.overrides]]
+module = ["async_property.*", "cache.*", "arcgis.*"]
+ignore_missing_imports = true
 
 [dependency-groups]
 dev = [
@@ -41,6 +49,8 @@ dev = [
     "docutils>=0.3",
     "ruff>=0.8.3",
     "mypy>=1.13.0",
+    "types-shapely>=2.1.0.20260728",
+    "types-geopandas>=1.1.4.20260728",
 ]
 
 [tool.uv]

@@ -92,6 +92,8 @@ def _parse_geography(content: bytes) -> Geography:
 class Group(_ModelDelegate):
     """A group of related variables on the same topic."""
 
+    _model: model.Group
+
     def __init__(self, model: model.Group, client: httpx.AsyncClient | httpx.Client) -> None:
         self._model = model
         self.client = client
@@ -118,6 +120,8 @@ class Group(_ModelDelegate):
 # ---------------------------------------------------------------------------
 
 class Dataset(_ModelDelegate):
+    _model: model.Dataset
+
     def __init__(self, model: model.Dataset, client: httpx.AsyncClient | httpx.Client) -> None:
         self._model = model
         self.client = client
@@ -241,21 +245,21 @@ class Dataset(_ModelDelegate):
     def weight_variables(self) -> dict[str, model.Variable] | None:
         if not self._model.c_isMicrodata:
             return None
-        return _filter_variables(self.variables, lambda v: v.isWeight)
+        return _filter_variables(self.variables, lambda v: bool(v.isWeight))
 
     @cached_property
     def required_variables(self) -> dict[str, model.Variable]:
-        return _filter_variables(self.variables, lambda v: v.required)
+        return _filter_variables(self.variables, lambda v: bool(v.required))
 
     @async_cached_property
     async def weight_avariables(self) -> dict[str, model.Variable] | None:
         if not self._model.c_isMicrodata:
             return None
-        return _filter_variables(await self.avariables, lambda v: v.isWeight)
+        return _filter_variables(await self.avariables, lambda v: bool(v.isWeight))
 
     @async_cached_property
     async def required_avariables(self) -> dict[str, model.Variable]:
-        return _filter_variables(await self.avariables, lambda v: v.required)
+        return _filter_variables(await self.avariables, lambda v: bool(v.required))
 
 
 # ---------------------------------------------------------------------------
@@ -266,6 +270,8 @@ CAT = TypeVar('CAT', bound='Catalog')
 
 
 class Catalog(_ModelDelegate):
+    _model: model.Catalog
+
     @staticmethod
     def _catalog_url(catalog_subpath: str) -> str:
         if not catalog_subpath:

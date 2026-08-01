@@ -1,0 +1,23 @@
+from _typeshed import Incomplete
+from collections.abc import Generator
+from whoosh.compat import iteritems as iteritems
+
+class CompositionError(Exception): ...
+
+def unstopped(tokenstream): ...
+def entoken(textstream, positions: bool = False, chars: bool = False, start_pos: int = 0, start_char: int = 0, **kwargs) -> Generator[Incomplete]: ...
+
+class Token:
+    positions: Incomplete
+    chars: Incomplete
+    stopped: bool
+    boost: float
+    removestops: Incomplete
+    mode: Incomplete
+    def __init__(self, positions: bool = False, chars: bool = False, removestops: bool = True, mode: str = '', **kwargs) -> None: ...
+    def copy(self): ...
+
+class Composable:
+    is_morph: bool
+    def __or__(self, other): ...
+    def has_morph(self): ...

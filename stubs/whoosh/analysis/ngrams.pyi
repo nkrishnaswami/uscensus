@@ -1,0 +1,26 @@
+from _typeshed import Incomplete
+from collections.abc import Generator
+from whoosh.analysis.acore import Token as Token
+from whoosh.analysis.filters import Filter as Filter, LowercaseFilter as LowercaseFilter
+from whoosh.analysis.tokenizers import RegexTokenizer as RegexTokenizer, Tokenizer as Tokenizer
+from whoosh.compat import text_type as text_type, xrange as xrange
+
+class NgramTokenizer(Tokenizer):
+    __inittypes__: Incomplete
+    min: Incomplete
+    max: Incomplete
+    def __init__(self, minsize, maxsize: Incomplete | None = None) -> None: ...
+    def __eq__(self, other): ...
+    def __call__(self, value, positions: bool = False, chars: bool = False, keeporiginal: bool = False, removestops: bool = True, start_pos: int = 0, start_char: int = 0, mode: str = '', **kwargs) -> Generator[Incomplete]: ...
+
+class NgramFilter(Filter):
+    __inittypes__: Incomplete
+    min: Incomplete
+    max: Incomplete
+    at: int
+    def __init__(self, minsize, maxsize: Incomplete | None = None, at: Incomplete | None = None) -> None: ...
+    def __eq__(self, other): ...
+    def __call__(self, tokens) -> Generator[Incomplete]: ...
+
+def NgramAnalyzer(minsize, maxsize: Incomplete | None = None): ...
+def NgramWordAnalyzer(minsize, maxsize: Incomplete | None = None, tokenizer: Incomplete | None = None, at: Incomplete | None = None): ...

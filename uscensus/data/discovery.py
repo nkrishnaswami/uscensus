@@ -195,7 +195,7 @@ class DiscoveryInterface:
 
         """
         _logger.debug('Fetching root metadata')
-        self._impl = asyncio.get_event_loop().run_until_complete(
+        self._impl = asyncio.run(
             AsyncDiscoveryInterface.create(key, client, vintage, fts_class))
         self.datasets = {
             key: CensusDataEndpoint(value)

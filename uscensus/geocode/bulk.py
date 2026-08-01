@@ -2,11 +2,12 @@
 
 Attributes
 ----------
-    CENSUS_GEO_COLNAMES: column names in output from geocoding API.
+CENSUS_GEO_COLNAMES: column names in output from geocoding API.
 
 """
 import asyncio
 import csv
+import functools
 import glob
 import logging
 import os
@@ -15,7 +16,7 @@ from abc import ABC, abstractmethod
 from collections.abc import Iterable, Mapping
 from io import BytesIO, StringIO
 from itertools import islice
-from typing import Any
+from typing import Any, Callable, Concatenate, Coroutine, ParamSpec, TypeVar
 
 import geopandas as gpd
 import httpx
@@ -59,10 +60,62 @@ Row4 = tuple[str, str, str, str]
 Row5 = tuple[str, str, str, str, str]
 
 
+def _select_columns(df: pd.DataFrame, columns: Row4 | Row5) -> Iterable[Any]:
+    """Extract key/street/city/state/zip columns from a DataFrame as
+    row tuples.
+
+    Arguments
+    ---------
+      * df: the pandas DataFrame.
+      * columns: a 4- or 5-tuple/list of columns to extract:
+            0. unique key. If omitted, index will be used.
+            1. street address.
+            2. city name.
+            3. state abbreviation.
+            4. ZIP code as string.
+
+    Raises
+    ------
+      ValueError: `columns` has the wrong number of elements.
+
+    """
+    if len(columns) == 4:
+        return df.loc[:, list(columns)].itertuples()
+    elif len(columns) == 5:
+        return df.loc[:, list(columns)].itertuples(index=False)
+    raise ValueError('len(columns) is neither 4 or 5')
+
+
+P = ParamSpec('P')
+R = TypeVar('R')
+
+
+def _sync_variant(
+    async_method: Callable[Concatenate[Any, P], Coroutine[Any, Any, R]],
+) -> Callable[Concatenate[Any, P], R]:
+    """Derive a blocking counterpart from an async instance method.
+
+    Runs the coroutine to completion via `asyncio.run`, so -- exactly
+    like the original hand-written `geocode_rows` -- the resulting
+    method cannot be called from a thread that already has a running
+    event loop.
+    """
+    @functools.wraps(async_method)
+    def wrapper(self, *args: P.args, **kwargs: P.kwargs) -> R:
+        return asyncio.run(async_method(self, *args, **kwargs))
+
+    if async_method.__doc__:
+        wrapper.__doc__ = (
+            async_method.__doc__.replace(' asynchronously', '')
+            + '\n        This function invokes `asyncio.run`, so it cannot be used\n'
+              '        when an event loop is already running.\n'
+        )
+    return wrapper
+
+
 class Persister(ABC):
     """ABC for data persistence across multiple Census geocoding API
     calls.
-
     """
 
     @abstractmethod
@@ -89,9 +142,10 @@ class FilePersister(Persister):
 
     def __init__(self, tempOut: str, finalOut: str) -> None:
         """Arguments:
-        * tempOut: filename template with one positional parameter
-        for temporary files.
-        * finalOut: filename for final CSV output.
+        ---------
+          * tempOut: filename template with one positional parameter
+                for temporary files.
+          * finalOut: filename for final CSV output.
         """
         self.temp = tempOut
         self.final = finalOut
@@ -192,16 +246,16 @@ class CensusBulkGeocoder:
     """Geocode many addresses."""
 
     BATCH_ENDPOINT = ('https://geocoding.geo.census.gov/geocoder/' +
-                      'geographies/addressbatch')
+                       'geographies/addressbatch')
 
     def __init__(
-            self,
-            persister: Persister,
-            endpoint: str = BATCH_ENDPOINT,
-            benchmark: str = 'Public_AR_Current',
-            vintage: str = 'Current_Current',
-            chunksize: int = 1000,
-            concurrency: int = 10,
+        self,
+        persister: Persister,
+        endpoint: str = BATCH_ENDPOINT,
+        benchmark: str = 'Public_AR_Current',
+        vintage: str = 'Current_Current',
+        chunksize: int = 1000,
+        concurrency: int = 10,
     ) -> None:
         self.persister = persister
         self.endpoint = endpoint
@@ -216,9 +270,9 @@ class CensusBulkGeocoder:
         )
 
     def _generate_requests(
-            self,
-            rows: Iterable[Iterable[Any]],
-            client: httpx.AsyncClient,
+        self,
+        rows: Iterable[Iterable[Any]],
+        client: httpx.AsyncClient,
     ):
         for idx, chunk in enumerate(chunker(self.chunksize, rows)):
             _logger.debug(f'Processing chunk #{idx}: geocoding {len(chunk)} ' +
@@ -240,23 +294,23 @@ class CensusBulkGeocoder:
                 files=files)
 
     async def async_geocode_rows(self,
-                                 rows: Iterable[Iterable[Any]],
-                                 *,
-                                 retries: int = 3,
-                                 client: None | httpx.AsyncClient = None) -> pd.DataFrame:
+                                  rows: Iterable[Iterable[Any]],
+                                  *,
+                                  retries: int = 3,
+                                  client: None | httpx.AsyncClient = None) -> pd.DataFrame:
         """Geocode addresses stored as rows asynchronously.
 
         Arguments:
         ---------
           * row: iterator of iterables containing
-            * key: unique identifier.
-            * street: street address.
-            * city: city name.
-            * state: state abbreviation.
-            * zip5: ZIP code as string.
+                * key: unique identifier.
+                * street: street address.
+                * city: city name.
+                * state: state abbreviation.
+                * zip5: ZIP code as string.
 
         Returns: DataFrame with geocoding output with rows keyed by
-          the input key.
+        the input key.
 
         """
         client = client or httpx.AsyncClient(
@@ -266,9 +320,9 @@ class CensusBulkGeocoder:
         req_to_chunkno = {req: chunkno for chunkno, req in enumerate(reqs)}
 
         async def handleResp(idx: int,
-                             r: httpx.Response,
-                             *,
-                             retry: int = 0):
+                              r: httpx.Response,
+                              *,
+                              retry: int = 0):
             chunkno = req_to_chunkno.get(r.request, 'N/A')
             _logger.debug(f'Finished req {idx+1}/{len(reqs)} for ' +
                           f'chunk {chunkno}: status {r.status_code}')
@@ -293,15 +347,16 @@ class CensusBulkGeocoder:
                 [client.send(req) for req in reqs])):
             await handleResp(idx, await resp)
         _logger.debug(f'Processed {idx+1} responses')
+
         return self.persister.persistFinal()
 
     async def async_geocode_cols(
-            self,
-            key: Iterable[str] | Iterable[int],
-            street: Iterable[str],
-            city: Iterable[str],
-            state: Iterable[str],
-            zip5: Iterable[str],
+        self,
+        key: Iterable[str] | Iterable[int],
+        street: Iterable[str],
+        city: Iterable[str],
+        state: Iterable[str],
+        zip5: Iterable[str],
     ) -> pd.DataFrame:
         """Geocode addresses stored as separate columns.
 
@@ -314,7 +369,7 @@ class CensusBulkGeocoder:
           * zip5: ZIP codes as strings.
 
         Returns: DataFrame with geocoding output with rows keyed by
-          the input key.
+        the input key.
 
         """
         return await self.async_geocode_rows(
@@ -327,110 +382,48 @@ class CensusBulkGeocoder:
         ---------
           * df: the pandas DataFrame
           * columns: a 4- or 5-tuple/list of columns to extract:
-            0. unique key. If omitted, index will be used.
-            1. street address.
-            2. city name.
-            3. state abbreviation.
-            4. ZIP code as string.
+                0. unique key. If omitted, index will be used.
+                1. street address.
+                2. city name.
+                3. state abbreviation.
+                4. ZIP code as string.
 
         Returns: DataFrame with geocoding output with rows keyed by
-          the input key.
+        the input key.
 
         Raises:
         ------
           ValueError: `columns` has the wrong number of elements.
 
         """
-        if len(columns) == 4:
-            iter = df.loc[:, list(columns)].itertuples()
-        elif len(columns) == 5:
-            iter = df.loc[:, list(columns)].itertuples(index=False)
-        else:
-            raise ValueError('len(columns) is neither 4 or 5')
-        return await self.async_geocode_rows(iter)
+        return await self.async_geocode_rows(_select_columns(df, columns))
 
-    def geocode_rows(self, rows: Iterable[Iterable[Any]]) -> pd.DataFrame:
-        """Geocode addresses stored as rows.
+    # The three methods below are mechanically derived from their
+    # `async_`-prefixed counterparts above: same behavior, same
+    # docstring (minus the "asynchronously" wording), driven to
+    # completion via `asyncio.run`. This replaces what used to be
+    # three fully duplicated method bodies (~90 lines) -- including a
+    # duplicate of the `_select_columns` branching logic inside
+    # `geocode_df` -- and also fixes a real bug: the previous sync
+    # `geocode_rows` used `asyncio.get_event_loop().run_until_complete(...)`,
+    # which is deprecated for auto-creating a loop and, unlike
+    # `asyncio.run`, never closes the loop it creates, so repeated
+    # calls could leak resources across invocations.
+    geocode_rows = _sync_variant(async_geocode_rows)
+    geocode_cols = _sync_variant(async_geocode_cols)
+    geocode_df = _sync_variant(async_geocode_df)
 
-        This function invokes `asyncio.run_until_complete`, so cannot
-        be used when an event loop is running.
 
-        Arguments:
-        ---------
-          * row: iterator of iterables containing
-            * key: unique identifier.
-            * street: street address.
-            * city: city name.
-            * state: state abbreviation.
-            * zip5: ZIP code as string.
-
-        Returns: DataFrame with geocoding output with rows keyed by
-          the input key.
-
-        """
-        return asyncio.get_event_loop().run_until_complete(
-            self.async_geocode_rows(rows))
-
-    def geocode_cols(
-            self,
-            key: Iterable[str] | Iterable[int],
-            street: Iterable[str],
-            city: Iterable[str],
-            state: Iterable[str],
-            zip5: Iterable[str],
-    ) -> pd.DataFrame:
-        """Geocode addresses stored as separate columns.
-
-        Arguments:
-        ---------
-          * key: unique identifiers.
-          * street: street addresses.
-          * city: city names.
-          * state: state abbreviations.
-          * zip5: ZIP codes as strings.
-
-        Returns: DataFrame with geocoding output with rows keyed by
-          the input key.
-
-        """
-        return self.geocode_rows(
-            zip(key, street, city, state, zip5, strict=False))
-
-    def geocode_df(self, df: pd.DataFrame, columns: Row4 | Row5) -> pd.DataFrame:
-        """Geocode from a dataframe.
-
-        Arguments:
-        ---------
-          * df: the pandas DataFrame
-          * columns: a 4- or 5-tuple/list of columns to extract:
-            0. unique key. If omitted, index will be used.
-            1. street address.
-            2. city name.
-            3. state abbreviation.
-            4. ZIP code as string.
-
-        Returns: DataFrame with geocoding output with rows keyed by
-          the input key.
-
-        Raises:
-        ------
-          ValueError: `columns` has the wrong number of elements.
-
-        """
-        if len(columns) == 4:
-            iter = df.loc[:, list(columns)].itertuples()
-        elif len(columns) == 5:
-            iter = df.loc[:, list(columns)].itertuples(index=False)
-        else:
-            raise ValueError('len(columns) is neither 4 or 5')
-        return self.geocode_rows(iter)
+def _to_point(x: Any) -> Any:
+    # pandas-stubs' `Series.apply` overloads don't cover custom return
+    # types like `shapely.Point`, so this is annotated `Any` rather
+    # than the more precise `list[str] | float`/`Point` it actually is.
+    return x and shapely.geometry.Point(float(x[0]), float(x[1]))
 
 
 def parse_lonlat(series: pd.Series) -> pd.Series:
     """Turn a Geo.Lon.Lat series into a shapely Geometry series."""
-    return series.str.split(',').apply(
-        lambda x: x and shapely.geometry.Point(
-            float(x[0]), float(x[1])))
+    return series.str.split(',').apply(_to_point)
 
 
 def to_geodataframe(df: pd.DataFrame) -> gpd.GeoDataFrame:
