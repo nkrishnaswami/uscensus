@@ -7,7 +7,7 @@ from __future__ import annotations
 import json
 import logging
 from functools import cached_property
-from typing import Callable, TYPE_CHECKING, TypeVar, cast
+from typing import Callable, TypeVar, cast
 
 import httpx
 from async_property import async_cached_property

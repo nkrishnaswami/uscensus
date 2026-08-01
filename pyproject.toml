@@ -33,6 +33,7 @@ arcgis = ["arcgis"]
 
 [tool.ruff]
 target-version = "py311"
+extend-exclude = ["stubs"]
 
 [tool.mypy]
 mypy_path = "stubs"
@@ -51,6 +52,7 @@ dev = [
     "mypy>=1.13.0",
     "types-shapely>=2.1.0.20260728",
     "types-geopandas>=1.1.4.20260728",
+    "pre-commit>=4.6.1",
 ]
 
 [tool.uv]
