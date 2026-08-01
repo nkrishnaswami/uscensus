@@ -262,7 +262,7 @@ class QueryBuilderBase(ABC):
         self._validate_geo()
         resp = await afetch(**self._prepare_fetch_args())
         resp.raise_for_status()
-        return self._make_dataframe(resp.model_dump_json())
+        return self._make_dataframe(resp.json())
 
 
 
@@ -381,7 +381,7 @@ def _check_valid_recode_values(
     """
     if not variable.values:
         return True
-    valid_values = set()
+    valid_values: set[int] = set()
     if variable.values.item:
         valid_values.update(int(x) for x in variable.values.item)
     if variable.values.range:

@@ -9,7 +9,7 @@ from typing import (
 
 T = TypeVar('T')
 PARAM = Sequence | Mapping
-XID = TypeVar('XID', bound='Sequence')
+XID = Sequence
 CONN = TypeVar('CONN', bound='DBAPIConnection')
 CONN_co = TypeVar('CONN_co', bound='DBAPIConnection', covariant=True)
 CURSOR_contra = TypeVar(

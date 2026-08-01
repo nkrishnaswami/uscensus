@@ -1,5 +1,6 @@
 import asyncio
 import logging
+from typing import Any
 
 import httpx
 import pandas as pd
@@ -29,7 +30,7 @@ class AsyncDiscoveryInterface:
     async def create(key: str,
                      client: httpx.AsyncClient,
                      vintage: str | int | None = None,
-                     fts_class: type = SqliteFts5Index):
+                     fts_class: type = SqliteFts5Index) -> 'AsyncDiscoveryInterface':
         """Load and wrap census datasets.
 
         Prefers cached metadata if present and not stale, otherwise
@@ -55,7 +56,7 @@ class AsyncDiscoveryInterface:
         resp = r.json()
         datasets = resp.get('dataset')
         if not datasets:
-            raise CensusError('Unable to identify datasets from dataset ' +
+            raise CensusError('Unable to identify datasets from dataset '
                               ' discovery endpoint')
 
         self.index = fts_class(FieldSet.DATASET, 'datasets')
@@ -72,7 +73,7 @@ class AsyncDiscoveryInterface:
         return self
 
     @staticmethod
-    def _get_ds_id(ds: dict):
+    def _get_ds_id(ds: dict) -> str:
         for distribution in ds.get('distribution') or []:
             if distribution.get('format') == 'API':
                 endpoint = distribution['accessURL']
@@ -86,9 +87,8 @@ class AsyncDiscoveryInterface:
                                    key: str,
                                    client: httpx.AsyncClient,
                                    ds: dict,
-                                   complete: list[int]):
-        """Build an AsyncCensuDataEndpoint for the specfied dataset
-        metadata.
+                                   complete: list[int]) -> None:
+        """Build an AsyncCensuDataEndpoint for the specfied dataset metadata.
 
         This must be called with self.index and self.variableindex
         entered.
@@ -114,20 +114,20 @@ class AsyncDiscoveryInterface:
                     tags=' '.join(dataset.tags),
                     variables=' '.join(dataset.variables['label']),
                     vintage=dataset.vintage)])
-            _logger.debug('Finished processing metadata for dataset: ' +
+            _logger.debug('Finished processing metadata for dataset: '
                           f'{dataset.id}')
-        except Exception as e:
-            _logger.warning('Error processing metadata; skipping dataset ' +
+        except Exception as e:  # noqa: BLE001
+            _logger.warning('Error processing metadata; skipping dataset '
                             f'{ds["title"]}: {ds_id}', exc_info=e)
             return
         complete[0] += 1
         if complete[0] % 100 == 0:
             _logger.info(f'Processed {complete[0]} datasets')
 
-    def search(self, query):
+    def search(self, query: str) -> pd.DataFrame:
         """Find a list of dataset objects matching the index query.
-        Index queries default to searching dataset titles, but may also
-        search.
+
+        Index queries default to searching dataset titles, but may also search.
 
             * description: long description of an dataset
             * variables: variables to return from query
@@ -142,9 +142,10 @@ class AsyncDiscoveryInterface:
 
         Elaborate queries can be constructed using parenthesized
         subqueries, ANDs, and ORs.
+
         """
         if query.find(':') < 0:
-            query = 'title: ' + query
+            query = f'title: {query}'
 
         cols = ['score', 'dataset_id', 'title', 'description']
         return pd.DataFrame(
@@ -153,7 +154,7 @@ class AsyncDiscoveryInterface:
             columns=cols,
         )
 
-    def __getitem__(self, dataset_id):
+    def __getitem__(self, dataset_id: str) -> AsyncCensusDataEndpoint | None:
         """Return an identifier by dataset ID.
 
         Arguments:
@@ -165,9 +166,7 @@ class AsyncDiscoveryInterface:
         return self.datasets.get(dataset_id)
 
     def __repr__(self) -> str:
-        """The readable string for an Loader is that of its `datasets`
-        dictionary.
-        """
+        """The readable string for an Loader is that of its `datasets` dictionary."""
         return repr(self.datasets)
 
 
@@ -203,7 +202,7 @@ class DiscoveryInterface:
             for key, value in self._impl.datasets.items()
         }
 
-    def __getitem__(self, dataset_id: str):
+    def __getitem__(self, dataset_id: str) -> CensusDataEndpoint:
         """Return an identifier by dataset ID.
 
         Arguments:
@@ -214,5 +213,5 @@ class DiscoveryInterface:
         """
         return self.datasets.get(dataset_id)
 
-    def __getattr__(self, key):
+    def __getattr__(self, key: str) -> Any:
         return getattr(self._impl, key)

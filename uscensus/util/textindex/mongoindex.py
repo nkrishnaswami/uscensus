@@ -1,5 +1,6 @@
 import logging
 from collections.abc import Iterable
+from typing import Any
 
 from pymongo import MongoClient
 
@@ -45,7 +46,7 @@ class MongoIndex(TextIndex):
             name='text_index',
             default_language='en')
 
-    def add(self,
+    def add(self,  # type: ignore[override]
             documents: Iterable[DatasetFields] | Iterable[VariableFields],
             **kwargs):
         """Add entries to the index.
@@ -64,7 +65,7 @@ class MongoIndex(TextIndex):
         """Find dataset IDs matching querystring."""
         ret = []
         query = {}
-        proj = {'_id': False}
+        proj: dict[str, Any] = {'_id': False}
         if querystring:
             query.update({'$text': {'$search': querystring}})
             proj['score'] = {'$meta': 'textScore'}

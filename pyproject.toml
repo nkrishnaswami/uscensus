@@ -1,47 +1,71 @@
+[project]
+name = "uscensus"
+version = "0.3.0"
+description = "This module fetches metadata for the Census Data API to make it easier to find relevant data sets and variables to query, and returns data as a Pandas dataframe."
+authors = [{ name = "Natarajan Krishnaswami", email = "nkrish@acm.org" }]
+requires-python = ">=3.11,<4"
+readme = "README.md"
+license = "Apache-2.0"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+]
+dependencies = [
+    "aiosqlite~=0.20",
+    "geopandas~=1.1",
+    "httpx~=0.28",
+    "httpx-caching>=0.1a4,<0.2",
+    "pandas>=2.2.3",
+    "shapely~=2.0",
+    "sqlalchemy[asyncio]~=2.0",
+    "pydantic~=2.10",
+    "async-property~=0.2",
+    "async-cache~=2.0",
+]
+
+[project.optional-dependencies]
+whoosh = ["whoosh>=2.7.4,<3"]
+pymongo = ["pymongo>=4.10.1,<5"]
+
 [tool.ruff]
 target-version = "py311"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3.4,<9",
+    "pytest-asyncio>=0.25.0,<0.26",
+    "respx>=0.21.1,<0.22",
+    "docutils>=0.3",
+    "ruff>=0.8.3,<0.9",
+    "mypy>=1.13.0,<2",
+    "pandas-stubs>=2.2.3.241126,<3",
+    "types-openpyxl>=3.1.5.20241126,<4",
+    "types-python-dateutil>=2.9.0.20241206,<3",
+    "types-pygments>=2.18.0.20240506,<3",
+    "types-colorama>=0.4.15.20240311,<0.5",
+    "types-pyopenssl>=24.1.0.20240722,<25",
+    "types-requests>=2.32.0.20241016,<3",
+]
+
+[tool.uv]
+default-groups = "all"
+
+[tool.uv.build-backend]
+module-root = ""
+
+[build-system]
+requires = ["uv_build>=0.10.0,<0.11.0"]
+build-backend = "uv_build"
+
 [tool.ruff.lint.flake8-quotes]
 docstring-quotes = "double"
 inline-quotes = "single"
 multiline-quotes = "double"
+
 [tool.ruff.lint.per-file-ignores]
-"__init__.py" = ["E402"]
-"test/**" = ["S101"]
-[tool.poetry]
-name = "uscensus"
-version = "0.3.0"
-description = "This module fetches metadata for the Census Data API to make it easier to find relevant data sets and variables to query, and returns data as a Pandas dataframe."
-authors = ["Natarajan Krishnaswami <nkrish@acm.org>"]
-license = "Apache Software License 2.0"
-readme = "README.md"
-
-[tool.poetry.dependencies]
-python = "^3.11"
-aiosqlite = "^0.20.0"
-geopandas = "^1.0.1"
-httpx = "^0.28.1"
-httpx-caching = "^0.1a4"
-pandas = "^2.2.3"
-shapely = "^2.0.6"
-sqlalchemy = {extras = ["asyncio"], version = "^2.0.36"}
-pymongo = {version = "^4.10.1", optional = true}
-whoosh = {version = "^2.7.4", optional = true}
-pydantic = "^2.10.3"
-async-property = "^0.2.2"
-
-
-[tool.poetry.group.dev.dependencies]
-pytest = "^8.3.4"
-pytest-asyncio = "^0.25.0"
-respx = "^0.21.1"
-docutils = ">=0.3"
-ruff = "^0.8.3"
-mypy = "^1.13.0"
-
-[tool.poetry.extras]
-whoosh = ["whoosh"]
-pymongo = ["pymongo"]
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+"**/*.py" = ["D100", "D105", "D401", "D417", "G004", "EM101", "TRY003", "ANN003", "PD901", "TD", "FIX"]
+"__init__.py" = ["D104", "E402"]
+"test/**" = ["ANN001", "ANN201", "ANN202", "S101", "D", "FBT", "PLR", "E501", "N", "PT007", "PT011", "PTH"]

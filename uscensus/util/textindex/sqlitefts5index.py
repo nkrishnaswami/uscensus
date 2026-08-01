@@ -10,7 +10,11 @@ _logger = logging.getLogger(__name__)
 class SqliteFts5Index(TextIndex):
     """Full-text index backing to a sqlite DB with FTS5."""
 
-    fields: tuple
+    fields: tuple[str, ...]
+    quoted_fields: tuple[str, ...]
+    table: str
+    conn: sqlite3.Connection
+
 
     def __init__(self,
                  fieldset: DatasetFields | VariableFields,
@@ -48,12 +52,12 @@ class SqliteFts5Index(TextIndex):
         self.conn.__exit__(exc_type, exc_value, traceback)
 
     def add(self,
-            documents: Iterable[DatasetFields] | Iterable[VariableFields],
+            iterable: Iterable[DatasetFields] | Iterable[VariableFields],
             **kwargs) -> None:
         self._execute_many(
             f"""INSERT INTO {self.table}({", ".join(self.quoted_fields)})
             VALUES (:{", :".join(self.fields)});""",
-            [doc._asdict() for doc in documents])
+            [doc._asdict() for doc in iterable])
 
     def query(self,
               querystring: str,

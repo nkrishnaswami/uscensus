@@ -1,10 +1,12 @@
 import asyncio
 import logging
 import time
+from collections.abc import Sequence
+from typing import Any, TypedDict, cast
 
 import httpx
 from httpx_caching import AsyncCachingTransport, CachingClient, SyncCachingTransport
-from httpx_caching._heuristics import ExpiresAfterHeuristic
+from httpx_caching._heuristics import BaseHeuristic, ExpiresAfterHeuristic
 
 from uscensus.util.datastores.datastore import AsyncDataStore, SyncDataStore
 from uscensus.util.errors import CensusError
@@ -27,28 +29,42 @@ def make_client(*,
     params = None
     if key:
         params = {'key': key}
-    client_args = {
+    class HttpxClientArgs(TypedDict):
+        follow_redirects: bool
+        params: dict[str, Any] | None
+        limits: httpx.Limits
+
+    class CachingClientArgs(TypedDict):
+        cacheable_status_codes: Sequence[int]
+        heuristic: BaseHeuristic
+        cache: SyncDataStore | AsyncDataStore
+
+    client_args: HttpxClientArgs = {
         'follow_redirects': True,
         'params': params,
         'limits': httpx.Limits(max_connections=max_connections),
     }
-    caching_client_args = {
+    caching_client_args: CachingClientArgs = {
         'cacheable_status_codes': (200, 203, 300, 301, 302, 308),
         'heuristic': heuristic,
         'cache': cache,
     }
     if sync:
-        assert isinstance(cache, SyncDataStore)
+        if not isinstance(cache, SyncDataStore):
+            raise TypeError('cache is not not a SyncDataStore')
         if transport:
-            assert isinstance(transport, httpx.BaseTransport)
+            if not isinstance(transport, httpx.BaseTransport):
+                raise TypeError('transport is not not a BaseTransport')
         return CachingClient(
-            httpx.Client(**client_args, transport=transport),
+            httpx.Client(**client_args, transport=cast(httpx.BaseTransport, transport)),
             **caching_client_args)
-    assert isinstance(cache, AsyncDataStore)
+    if not isinstance(cache, AsyncDataStore):
+        raise TypeError('cache is not not an AsyncDataStore')
     if transport:
-        assert isinstance(transport, httpx.AsyncBaseTransport)
+        if not isinstance(transport, httpx.AsyncBaseTransport):
+            raise TypeError('transport is not not an AsyncBaseTransport')
     return CachingClient(
-        httpx.AsyncClient(**client_args, transport=transport),
+        httpx.AsyncClient(**client_args, transport=cast(httpx.AsyncBaseTransport, transport)),
         **caching_client_args)
 
 
@@ -78,9 +94,9 @@ async def afetch(
 
     """
     _logger.debug(f'Fetching: {url}')
-    if isinstance(session._transport, SyncCachingTransport):
+    if isinstance(session._transport, SyncCachingTransport):  # noqa: SLF001
         raise CensusError('Async fetch with sync httpx client')
-    if not isinstance(session._transport, AsyncCachingTransport):
+    if not isinstance(session._transport, AsyncCachingTransport):  # noqa: SLF001
         raise CensusError('Caching not enabled in httpx client')
 
     req = httpx.Request('GET', url, **kwargs)
@@ -104,8 +120,9 @@ async def afetch(
             break
         await asyncio.sleep(3**retry)
 
-    # If we get here, r is not None.
-    assert r is not None
+    # If we get here, r should not be None.
+    if r is None:
+        raise ValueError('HTTP response is None')
     if r.extensions.get('from_cache'):
         _logger.debug(f'Cache hit for {url}')
     else:
@@ -123,9 +140,9 @@ def fetch(
         **kwargs) -> httpx.Response:
     """See `afetch` for description of arguments and behavior."""
     _logger.debug(f'Fetching: {url}')
-    if isinstance(session._transport, AsyncCachingTransport):
+    if isinstance(session._transport, AsyncCachingTransport):  # noqa: SLF001
         raise CensusError('Sync fetch with async httpx client')
-    if not isinstance(session._transport, SyncCachingTransport):
+    if not isinstance(session._transport, SyncCachingTransport):  # noqa: SLF001
         raise CensusError('Caching not enabled in httpx client')
 
     req = httpx.Request('GET', url, **kwargs)
@@ -151,8 +168,9 @@ def fetch(
             break
         time.sleep(3**retry)
 
-    # If we get here, r is not None.
-    assert r is not None
+    # If we get here, r should not be None.
+    if r is None:
+        raise ValueError('HTTP response is None')
     if r.extensions.get('from_cache'):
         _logger.debug(f'Cache hit for {url}')
     else:

@@ -12,7 +12,7 @@ import logging
 import os
 import os.path
 from abc import ABC, abstractmethod
-from collections.abc import Iterable, Mapping, Sized
+from collections.abc import Iterable, Mapping
 from io import BytesIO, StringIO
 from itertools import islice
 from typing import Any
@@ -53,6 +53,10 @@ CENSUS_GEO_DTYPES = {
 def chunker(n, iterable: Iterable) -> Iterable[list]:
     iterable = iter(iterable)
     return iter(lambda: list(islice(iterable, n)), [])
+
+
+Row4 = tuple[str, str, str, str]
+Row5 = tuple[str, str, str, str, str]
 
 
 class Persister(ABC):
@@ -128,6 +132,14 @@ class FilePersister(Persister):
 
 
 class SqlAlchemyPersister(Persister):
+    connstr: str
+    engine: sqlalchemy.engine.Engine
+    tablename: str
+    extend_existing: bool
+    table: sqlalchemy.Table | None
+    cols: list[str] | None
+    dtypes: Mapping[str, type[str]] | None
+
     def __init__(self, connstr, table, extend_existing=False) -> None:
         self.connstr = connstr
         self.engine = sqlalchemy.create_engine(self.connstr)
@@ -157,14 +169,20 @@ class SqlAlchemyPersister(Persister):
             md.create_all(bind=conn)
 
     def persistTemp(self, rows: Iterable[Mapping[str, Any]]) -> None:
+        if self.table is None:
+            raise ValueError('table is None')
         with self.engine.begin() as conn:
             conn.execute(self.table.insert(), *list(rows))
 
     def persistFinal(self) -> pd.DataFrame:
+        if self.table is None:
+            raise ValueError('table is None')
         ret = pd.read_sql(
             self.table.select(),
             self.engine,
         )
+        if self.dtypes is None:
+            raise ValueError('dtypes is None')
         for col, dtype in self.dtypes.items():
             ret.dtypes[col] = dtype
         return ret
@@ -225,7 +243,7 @@ class CensusBulkGeocoder:
                                  rows: Iterable[Iterable[Any]],
                                  *,
                                  retries: int = 3,
-                                 client: httpx.AsyncClient = None) -> pd.DataFrame:
+                                 client: None | httpx.AsyncClient = None) -> pd.DataFrame:
         """Geocode addresses stored as rows asynchronously.
 
         Arguments:
@@ -265,7 +283,7 @@ class CensusBulkGeocoder:
                                 f'status_code={r.status_code}')
                 if retry < retries:
                     _logger.info(f'Retrying... {retry + 1} of {retries}')
-                    asyncio.sleep(3**retry)
+                    await asyncio.sleep(3**retry)
                     await handleResp(idx,
                                      await client.send(r.request),
                                      retry=retry + 1)
@@ -302,7 +320,7 @@ class CensusBulkGeocoder:
         return await self.async_geocode_rows(
             zip(key, street, city, state, zip5, strict=False))
 
-    async def async_geocode_df(self, df: pd.DataFrame, columns: Sized) -> pd.DataFrame:
+    async def async_geocode_df(self, df: pd.DataFrame, columns: Row4 | Row5) -> pd.DataFrame:
         """Geocode from a dataframe.
 
         Arguments:
@@ -324,9 +342,9 @@ class CensusBulkGeocoder:
 
         """
         if len(columns) == 4:
-            iter = df.loc[:, columns].itertuples()
+            iter = df.loc[:, list(columns)].itertuples()
         elif len(columns) == 5:
-            iter = df.loc[:, columns].itertuples(index=False)
+            iter = df.loc[:, list(columns)].itertuples(index=False)
         else:
             raise ValueError('len(columns) is neither 4 or 5')
         return await self.async_geocode_rows(iter)
@@ -378,7 +396,7 @@ class CensusBulkGeocoder:
         return self.geocode_rows(
             zip(key, street, city, state, zip5, strict=False))
 
-    def geocode_df(self, df: pd.DataFrame, columns: Sized) -> pd.DataFrame:
+    def geocode_df(self, df: pd.DataFrame, columns: Row4 | Row5) -> pd.DataFrame:
         """Geocode from a dataframe.
 
         Arguments:
@@ -400,9 +418,9 @@ class CensusBulkGeocoder:
 
         """
         if len(columns) == 4:
-            iter = df.loc[:, columns].itertuples()
+            iter = df.loc[:, list(columns)].itertuples()
         elif len(columns) == 5:
-            iter = df.loc[:, columns].itertuples(index=False)
+            iter = df.loc[:, list(columns)].itertuples(index=False)
         else:
             raise ValueError('len(columns) is neither 4 or 5')
         return self.geocode_rows(iter)

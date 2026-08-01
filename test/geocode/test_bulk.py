@@ -5,7 +5,7 @@ import os
 import os.path
 
 import pandas as pd
-from pytest import approx
+import pytest
 
 from uscensus.geocode.bulk import (
     CensusBulkGeocoder,
@@ -38,8 +38,8 @@ def test_FilePersister():
         assert next(rdr) == ['21', '22']
     df = pers.persistFinal()
     assert df.shape[0] == 2
-    assert df.iloc[0].values.tolist() == ['11', '12']
-    assert df.iloc[1].values.tolist() == ['21', '22']
+    assert df.iloc[0].to_numpy().tolist() == ['11', '12']
+    assert df.iloc[1].to_numpy().tolist() == ['21', '22']
 
 
 def test_SqlAlchemyPersister():
@@ -53,8 +53,8 @@ def test_SqlAlchemyPersister():
     pers.persistTemp(rows2)
     df = pers.persistFinal()
     assert df.shape[0] == 2
-    assert df.iloc[0].values.tolist() == ['11', '12']
-    assert df.iloc[1].values.tolist() == ['21', '22']
+    assert df.iloc[0].to_numpy().tolist() == ['11', '12']
+    assert df.iloc[1].to_numpy().tolist() == ['21', '22']
 
 
 def test_CensusBulkGeocoder_df():
@@ -72,8 +72,8 @@ def test_CensusBulkGeocoder_df():
     assert row['Geo.Address'] \
         == '1600 PENNSYLVANIA AVE NW, WASHINGTON, DC, 20500'
     lon, lat = map(float, row['Geo.Lon.Lat'].split(','))
-    assert approx(-77.035, 0.0005) == lon
-    assert approx(38.899, 0.0005) == lat
+    assert pytest.approx(-77.035, 0.0005) == lon
+    assert pytest.approx(38.899, 0.0005) == lat
     assert row['Geo.TIGER.LineID'] == '76225813'
     assert row['Geo.TIGER.Side'] == 'L'
     assert row['Geo.FIPS.State'] == '11'
@@ -95,8 +95,8 @@ def test_CensusBulkGeocoder_rows():
     assert row['Geo.Address'] \
         == '1600 PENNSYLVANIA AVE NW, WASHINGTON, DC, 20500'
     lon, lat = map(float, row['Geo.Lon.Lat'].split(','))
-    assert approx(-77.035, 0.0005) == lon
-    assert approx(38.899, 0.0005) == lat
+    assert pytest.approx(-77.035, 0.0005) == lon
+    assert pytest.approx(38.899, 0.0005) == lat
     assert row['Geo.TIGER.LineID'] == '76225813'
     assert row['Geo.TIGER.Side'] == 'L'
     assert row['Geo.FIPS.State'] == '11'
@@ -117,8 +117,8 @@ def test_CensusBulkGeocoder_cols():
     assert row['Geo.Address'] \
         == '1600 PENNSYLVANIA AVE NW, WASHINGTON, DC, 20500'
     lon, lat = map(float, row['Geo.Lon.Lat'].split(','))
-    assert approx(-77.035, 0.0005) == lon
-    assert approx(38.899, 0.0005) == lat
+    assert pytest.approx(-77.035, 0.0005) == lon
+    assert pytest.approx(38.899, 0.0005) == lat
     assert row['Geo.TIGER.LineID'] == '76225813'
     assert row['Geo.TIGER.Side'] == 'L'
     assert row['Geo.FIPS.State'] == '11'
@@ -127,5 +127,5 @@ def test_CensusBulkGeocoder_cols():
     assert row['Geo.Block'] == '1034'
     gout = to_geodataframe(out)
     pt = gout.loc['WH000'].geometry
-    assert approx(-77.035, 0.0005) == pt.x
-    assert approx(38.899, 0.0005) == pt.y
+    assert pytest.approx(-77.035, 0.0005) == pt.x
+    assert pytest.approx(38.899, 0.0005) == pt.y

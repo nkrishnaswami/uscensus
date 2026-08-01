@@ -6,12 +6,10 @@ from __future__ import annotations
 
 import logging
 from functools import cached_property
-from typing import TYPE_CHECKING, TypeVar
+from typing import TYPE_CHECKING, TypeVar, cast
 
+import httpx
 from async_property import async_cached_property
-
-if TYPE_CHECKING:
-    import httpx
 
 from uscensus.incremental import model
 from uscensus.util.webcache import afetch, fetch
@@ -28,7 +26,7 @@ class Geography(model.USCensusBaseModel):
 class Group:
     """A group of related variables on the same topic."""
 
-    def __init__(self, model: model.Group, client: httpx.AsyncClient) -> None:
+    def __init__(self, model: model.Group, client: httpx.AsyncClient | httpx.Client) -> None:
         self._model = model
         self.client = client
 
@@ -43,7 +41,7 @@ class Group:
         if self._model.variables:
             url = self._model.variables.replace('http:', 'https:')
             return model.Variables.model_validate_json(
-                fetch(url, self.client).content).variables
+                fetch(url, cast(httpx.Client, self.client)).content).variables
         return {}
 
     @async_cached_property
@@ -51,12 +49,12 @@ class Group:
         if self._model.variables:
             url = self._model.variables.replace('http:', 'https:')
             return model.Variables.model_validate_json(
-                (await afetch(url, self.client)).content).variables
+                (await afetch(url, cast(httpx.AsyncClient,self.client))).content).variables
         return {}
 
 
 class Dataset:
-    def __init__(self, model: model.Dataset, client: httpx.AsyncClient) -> None:
+    def __init__(self, model: model.Dataset, client: httpx.AsyncClient | httpx.Client) -> None:
         self._model = model
         self.client = client
 
@@ -84,8 +82,8 @@ class Dataset:
         if self._model.c_geographyLink:
             url = self._model.c_geographyLink.replace('http:', 'https:')
             _logger.debug('Fetching geographies: %s', url)
-            geography = model.Geography.model_validate_json(fetch(url, self.client).content)
-            levels = {}
+            geography = model.Geography.model_validate_json(fetch(url, cast(httpx.Client, self.client)).content)
+            levels: dict[str, list[model.GeographyLevel]] = {}
             for level in geography.fips:
                 if level.name not in levels:
                     levels[level.name] = []
@@ -94,7 +92,7 @@ class Dataset:
                              levels=levels,
                              has_default=bool(geography.default and
                                               any(x.isDefault == 'true' for x in geography.default)))
-        return Geography(_model=model.Geography([], []),
+        return Geography(_model=model.Geography(fips=[], default=[]),
                          levels={},
                          has_default=False)
 
@@ -110,12 +108,17 @@ class Dataset:
         if self._model.c_geographyLink:
             url = self._model.c_geographyLink.replace('http:', 'https:')
             _logger.debug('Fetching geographies: %s', url)
-            geography = model.Geography.model_validate_json((await afetch(url, self.client)).content)
-            return Geography(geography,
-                             {level.name: level for level in geography.fips},
+            geography = model.Geography.model_validate_json((await afetch(url, cast(httpx.AsyncClient, self.client))).content)
+            levels: dict[str, list[model.GeographyLevel]] = {}
+            for level in geography.fips:
+                if level.name not in levels:
+                    levels[level.name] = []
+                levels[level.name].append(level)
+            return Geography(_model=geography,
+                             levels=levels,
                              has_default=bool(geography.default and
                                               geography.default[0].isDefault == 'true'))
-        return Geography(_model=model.Geography([], []),
+        return Geography(_model=model.Geography(fips=[], default=[]),
                          levels={},
                          has_default=False)
 
@@ -131,7 +134,7 @@ class Dataset:
         if self._model.c_tagsLink:
             url = self._model.c_tagsLink.replace('http:', 'https:')
             _logger.debug('Fetching tags:  %s', url)
-            return model.Tags.model_validate_json((fetch(url, self.client)).content).tags
+            return model.Tags.model_validate_json((fetch(url, cast(httpx.Client, self.client))).content).tags
         return []
 
     @async_cached_property
@@ -146,7 +149,7 @@ class Dataset:
         if self._model.c_tagsLink:
             url = self._model.c_tagsLink.replace('http:', 'https:')
             _logger.debug('Fetching tags:  %s', url)
-            return model.Tags.model_validate_json((await afetch(url, self.client)).content).tags
+            return model.Tags.model_validate_json((await afetch(url, cast(httpx.AsyncClient, self.client))).content).tags
         return []
 
     @cached_property
@@ -167,7 +170,7 @@ class Dataset:
                 Group(model.Group.model_validate({key.strip(): value
                                                   for key, value in group_dict.items()}),
                       self.client)
-                for group_dict in fetch(url, self.client).json()['groups']
+                for group_dict in fetch(url, cast(httpx.Client, self.client)).json()['groups']
             }
         return {}
 
@@ -188,7 +191,7 @@ class Dataset:
                 Group(model.Group.model_validate({key.strip(): value
                                                   for key, value in group_dict.items()}),
                       self.client)
-                for group_dict in (await afetch(url, self.client)).json()['groups']
+                for group_dict in (await afetch(url, cast(httpx.AsyncClient, self.client))).json()['groups']
             }
         return {}
 
@@ -205,7 +208,7 @@ class Dataset:
             url = self._model.c_variablesLink.replace('http:', 'https:')
             _logger.debug('Fetching variables:  %s', url)
             return model.Variables.model_validate_json(
-                fetch(url, self.client).content).variables
+                fetch(url, cast(httpx.Client, self.client)).content).variables
         return {}
 
     @async_cached_property
@@ -221,7 +224,7 @@ class Dataset:
             url = self._model.c_variablesLink.replace('http:', 'https:')
             _logger.debug('Fetching variables:  %s', url)
             return model.Variables.model_validate_json(
-                (await afetch(url, self.client)).content).variables
+                (await afetch(url, cast(httpx.AsyncClient, self.client))).content).variables
         return {}
 
     @cached_property
@@ -284,7 +287,7 @@ CAT = TypeVar('CAT', bound='Catalog')
 class Catalog:
     @classmethod
     def get_catalog(cls: type[CAT],
-                    client: httpx.AsyncClient,
+                    client: httpx.Client,
                     *,
                     catalog_subpath: str = '') -> Catalog:
         """Retrieve and process the root or subpath data catalog
@@ -292,7 +295,7 @@ class Catalog:
 
         Arguments:
         ---------
-          * client: an httpx.AsyncClient instance, such as one
+          * client: an httpx.AsyncClient | httpx.Client instance, such as one
                 returned by uscensus.util.webcache.make_client.
 
         Returns:
@@ -318,7 +321,7 @@ class Catalog:
 
         Arguments:
         ---------
-          * client: an httpx.AsyncClient instance, such as one
+          * client: an httpx.AsyncClient | httpx.Client instance, such as one
                 returned by uscensus.util.webcache.make_client.
 
         Returns:
@@ -334,7 +337,7 @@ class Catalog:
         return cls(model=model.Catalog.model_validate_json((await afetch(url, client)).content),
                    client=client)
 
-    def __init__(self, model: model.Catalog, client: httpx.AsyncClient) -> None:
+    def __init__(self, model: model.Catalog, client: httpx.AsyncClient | httpx.Client) -> None:
         self._model = model
         self.client = client
 

@@ -12,8 +12,7 @@ _logger = logging.getLogger(__name__)
 
 
 class AsyncCensusDataEndpoint:
-    """A single census endpoint, with metadata about queryable variables
-    and geography.
+    """A single census endpoint, with metadata about queryable variables and geography.
     """
 
     concepts: set[str]

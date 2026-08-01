@@ -25,7 +25,7 @@ DatasetSchemaFields = OrderedDict((
     ('variables', KEYWORD(analyzer=KWAnalyzer)),
     ('vintage', ID),
 ))
-assert sorted(DatasetSchemaFields) == sorted(DatasetFields._fields)
+assert sorted(DatasetSchemaFields) == sorted(DatasetFields._fields)  # noqa: S101
 
 VariableSchemaFields = OrderedDict((
     ('dataset_id', ID(stored=True)),
@@ -34,7 +34,7 @@ VariableSchemaFields = OrderedDict((
     ('label', TEXT(analyzer=Analyzer)),
     ('concept', KEYWORD(analyzer=Analyzer)),
 ))
-assert sorted(VariableSchemaFields) == sorted(VariableFields._fields)
+assert sorted(VariableSchemaFields) == sorted(VariableFields._fields)  # noqa: S101
 
 
 class WhooshIndex(TextIndex):
@@ -46,7 +46,7 @@ class WhooshIndex(TextIndex):
                  fieldset: FieldSet,
                  index_name: str,
                  dflt_query_field: str,
-                 path: str = None) -> None:
+                 path: str | None = None) -> None:
         """Initialize Whoosh index specified fields.
 
         Arguments:
@@ -58,7 +58,7 @@ class WhooshIndex(TextIndex):
 
         """
         if fieldset == FieldSet.DATASET:
-            self.schema_fields = DatasetSchemaFields
+            self.schema_fields = DatasetSchemaFields  # type: ignore[assignment]
         elif fieldset == FieldSet.VARIABLE:
             self.schema_fields = VariableSchemaFields
         else:
