@@ -211,7 +211,7 @@ class DiscoveryInterface:
                 census dataset URL prefix.
 
         """
-        return self.datasets.get(dataset_id)
+        return self.datasets[dataset_id]
 
     def __getattr__(self, key: str) -> Any:
         return getattr(self._impl, key)
