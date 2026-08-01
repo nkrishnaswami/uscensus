@@ -18,7 +18,7 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.11"
 aiosqlite = "^0.20.0"
-geopandas = "^1.0.1"
+geopandas = "^1.1.2"
 httpx = "^0.28.1"
 httpx-caching = "^0.1a4"
 pandas = "^2.2.3"
