@@ -28,7 +28,7 @@ dependencies = [
 
 [project.optional-dependencies]
 whoosh = ["whoosh>=2.7.4,<3"]
-pymongo = ["pymongo>=4.10.1,<5"]
+pymongo = ["pymongo>=4.18.2,<5"]
 arcgis = ["arcgis"]
 
 [tool.ruff]
